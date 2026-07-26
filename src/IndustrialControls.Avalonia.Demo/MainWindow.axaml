@@ -3,7 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:industrial="using:IndustrialControls.Avalonia.Controls"
-    Title="IndustrialControls.Avalonia — M6"
+    Title="IndustrialControls.Avalonia — M7"
     Width="1440"
     Height="960"
     MinWidth="1120"
@@ -21,13 +21,13 @@
                      FontSize="25"
                      FontWeight="Bold"
                      Foreground="#ECEEE7" />
-          <TextBlock Text="M6 · trend, oscilloscopio, registratore e qualità dei segnali"
+          <TextBlock Text="M7 · indicatori di allarme e componenti statici da pannello"
                      Foreground="#A8ADA8"
                      Margin="0,4,0,0" />
         </StackPanel>
 
         <industrial:EngravedLabel Grid.Column="1"
-                                  Text="M6 CANDIDATE"
+                                  Text="M7 CANDIDATE"
                                   Variant="Aluminum"
                                   ShowFasteners="True"
                                   VerticalAlignment="Center"
@@ -37,127 +37,233 @@
 
     <ScrollViewer Grid.Row="1">
       <StackPanel Margin="24" Spacing="20">
-        <Grid ColumnDefinitions="3*,1*" ColumnSpacing="20">
-          <industrial:IndustrialScreen Title="FULL-PLANT PROCESS TREND"
-                                       StatusText="LIVE"
-                                       Height="410">
-            <Grid RowDefinitions="*,Auto" RowSpacing="8">
-              <industrial:TrendChart x:Name="ProcessTrend"
-                                     Title="POWER / PRESSURE / FREQUENCY"
-                                     Minimum="0"
-                                     Maximum="10"
-                                     TimeWindowSeconds="60"
-                                     MaxSamplesPerSeries="900"
-                                     AutoScale="True"
-                                     CursorFraction="0.78"
-                                     ShowCursor="True"
-                                     ShowGrid="True"
-                                     ShowLegend="True" />
+        <industrial:AlarmIndicatorPanel x:Name="AlarmPanel"
+                                        Title="PRIMARY PLANT ALARM INDICATORS"
+                                        Columns="3">
+          <industrial:AlarmIndicatorPanel.Indicators>
+          <industrial:BacklitAlarmIndicator x:Name="SteamAlarm"
+                                            AlarmId="STEAM_LOW"
+                                            Text="MAIN STEAM"
+                                            SecondaryText="LOW PRESSURE"
+                                            Priority="Warning" />
 
-              <industrial:LedMatrixDisplay Grid.Row="1"
-                                           x:Name="CursorReadoutDisplay"
-                                           Text="NO DATA"
-                                           LedColor="Green"
-                                           MinHeight="42" />
-            </Grid>
-          </industrial:IndustrialScreen>
+          <industrial:BacklitAlarmIndicator x:Name="VacuumAlarm"
+                                            AlarmId="VACUUM_LOW"
+                                            Text="CONDENSER"
+                                            SecondaryText="VACUUM LOW"
+                                            Priority="Critical" />
 
-          <industrial:IndustrialPanel Grid.Column="1"
-                                      Header="QUALITÀ DEI SEGNALI"
-                                      Subtitle="STATO DELLA CATENA DI MISURA">
-            <StackPanel Spacing="12">
-              <industrial:SignalQualityIndicator x:Name="PowerQuality"
-                                                 SignalName="GENERATOR POWER"
-                                                 Source="TX-PWR-01 / VALIDATED"
-                                                 Quality="Good" />
-              <industrial:SignalQualityIndicator x:Name="PressureQuality"
-                                                 SignalName="STEAM PRESSURE"
-                                                 Source="PT-201 / VALIDATED"
-                                                 Quality="Good" />
-              <industrial:SignalQualityIndicator x:Name="FrequencyQuality"
-                                                 SignalName="GRID FREQUENCY"
-                                                 Source="FT-GRID-01 / VALIDATED"
-                                                 Quality="Good" />
-            </StackPanel>
-          </industrial:IndustrialPanel>
-        </Grid>
+          <industrial:BacklitAlarmIndicator x:Name="PumpAlarm"
+                                            AlarmId="PUMP_TRIP"
+                                            Text="PRIMARY PUMP"
+                                            SecondaryText="TRIP"
+                                            Priority="Critical" />
 
-        <Grid ColumnDefinitions="1.1*,0.9*" ColumnSpacing="20">
-          <industrial:IndustrialScreen Title="OSCILLOSCOPE"
-                                       StatusText="TRIGGERED"
-                                       Height="330">
-            <industrial:OscilloscopeDisplay x:Name="Scope"
-                                            Title="GENERATOR PHASE ERROR"
-                                            VerticalMinimum="-1"
-                                            VerticalMaximum="1"
-                                            TriggerLevel="0"
-                                            TimebaseMilliseconds="200"
-                                            MaxSamples="256"
-                                            TraceColor="#58D46C" />
-          </industrial:IndustrialScreen>
+          <industrial:BacklitAlarmIndicator x:Name="FeedAlarm"
+                                            AlarmId="FEED_LOW"
+                                            Text="FEEDWATER"
+                                            SecondaryText="LOW LEVEL"
+                                            Priority="Caution" />
 
-          <industrial:IndustrialScreen Title="STRIP-CHART RECORDER"
-                                       StatusText="PAPER FEED"
-                                       Height="330">
-            <industrial:StripChartRecorder x:Name="Recorder"
-                                           Title="THERMAL PROCESS RECORDER"
-                                           Minimum="0"
-                                           Maximum="100"
-                                           TimeWindowSeconds="45"
-                                           MaxSamplesPerSeries="600"
-                                           AutoScale="False"
-                                           PaperSpeed="10"
-                                           MajorGridSeconds="10"
-                                           IsRunning="True" />
-          </industrial:IndustrialScreen>
-        </Grid>
+          <industrial:BacklitAlarmIndicator x:Name="GridAlarm"
+                                            AlarmId="GRID_DEVIATION"
+                                            Text="GRID FREQUENCY"
+                                            SecondaryText="DEVIATION"
+                                            Priority="Advisory" />
 
-        <industrial:IndustrialPanel Header="COMANDI DELLA DEMO"
-                                    Subtitle="REGISTRAZIONE, QUALITÀ, CURSORE E MEMORIA">
-          <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto"
+          <industrial:BacklitAlarmIndicator x:Name="OilAlarm"
+                                            AlarmId="OIL_PRESSURE"
+                                            Text="TURBINE OIL"
+                                            SecondaryText="PRESSURE LOW"
+                                            Priority="Warning"
+                                            IsLatched="False" />
+          </industrial:AlarmIndicatorPanel.Indicators>
+        </industrial:AlarmIndicatorPanel>
+
+        <industrial:IndustrialPanel Header="PROVA CICLO ALLARMI"
+                                    Subtitle="NUOVO ALLARME, ACK, RIENTRO E RESET">
+          <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto"
                 ColumnSpacing="14">
-            <industrial:IlluminatedPushButton Content="RUN / PAUSE"
-                                              SecondaryCaption="RECORDER"
-                                              LampColor="Green"
-                                              IsLampOn="True"
-                                              Click="OnToggleRun" />
-
-            <industrial:IlluminatedPushButton Grid.Column="1"
-                                              Content="QUALITY"
-                                              SecondaryCaption="CYCLE STATE"
-                                              LampColor="Amber"
-                                              IsLampOn="True"
-                                              Click="OnCycleQuality" />
-
-            <industrial:IlluminatedPushButton Grid.Column="2"
-                                              Content="CURSOR ◀"
-                                              SecondaryCaption="-5%"
-                                              LampColor="Blue"
-                                              IsLampOn="True"
-                                              Click="OnCursorLeft" />
-
-            <industrial:IlluminatedPushButton Grid.Column="3"
-                                              Content="CURSOR ▶"
-                                              SecondaryCaption="+5%"
-                                              LampColor="Blue"
-                                              IsLampOn="True"
-                                              Click="OnCursorRight" />
-
-            <industrial:IlluminatedPushButton Grid.Column="4"
-                                              Content="CLEAR"
-                                              SecondaryCaption="ALL HISTORY"
+            <industrial:IlluminatedPushButton Content="RAISE"
+                                              SecondaryCaption="ALARMS"
                                               LampColor="Red"
                                               IsLampOn="True"
-                                              Click="OnClearHistory" />
+                                              Click="OnRaiseAlarms" />
 
-            <industrial:LedMatrixDisplay Grid.Column="5"
+            <industrial:IlluminatedPushButton Grid.Column="1"
+                                              Content="ACK ALL"
+                                              SecondaryCaption="RECOGNIZE"
+                                              LampColor="Amber"
+                                              IsLampOn="True"
+                                              Click="OnAcknowledgeAll" />
+
+            <industrial:IlluminatedPushButton Grid.Column="2"
+                                              Content="CLEAR"
+                                              SecondaryCaption="CONDITIONS"
+                                              LampColor="Green"
+                                              IsLampOn="True"
+                                              Click="OnClearConditions" />
+
+            <industrial:IlluminatedPushButton Grid.Column="3"
+                                              Content="RESET"
+                                              SecondaryCaption="LATCHED"
+                                              LampColor="Blue"
+                                              IsLampOn="True"
+                                              Click="OnResetAll" />
+
+            <industrial:LedMatrixDisplay Grid.Column="4"
                                          x:Name="StatusDisplay"
-                                         Text="LIVE ACQUISITION ACTIVE"
+                                         Text="ALARM PANEL CLEAR"
                                          LedColor="Green"
                                          VerticalAlignment="Center" />
 
-            <industrial:EngravedLabel Grid.Column="6"
-                                      Text="NEXT: M7 RELEASE"
+            <industrial:EngravedLabel Grid.Column="5"
+                                      Text="ALARM SEQUENCE"
+                                      Variant="Red"
+                                      ShowFasteners="True"
+                                      VerticalAlignment="Center" />
+          </Grid>
+        </industrial:IndustrialPanel>
+
+        <industrial:IndustrialPanel Header="PANNELLI STATICI DI SICUREZZA"
+                                    Subtitle="ICONE, COLORI E FISSAGGI A VITE">
+          <Grid ColumnDefinitions="*,*,*,*"
+                ColumnSpacing="16">
+            <industrial:SafetyPlacard Level="Danger"
+                                      Icon="ElectricalHazard"
+                                      Title="DANGER"
+                                      Text="HIGH VOLTAGE. ISOLATE AND VERIFY BEFORE ACCESS." />
+
+            <industrial:SafetyPlacard Grid.Column="1"
+                                      Level="Warning"
+                                      Icon="HotSurface"
+                                      Title="WARNING"
+                                      Text="HOT SURFACE. ALLOW EQUIPMENT TO COOL BEFORE SERVICE." />
+
+            <industrial:SafetyPlacard Grid.Column="2"
+                                      Level="Caution"
+                                      Icon="Radiation"
+                                      Title="CAUTION"
+                                      Text="CONTROLLED AREA. FOLLOW SITE ACCESS PROCEDURES." />
+
+            <industrial:SafetyPlacard Grid.Column="3"
+                                      Level="Information"
+                                      Icon="Information"
+                                      Title="INFORMATION"
+                                      Text="REFER TO THE OPERATING MANUAL BEFORE MANUAL OVERRIDE." />
+          </Grid>
+        </industrial:IndustrialPanel>
+
+        <industrial:IndustrialPanel Header="TARGHETTE DATI IMBULLONATE"
+                                    Subtitle="DATI NOMINALI, IDENTIFICAZIONE E ISTRUZIONI">
+          <Grid ColumnDefinitions="*,*,*"
+                ColumnSpacing="18">
+            <industrial:BoltedDataPlate Title="GENERATOR NAMEPLATE"
+                                        Subtitle="SYNCHRONOUS UNIT"
+                                        Identifier="GEN-01 / REV C"
+                                        Material="Aluminum">
+              <Grid ColumnDefinitions="*,Auto"
+                    RowDefinitions="Auto,Auto,Auto,Auto"
+                    RowSpacing="5">
+                <TextBlock Text="RATED POWER"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Column="1"
+                           Text="10 MWe"
+                           FontWeight="Bold"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="1"
+                           Text="RATED SPEED"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="1500 rpm"
+                           FontWeight="Bold"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="2"
+                           Text="FREQUENCY"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="50 Hz"
+                           FontWeight="Bold"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="3"
+                           Text="INSULATION"
+                           Foreground="#17191B" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="CLASS F"
+                           FontWeight="Bold"
+                           Foreground="#17191B" />
+              </Grid>
+            </industrial:BoltedDataPlate>
+
+            <industrial:BoltedDataPlate Grid.Column="1"
+                                        Title="TURBINE GOVERNOR"
+                                        Subtitle="CONTROL AUTHORITY"
+                                        Identifier="GOV-CTRL-02"
+                                        Material="Brass">
+              <Grid ColumnDefinitions="*,Auto"
+                    RowDefinitions="Auto,Auto,Auto,Auto"
+                    RowSpacing="5">
+                <TextBlock Text="MODE"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Column="1"
+                           Text="SPEED / LOAD"
+                           FontWeight="Bold"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="1"
+                           Text="DROOP"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="1.5 rpm"
+                           FontWeight="Bold"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="2"
+                           Text="OUTPUT"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="0–100 %"
+                           FontWeight="Bold"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="3"
+                           Text="FAIL STATE"
+                           Foreground="#201D12" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="HOLD"
+                           FontWeight="Bold"
+                           Foreground="#201D12" />
+              </Grid>
+            </industrial:BoltedDataPlate>
+
+            <industrial:BoltedDataPlate Grid.Column="2"
+                                        Title="MANUAL OVERRIDE"
+                                        Subtitle="AUTHORIZED PERSONNEL ONLY"
+                                        Identifier="PROC-OVR-17"
+                                        Material="Red">
+              <StackPanel Spacing="7">
+                <TextBlock Text="1. VERIFY ALL PERMISSIVES."
+                           Foreground="#F8F2E8" />
+                <TextBlock Text="2. RECORD THE OVERRIDE."
+                           Foreground="#F8F2E8" />
+                <TextBlock Text="3. RESTORE AUTOMATIC AUTHORITY."
+                           Foreground="#F8F2E8" />
+              </StackPanel>
+            </industrial:BoltedDataPlate>
+          </Grid>
+        </industrial:IndustrialPanel>
+
+        <industrial:IndustrialPanel Header="STATO MILESTONE"
+                                    Subtitle="PROSSIMO PASSO: STABILIZZAZIONE E RELEASE">
+          <Grid ColumnDefinitions="*,Auto"
+                ColumnSpacing="18">
+            <industrial:LedMatrixDisplay Text="M7 ALARM AND STATIC PANEL ELEMENTS"
+                                         LedColor="Green" />
+            <industrial:EngravedLabel Grid.Column="1"
+                                      Text="NEXT: M8 RELEASE"
                                       Variant="Red"
                                       ShowFasteners="True"
                                       VerticalAlignment="Center" />

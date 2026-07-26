@@ -2,35 +2,53 @@
 
 ## Baseline ufficiale
 
-M5 Hotfix 3 è la baseline validata.
+M6 Hotfix 2 è la baseline validata.
 
 ## Candidate corrente
 
-M6 Hotfix 2 — borderless trend points and roadmap extension.
+M7 Hotfix 3 — off-state annunciator readability.
 
-## Controlli e modelli aggiunti
+## Controlli aggiunti
 
-- `SignalQuality`
-- `SignalSample`
-- `SignalTraceSeries`
-- `TimeSeriesControlBase`
-- `TrendChart`
-- `OscilloscopeDisplay`
-- `StripChartRecorder`
-- `SignalQualityIndicator`
-- `IndustrialScreen`
+- `BacklitAlarmIndicator`
+- `AlarmIndicatorPanel`
+- `SafetyPlacard`
+- `BoltedDataPlate`
 
-## Principi M6
+## Contratto allarmi M7
 
-- i controlli non generano autonomamente dati di processo;
-- l'applicazione fornisce campioni espliciti;
-- ogni serie ha capacità limitata;
-- il trimming è deterministico;
-- i campioni conservano la qualità della misura;
-- `Bad` e `Unavailable` interrompono la traccia;
-- `Uncertain` usa una rappresentazione di cautela;
-- il registratore rifiuta campioni quando è in pausa;
-- la demo usa un timer soltanto per mostrare l'integrazione.
+Il ciclo operativo è:
+
+1. `Activate()` crea un nuovo allarme e annulla l'ACK precedente;
+2. `Acknowledge()` riconosce l'allarme;
+3. `ClearCondition()` rappresenta il rientro della condizione;
+4. se `IsLatched` è attivo, l'indicatore resta memorizzato;
+5. `Reset()` è consentito solo dopo rientro e ACK.
+
+Gli stati derivati sono:
+
+- `Clear`;
+- `NewAlarm`;
+- `AcknowledgedActive`;
+- `ReturnedUnacknowledged`;
+- `ReadyToReset`;
+- `Disabled`.
+
+## Elementi statici
+
+`SafetyPlacard` fornisce:
+
+- cinque livelli di attenzione;
+- sei icone;
+- viti agli angoli;
+- testo statico.
+
+`BoltedDataPlate` fornisce:
+
+- contenuto libero;
+- titolo, sottotitolo e identificativo;
+- quattro materiali;
+- quattro fissaggi.
 
 ## Gate
 
@@ -38,13 +56,11 @@ M6 Hotfix 2 — borderless trend points and roadmap extension.
 .\scripts\validate.ps1
 ```
 
-M6 diventa validata solo dopo conferma dell'utente che build, test e controllo manuale della demo sono riusciti.
+M7 diventa validata solo dopo conferma dell'utente che build, test e controllo manuale della demo sono riusciti.
 
 ## Prossima milestone
 
-M7 — Alarm Indicators & Static Panel Elements.
-
-La stabilizzazione e il rilascio finale diventano M8.
+M8 — Stabilization and Release.
 
 ## Consegna
 
@@ -53,25 +69,34 @@ Ogni consegna deve essere uno ZIP completo dell'intero progetto pronto per compi
 
 ## Hotfix 1
 
-Correzioni richieste dal controllo manuale:
+Correzione di compilazione:
 
-- l'indicatore di qualità usa ora una lampada tonda dedicata nel template;
-- il trend usa punti e marcatori circolari al posto delle X;
-- i campioni visualizzati vengono decimati se troppo densi per la larghezza disponibile;
-- riducendo `MaxSamplesPerSeries`, i buffer esistenti vengono immediatamente ritagliati;
-- il contenimento della memoria resta deterministico e per-serie.
+- `Panel.Render(DrawingContext)` non viene più sovrascritto;
+- `AlarmIndicatorPanel` è un `ItemsControl`;
+- il rendering del pannello è demandato a `ControlTheme`;
+- il layout usa `UniformGrid` con colonne e spaziature configurabili;
+- i test usano `Items.Add` invece di `Children.Add`;
+- versione libreria `0.7.1`.
 
 
 ## Hotfix 2
 
+Correzione dei test concorrenti:
+
+- `ItemsControl.Items` non viene più usato come archivio logico;
+- `AlarmIndicatorPanel.Indicators` è una collection .NET indipendente dal thread UI;
+- il template visuale consuma la collection tramite `ItemsSource`;
+- demo e test usano la proprietà `Indicators`;
+- le API collettive operano esclusivamente sulla collection logica;
+- versione libreria `0.7.2`.
+
+
+## Hotfix 3
+
 Correzione visuale:
 
-- i punti del `TrendChart` non hanno più bordo;
-- il colore del campione riempie interamente il cerchio;
-- memoria, capacità e decimazione restano invariati.
-
-Roadmap estesa:
-
-- M7 dedicata a indicatori di allarme retroilluminati e componenti statici da pannello;
-- M8 dedicata alla stabilizzazione e al rilascio 1.0;
-- versione libreria `0.6.2`.
+- quando l'annunciatore è in `CLEAR`, il testo non usa più il colore scuro da stato attivo;
+- `CLEAR` usa un foreground chiaro caldo, leggibile sul fondo attenuato;
+- `DISABLED` usa un foreground grigio chiaro;
+- opacità `CLEAR` alzata leggermente da `0.16` a `0.18`;
+- aggiunto test di regressione.

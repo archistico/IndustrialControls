@@ -26,34 +26,27 @@
 
 ## M6 — Trends and screens
 
-Candidate corrente:
-
-- `TimeSeriesControlBase`;
-- `TrendChart`;
-- `OscilloscopeDisplay`;
-- `StripChartRecorder`;
-- `SignalQualityIndicator`;
-- `IndustrialScreen`;
-- serie multicanale;
-- capacità limitata e trimming deterministico;
-- cursore temporale;
-- auto-scaling;
-- qualità dei campioni;
-- demo dinamica;
-- test di contratto.
-
-Stato: **CANDIDATE — HOTFIX 2**
+**VALIDATED — HOTFIX 2**
 
 ## M7 — Alarm Indicators & Static Panel Elements
 
-- indicatori di allarme retroilluminati;
-- pannello di indicatori di allarme;
-- stati attivo, riconosciuto, rientrato e latched;
-- pannelli statici con viti agli angoli;
-- icone di attenzione e sicurezza;
-- targhette dati imbullonate;
-- varianti di materiale e colore;
-- demo e test dedicati.
+Candidate corrente:
+
+- `BacklitAlarmIndicator`;
+- `AlarmIndicatorPanel`;
+- stato nuovo allarme;
+- ACK;
+- rientro;
+- memoria latched;
+- RESET;
+- `SafetyPlacard`;
+- icone di sicurezza;
+- fissaggi agli angoli;
+- `BoltedDataPlate`;
+- varianti di materiale;
+- demo e test.
+
+Stato: **CANDIDATE — HOTFIX 3**
 
 ## M8 — Stabilization and release
 

@@ -2,26 +2,24 @@
 
 Libreria Avalonia riutilizzabile per interfacce industriali e sale controllo, con estetica anni Novanta.
 
-## Baseline M6
+## Baseline M7
 
-Include le milestone M0–M5 validate e aggiunge:
+Include le milestone M0–M6 validate e aggiunge:
 
-- `TimeSeriesControlBase`;
-- `SignalTraceSeries`;
-- `SignalSample`;
-- `SignalQuality`;
-- `TrendChart`;
-- `OscilloscopeDisplay`;
-- `StripChartRecorder`;
-- `SignalQualityIndicator`;
-- `IndustrialScreen`;
-- trend multicanale;
-- cursore temporale e lettura dei valori;
-- auto-scaling opzionale;
-- qualità dei campioni;
-- oscilloscopio con trigger;
-- registratore a carta continua;
-- demo dinamica e deterministica;
+- `BacklitAlarmIndicator`;
+- `AlarmIndicatorPanel`;
+- `AlarmIndicatorVisualState`;
+- `SafetyPlacard`;
+- `SafetyPlacardLevel`;
+- `SafetyPlacardIcon`;
+- `BoltedDataPlate`;
+- `DataPlateMaterial`;
+- ciclo allarme con attivazione, ACK, rientro e RESET;
+- memoria latched opzionale;
+- pannello allarmi con layout multicolonna;
+- pannelli statici di sicurezza con icone e viti;
+- targhette dati imbullonate;
+- demo interattiva;
 - test xUnit v3 con Microsoft Testing Platform.
 
 ## Validazione
@@ -38,37 +36,34 @@ dotnet run --project src/IndustrialControls.Avalonia.Demo
 
 ## Stato
 
-M0–M5 Hotfix 3: **VALIDATED**  
-M6 Hotfix 2: **CANDIDATE**
+M0–M6 Hotfix 2: **VALIDATED**  
+M7 Hotfix 3: **CANDIDATE**
 
 
-## M6 Hotfix 1
+## M7 Hotfix 1
 
-- `SignalQualityIndicator`: lampada grafica ridisegnata come luce circolare dedicata, senza deformazioni;
-- `TrendChart`: resa dei campioni aggiornata con punti al posto delle marcature a X;
-- `TrendChart`: decimazione grafica automatica quando i campioni visibili sono più densi dei pixel disponibili;
-- `TimeSeriesControlBase`: se `MaxSamplesPerSeries` viene abbassato, le serie esistenti vengono subito ritagliate alla nuova capacità;
-- memoria dei campioni sempre limitata da capacità per serie.
+- `AlarmIndicatorPanel` ora deriva da `ItemsControl`;
+- rimosso l'override non consentito di `Panel.Render`;
+- cornice, intestazione e viti sono definite nel tema Industrial90;
+- gli indicatori sono disposti da un `UniformGrid`;
+- API collettive `Activate`, `AcknowledgeAll`, `ClearAllConditions` e `ResetAll` invariate;
+- versione libreria `0.7.1`.
 
 
-## M6 Hotfix 2
+## M7 Hotfix 2
 
-- i punti del `TrendChart` sono ora cerchi pieni senza bordo;
-- anche i campioni `Bad` e `Unavailable` usano un marcatore circolare pieno;
-- nessuna modifica al limite di memoria o alla decimazione;
-- versione libreria `0.6.2`.
+- `AlarmIndicatorPanel` ora deriva da `TemplatedControl`;
+- introdotta la raccolta logica `Indicators`;
+- `Indicators` è una `ObservableCollection<BacklitAlarmIndicator>` indipendente da `ItemsControl.Items`;
+- il template usa un `ItemsControl` interno soltanto per la visualizzazione;
+- eliminata la dipendenza dei test dal dispatcher Avalonia;
+- versione libreria `0.7.2`.
 
-## Prossima milestone
 
-### M7 — Alarm Indicators & Static Panel Elements
+## M7 Hotfix 3
 
-Controlli previsti:
-
-- `BacklitAlarmIndicator`;
-- `AlarmIndicatorPanel`;
-- pannelli statici con viti agli angoli;
-- icone di sicurezza e avvertimento;
-- targhette dati imbullonate;
-- varianti di materiale, colore e livello di attenzione.
-
-La stabilizzazione e il rilascio 1.0 vengono spostati a M8.
+- migliorata la leggibilità di `BacklitAlarmIndicator` quando è spento;
+- negli stati `CLEAR` e `DISABLED` il testo usa ora un tono chiaro ad alto contrasto;
+- la retroilluminazione `CLEAR` resta debole ma leggermente più leggibile;
+- aggiunto test di regressione per il foreground dello stato spento;
+- versione libreria `0.7.3`.

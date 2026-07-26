@@ -176,3 +176,20 @@ Pannello statico con viti agli angoli, icona e testo di attenzione o sicurezza.
 ## BoltedDataPlate
 
 Targhetta statica per dati tecnici, valori nominali, identificativi o istruzioni, con fissaggi agli angoli.
+
+
+## BacklitAlarmIndicator
+
+Indicatore rettangolare retroilluminato con priorità, lampeggio, ACK, rientro, memoria latched e RESET.
+
+## AlarmIndicatorPanel
+
+Pannello industriale multicolonna con cornice, intestazione, fissaggi e comandi collettivi per ACK, rientro e RESET.
+
+## SafetyPlacard
+
+Pannello statico di sicurezza con livello, icona, testo e fissaggi agli angoli.
+
+## BoltedDataPlate
+
+Targhetta dati con contenuto libero, titolo, identificativo, materiale e quattro viti.

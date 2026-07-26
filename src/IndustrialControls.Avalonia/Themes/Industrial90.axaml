@@ -848,6 +848,281 @@
   </Setter>
 </ControlTheme>
 
+  
+<ControlTheme x:Key="{x:Type controls:BacklitAlarmIndicator}"
+              TargetType="controls:BacklitAlarmIndicator">
+  <Setter Property="MinWidth" Value="210" />
+  <Setter Property="MinHeight" Value="82" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#111315"
+              BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4"
+              CornerRadius="3"
+              Padding="4">
+        <Border Background="#262B2E"
+                BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                BorderThickness="1"
+                CornerRadius="2"
+                Padding="4">
+          <Border Background="{TemplateBinding DisplayBrush}"
+                  Opacity="{TemplateBinding EffectiveOpacity}"
+                  CornerRadius="2"
+                  Padding="10,7">
+            <Grid RowDefinitions="*,Auto">
+              <StackPanel VerticalAlignment="Center"
+                          Spacing="2">
+                <TextBlock Text="{TemplateBinding Text}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           FontWeight="Bold"
+                           Foreground="{TemplateBinding DisplayForegroundBrush}" />
+                <TextBlock Text="{TemplateBinding SecondaryText}"
+                           TextAlignment="Center"
+                           FontSize="9"
+                           Foreground="{TemplateBinding DisplayForegroundBrush}" />
+              </StackPanel>
+
+              <TextBlock Grid.Row="1"
+                         Text="{TemplateBinding StateText}"
+                         HorizontalAlignment="Center"
+                         FontSize="8"
+                         FontWeight="Bold"
+                         Foreground="{TemplateBinding DisplayForegroundBrush}" />
+            </Grid>
+          </Border>
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:SafetyPlacard}"
+              TargetType="controls:SafetyPlacard">
+  <Setter Property="MinWidth" Value="260" />
+  <Setter Property="MinHeight" Value="150" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="{TemplateBinding BodyBrush}"
+              BorderBrush="#111315"
+              BorderThickness="4"
+              CornerRadius="2">
+        <Grid RowDefinitions="Auto,*">
+          <Border Background="{TemplateBinding HeaderBrush}"
+                  Padding="12,8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Ellipse Width="8"
+                       Height="8"
+                       Fill="#858B8E"
+                       VerticalAlignment="Center"
+                       IsVisible="{TemplateBinding ShowFasteners}" />
+
+              <TextBlock Grid.Column="1"
+                         Text="{TemplateBinding Title}"
+                         HorizontalAlignment="Center"
+                         FontSize="15"
+                         FontWeight="Bold"
+                         Foreground="{TemplateBinding HeaderForegroundBrush}" />
+
+              <Ellipse Grid.Column="2"
+                       Width="8"
+                       Height="8"
+                       Fill="#858B8E"
+                       VerticalAlignment="Center"
+                       IsVisible="{TemplateBinding ShowFasteners}" />
+            </Grid>
+          </Border>
+
+          <Grid Grid.Row="1"
+                ColumnDefinitions="Auto,*"
+                ColumnSpacing="14"
+                Margin="14,12">
+            <Border Width="62"
+                    Height="62"
+                    Background="#F8F7EE"
+                    BorderBrush="#111315"
+                    BorderThickness="3"
+                    CornerRadius="31">
+              <TextBlock Text="{TemplateBinding IconGlyph}"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         FontSize="32"
+                         FontWeight="Bold"
+                         Foreground="#111315" />
+            </Border>
+
+            <TextBlock Grid.Column="1"
+                       Text="{TemplateBinding Text}"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       Foreground="#17191B" />
+          </Grid>
+        </Grid>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:BoltedDataPlate}"
+              TargetType="controls:BoltedDataPlate">
+  <Setter Property="MinWidth" Value="300" />
+  <Setter Property="MinHeight" Value="180" />
+  <Setter Property="Padding" Value="20" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="{TemplateBinding PlateBrush}"
+              BorderBrush="{TemplateBinding PlateEdgeBrush}"
+              BorderThickness="4"
+              CornerRadius="3"
+              Padding="5">
+        <Grid>
+          <Ellipse Width="9"
+                   Height="9"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Fill="#858B8E"
+                   Stroke="#17191B"
+                   StrokeThickness="1"
+                   IsVisible="{TemplateBinding ShowFasteners}" />
+          <Ellipse Width="9"
+                   Height="9"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   Fill="#858B8E"
+                   Stroke="#17191B"
+                   StrokeThickness="1"
+                   IsVisible="{TemplateBinding ShowFasteners}" />
+          <Ellipse Width="9"
+                   Height="9"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Bottom"
+                   Fill="#858B8E"
+                   Stroke="#17191B"
+                   StrokeThickness="1"
+                   IsVisible="{TemplateBinding ShowFasteners}" />
+          <Ellipse Width="9"
+                   Height="9"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Fill="#858B8E"
+                   Stroke="#17191B"
+                   StrokeThickness="1"
+                   IsVisible="{TemplateBinding ShowFasteners}" />
+
+          <Grid Margin="{TemplateBinding Padding}"
+                RowDefinitions="Auto,Auto,*,Auto"
+                RowSpacing="5">
+            <TextBlock Text="{TemplateBinding Title}"
+                       HorizontalAlignment="Center"
+                       FontSize="15"
+                       FontWeight="Bold"
+                       Foreground="{TemplateBinding PlateForegroundBrush}" />
+
+            <TextBlock Grid.Row="1"
+                       Text="{TemplateBinding Subtitle}"
+                       HorizontalAlignment="Center"
+                       FontSize="10"
+                       Foreground="{TemplateBinding PlateForegroundBrush}" />
+
+            <ContentPresenter Grid.Row="2"
+                              Margin="0,8"
+                              Content="{TemplateBinding Content}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+            <TextBlock Grid.Row="3"
+                       Text="{TemplateBinding Identifier}"
+                       HorizontalAlignment="Right"
+                       FontFamily="Cascadia Mono,Consolas,monospace"
+                       FontSize="9"
+                       Foreground="{TemplateBinding PlateForegroundBrush}" />
+          </Grid>
+        </Grid>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+  
+<ControlTheme x:Key="{x:Type controls:AlarmIndicatorPanel}"
+              TargetType="controls:AlarmIndicatorPanel">
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#454A4E"
+              BorderBrush="#17191B"
+              BorderThickness="5"
+              CornerRadius="3"
+              Padding="5">
+        <Border BorderBrush="#969DA1"
+                BorderThickness="1"
+                CornerRadius="2">
+          <Grid RowDefinitions="Auto,*">
+            <Border Background="#292C2F"
+                    BorderBrush="#17191B"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,9">
+              <Grid ColumnDefinitions="*,Auto,Auto"
+                    ColumnSpacing="9">
+                <TextBlock Text="{TemplateBinding Title}"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           Foreground="#E5E7DE" />
+
+                <Grid Grid.Column="1"
+                      Width="10"
+                      Height="10"
+                      IsVisible="{TemplateBinding ShowFasteners}">
+                  <Ellipse Fill="#858B8E"
+                           Stroke="#17191B"
+                           StrokeThickness="1" />
+                  <Border Height="1"
+                          Width="5"
+                          Background="#4B5052"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center" />
+                </Grid>
+
+                <Grid Grid.Column="2"
+                      Width="10"
+                      Height="10"
+                      IsVisible="{TemplateBinding ShowFasteners}">
+                  <Ellipse Fill="#858B8E"
+                           Stroke="#17191B"
+                           StrokeThickness="1" />
+                  <Border Height="1"
+                          Width="5"
+                          Background="#4B5052"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center" />
+                </Grid>
+              </Grid>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Padding="{TemplateBinding PanelPadding}">
+              <ItemsControl
+                  ItemsSource="{Binding Indicators, RelativeSource={RelativeSource TemplatedParent}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <UniformGrid
+                        Columns="{Binding Columns, RelativeSource={RelativeSource AncestorType=controls:AlarmIndicatorPanel}}"
+                        ColumnSpacing="{Binding HorizontalGap, RelativeSource={RelativeSource AncestorType=controls:AlarmIndicatorPanel}}"
+                        RowSpacing="{Binding VerticalGap, RelativeSource={RelativeSource AncestorType=controls:AlarmIndicatorPanel}}" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
+            </Border>
+          </Grid>
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
   </Styles.Resources>
 
   <Style Selector="controls|EngravedLabel[Variant=Red]">

@@ -7,10 +7,10 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageId>IndustrialControls.Avalonia</PackageId>
-    <Version>0.6.2</Version>
+    <Version>0.7.3</Version>
     <Authors>Emilie Rollandin</Authors>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
-    <PackageTags>avalonia;controls;industrial;hmi;gauge;led;operator;switch;slider;trend;oscilloscope;recorder</PackageTags>
+    <PackageTags>avalonia;controls;industrial;hmi;gauge;led;operator;switch;slider;trend;oscilloscope;recorder;alarm;annunciator;placard;nameplate</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
