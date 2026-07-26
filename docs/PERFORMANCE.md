@@ -78,3 +78,10 @@ The benchmark includes a 100,000-sample render-plan diagnostic.
 
 This prevents point-count assumptions from being used as a proxy for trace
 continuity.
+
+
+## Final strip-chart scale contract
+
+`TimeWindowSeconds` is the authoritative horizontal time span and
+`MajorGridSeconds` is the authoritative temporal grid interval. No physical
+screen-millimetre conversion is claimed by the control.

@@ -40,5 +40,17 @@
     <None Include="..\..\src\IndustrialControls.Avalonia\Controls\StripChartRecorder.cs"
           Link="Assets\StripChartRecorder.cs"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\IndustrialToggleSwitch.cs"
+          Link="Assets\IndustrialToggleSwitch.cs"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\IndustrialRockerSwitch.cs"
+          Link="Assets\IndustrialRockerSwitch.cs"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\scripts\validate-package-consumer.ps1"
+          Link="Assets\validate-package-consumer.ps1"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\README.md"
+          Link="Assets\README.md"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

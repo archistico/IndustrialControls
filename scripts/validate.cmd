@@ -22,8 +22,11 @@ if errorlevel 1 goto :fail
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-package.ps1
 if errorlevel 1 goto :fail
 
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-package-consumer.ps1
+if errorlevel 1 goto :fail
+
 echo.
-echo M8 RC6-B VALIDATION PASSED
+echo M8 RC6-D VALIDATION PASSED
 popd
 exit /b 0
 

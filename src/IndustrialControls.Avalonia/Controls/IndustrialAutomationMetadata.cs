@@ -130,26 +130,44 @@ internal static class IndustrialAutomationMetadata
         string prefix,
         string name)
     {
-        var builder = new StringBuilder(prefix.Length + name.Length + 1);
+        var builder =
+            new StringBuilder(
+                prefix.Length +
+                name.Length +
+                8);
+
         builder.Append(prefix);
         builder.Append('.');
+
+        var hasNameCharacter = false;
+        var separatorPending = false;
 
         foreach (var character in name)
         {
             if (char.IsLetterOrDigit(character))
             {
+                if (separatorPending &&
+                    hasNameCharacter)
+                {
+                    builder.Append('-');
+                }
+
                 builder.Append(character);
+                hasNameCharacter = true;
+                separatorPending = false;
             }
-            else if (builder.Length > 0 &&
-                     builder[^1] != '-')
+            else if (hasNameCharacter)
             {
-                builder.Append('-');
+                separatorPending = true;
             }
         }
 
-        return builder
-            .ToString()
-            .TrimEnd('-');
+        if (!hasNameCharacter)
+        {
+            builder.Append("Control");
+        }
+
+        return builder.ToString();
     }
 
     private sealed class MetadataState

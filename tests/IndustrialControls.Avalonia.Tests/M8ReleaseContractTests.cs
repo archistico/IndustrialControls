@@ -14,7 +14,7 @@ public sealed class M8ReleaseContractTests
             "IndustrialControls.Avalonia",
             IndustrialControlsRelease.ProductName);
         Assert.Equal(
-            "1.0.0-rc.8",
+            "1.0.0-rc.9",
             IndustrialControlsRelease.Version);
         Assert.Equal(
             "avares://IndustrialControls.Avalonia/Themes/IndustrialControlsTheme.axaml",

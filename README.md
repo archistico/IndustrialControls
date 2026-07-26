@@ -46,7 +46,7 @@ il file generato.
 Esempio con una sorgente locale configurata:
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.8
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.9
 ```
 
 ### Da riferimento al progetto
@@ -739,7 +739,6 @@ I campioni vengono conservati in un buffer circolare limitato da
     Maximum="100"
     TimeWindowSeconds="45"
     MaxSamplesPerSeries="600"
-    PaperSpeed="10"
     MajorGridSeconds="10"
     IsRunning="True" />
 ```
@@ -749,9 +748,10 @@ serie molto densa non genera un segmento per ogni campione, ma mantiene un
 budget prossimo a un punto per pixel, preservando campioni incerti e
 interruzioni dovute a qualità `Bad` o `Unavailable`.
 
-`MajorGridSeconds` controlla realmente la spaziatura della griglia temporale.
-`PaperSpeed` resta una velocità nominale visualizzata nell'intestazione; la
-finestra temporale sullo schermo è determinata da `TimeWindowSeconds`.
+`TimeWindowSeconds` determina la porzione di storia visibile e
+`MajorGridSeconds` la spaziatura della griglia temporale. L'intestazione mostra
+direttamente questi due valori, evitando parametri nominali che non influenzano
+la geometria del controllo.
 
 #### OscilloscopeDisplay
 
@@ -980,10 +980,13 @@ Il gate esegue:
 4. suite completa dei test tramite Microsoft Testing Platform;
 5. controllo del codice di uscita di ogni comando;
 6. creazione del pacchetto NuGet;
-7. verifica del contenuto del pacchetto.
+7. verifica di contenuto e versione del pacchetto;
+8. creazione, restore, build ed esecuzione di un'applicazione consumer che usa
+   il pacchetto appena generato.
 
-Qualunque errore interrompe immediatamente lo script: il messaggio finale di
-successo viene stampato soltanto dopo test e package validation completati.
+Qualunque errore interrompe immediatamente lo script. Il messaggio finale viene
+stampato soltanto dopo il vero utilizzo del `.nupkg` da parte del progetto
+consumer temporaneo.
 
 Comandi separati:
 

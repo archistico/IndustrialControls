@@ -7,11 +7,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageId>IndustrialControls.Avalonia</PackageId>
-    <Version>1.0.0-rc.8</Version>
+    <Version>1.0.0-rc.9</Version>
     <Authors>Emilie Rollandin</Authors>
     <Title>IndustrialControls.Avalonia</Title>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
-    <PackageReleaseNotes>Eighth 1.0 release candidate: cached responsive marquee scrolling, decimated allocation-stable strip-chart rendering, render diagnostics and benchmarks, and a common interlocked HMI visual treatment.</PackageReleaseNotes>
+    <PackageReleaseNotes>Ninth and final 1.0 release candidate: final API cleanup, removal of decorative paper-speed API, shared bistable-switch behavior, hardened automation IDs, package-consumer smoke validation, and release-ready documentation.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -34,5 +34,8 @@
     <None Include="..\..\docs\PUBLIC_API.md" Pack="true" PackagePath="docs\" Link="PUBLIC_API.md" />
     <None Include="..\..\docs\ACCESSIBILITY.md" Pack="true" PackagePath="docs\" Link="ACCESSIBILITY.md" />
     <None Include="..\..\docs\DEMO_CATALOG.md" Pack="true" PackagePath="docs\" Link="DEMO_CATALOG.md" />
+    <None Include="..\..\docs\CONTROL_CATALOG.md" Pack="true" PackagePath="docs\" Link="CONTROL_CATALOG.md" />
+    <None Include="..\..\docs\PERFORMANCE.md" Pack="true" PackagePath="docs\" Link="PERFORMANCE.md" />
+    <None Include="..\..\docs\RELEASE_CHECKLIST.md" Pack="true" PackagePath="docs\" Link="RELEASE_CHECKLIST.md" />
   </ItemGroup>
 </Project>

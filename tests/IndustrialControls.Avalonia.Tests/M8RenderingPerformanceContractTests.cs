@@ -234,7 +234,7 @@ public sealed class M8RenderingPerformanceContractTests
     }
 
     [Fact]
-    public void StripChartDocumentationDoesNotUseUnresolvedInheritedCref()
+    public void StripChartSourceDoesNotUseUnresolvedInheritedCref()
     {
         var source =
             ReadAsset(
@@ -245,7 +245,11 @@ public sealed class M8RenderingPerformanceContractTests
             source);
 
         Assert.Contains(
-            "<c>TimeWindowSeconds</c>",
+            "TimeWindowSeconds.ToString",
+            source);
+
+        Assert.Contains(
+            "MajorGridSeconds.ToString",
             source);
     }
 

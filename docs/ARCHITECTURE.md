@@ -101,3 +101,16 @@ The release gate separates:
 - package-content inspection.
 
 The benchmark project has no third-party dependencies and is not a correctness gate.
+
+
+## Final candidate API cleanup
+
+`IndustrialToggleSwitch` and `IndustrialRockerSwitch` keep separate public
+types and templates while sharing internal behavior through
+`IndustrialBistableSwitchBehavior`. This avoids a new public base class before
+the stable API lock.
+
+The release gate now validates both package structure and actual package
+consumption. A temporary standalone application restores the generated
+candidate package, builds against its public API and executes a deterministic
+smoke scenario.

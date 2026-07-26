@@ -144,7 +144,7 @@ Oscilloscopio a singola traccia con scala verticale, trigger, base dei tempi, ca
 
 ## StripChartRecorder
 
-Registratore multicanale a carta continua. Accetta nuovi campioni solo quando `IsRunning` è attivo.
+Registratore multicanale a carta continua. Accetta nuovi campioni solo quando `IsRunning` è attivo, mostra la finestra configurata da `TimeWindowSeconds`, usa `MajorGridSeconds` per la griglia e decima le serie dense in funzione della larghezza del plot.
 
 ## SignalQualityIndicator
 

@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.8`
+Version: `1.0.0-rc.9`
 
 The following control families are release-gated:
 
@@ -105,3 +105,31 @@ Use `PriorityColor` in tests and non-rendering logic.
 
 Bindings update when indicators are added, removed, activated, acknowledged,
 returned or reset.
+
+
+## Final candidate API decisions
+
+### StripChartRecorder
+
+The visible time scale is controlled by:
+
+- `TimeWindowSeconds`;
+- `MajorGridSeconds`.
+
+The earlier release-candidate-only `PaperSpeed` property was removed because it
+did not affect rendering and could mislead applications into assuming a
+physical millimetre-to-time conversion.
+
+### Bistable switches
+
+`IndustrialToggleSwitch` and `IndustrialRockerSwitch` retain their existing
+public properties and methods. Their shared state, interlock and deterministic
+toggle behavior is implemented by an internal helper and does not add a new
+public base class.
+
+### Automation IDs
+
+Automation IDs use the configured control prefix plus a normalized
+alphanumeric name. Repeated separators are collapsed, leading and trailing
+separators are discarded, and names without alphanumeric characters use the
+stable `Control` fallback.

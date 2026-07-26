@@ -3,7 +3,7 @@
 ## Install
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.8
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.9
 ```
 
 ## Include the theme
@@ -64,3 +64,17 @@ trend.AddSample(
 ```
 
 This avoids repeated name lookup and is the preferred path for dense acquisition.
+
+
+## Package-consumer smoke gate
+
+The repository validates the generated package through:
+
+```powershell
+.\scripts\validate-package-consumer.ps1
+```
+
+The script creates a temporary standalone `.NET 10` application, restores
+`IndustrialControls.Avalonia` from `artifacts\packages`, builds it and runs a
+small public-API scenario. This confirms that the package is consumable without
+a project reference.

@@ -2,11 +2,11 @@
 
 ## Baseline ufficiale
 
-M7 Hotfix 3 / versione `0.7.3` è la baseline validata.
+M8 RC6-C Hotfix 2 / versione `1.0.0-rc.8` è la baseline validata.
 
 ## Candidate corrente
 
-M8 RC6-C — Rendering & Performance Hardening / versione `1.0.0-rc.8`.
+M8 RC6-D — Final API Cleanup & Release Gate / versione `1.0.0-rc.9`.
 
 ## Contenuto
 
@@ -33,7 +33,8 @@ Risultati richiesti:
 - build Release senza warning;
 - suite completa superata;
 - package `.nupkg` e `.snupkg` generati;
-- contenuto del package validato;
+- contenuto e versione del package validati;
+- package consumato da un'applicazione standalone;
 - demo verificata manualmente;
 - navigazione da tastiera verificata.
 
@@ -252,3 +253,57 @@ The renderer was already preserving the discontinuities. The internal
 diagnostic contract now reports quality breaks and uncertain points directly,
 and the regression test validates those values. Production rendering is
 unchanged.
+
+
+## M8 RC6-D candidate
+
+Final release-candidate cleanup based on validated RC6-C Hotfix 2:
+
+- removed `StripChartRecorder.PaperSpeed`, which was decorative and did not
+  affect geometry;
+- the strip-chart header now reports the actual time window and grid interval;
+- toggle and rocker controls share internal bistable behavior without changing
+  their public contracts;
+- automation IDs now collapse separators and provide a deterministic fallback;
+- package inspection validates the exact expected version and additional
+  release documentation;
+- a standalone consumer project restores, builds and runs against the generated
+  package;
+- PowerShell and CMD gates now end with `M8 RC6-D VALIDATION PASSED`.
+
+After validation, the only planned code change is the stable-version promotion
+from `1.0.0-rc.9` to `1.0.0`.
+
+
+## M8 RC6-D Hotfix 1
+
+Compile-only test correction:
+
+- escaped the XML attribute quotes in the package-consumer source assertion;
+- no production, package or release-gate behavior changed;
+- package version remains `1.0.0-rc.9`.
+
+
+## M8 RC6-D Hotfix 2
+
+Test-contract correction:
+
+- the old test required `<c>TimeWindowSeconds</c>`, which had legitimately
+  disappeared when the decorative `PaperSpeed` XML comment was removed;
+- the test now verifies that no unresolved `cref` exists and that the
+  strip-chart header uses the actual `TimeWindowSeconds` and
+  `MajorGridSeconds` values;
+- production code and package version are unchanged.
+
+
+## M8 RC6-D Hotfix 3
+
+Package-consumer gate correction:
+
+- the temporary consumer project is generated below the repository and was
+  inheriting the parent `Directory.Packages.props`;
+- the generated project now sets
+  `<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>`;
+- its explicit `PackageReference` version therefore validates the exact
+  candidate package without conflicting with repository CPM;
+- library, public API and package version are unchanged.

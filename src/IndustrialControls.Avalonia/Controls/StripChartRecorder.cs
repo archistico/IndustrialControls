@@ -60,12 +60,6 @@ public sealed class StripChartRecorder : TimeSeriesControlBase
             nameof(IsRunning),
             true);
 
-    public static readonly StyledProperty<double> PaperSpeedProperty =
-        AvaloniaProperty.Register<StripChartRecorder, double>(
-            nameof(PaperSpeed),
-            10.0,
-            validate: value => value > 0);
-
     public static readonly StyledProperty<double> MajorGridSecondsProperty =
         AvaloniaProperty.Register<StripChartRecorder, double>(
             nameof(MajorGridSeconds),
@@ -76,7 +70,6 @@ public sealed class StripChartRecorder : TimeSeriesControlBase
     {
         AffectsRender<StripChartRecorder>(
             IsRunningProperty,
-            PaperSpeedProperty,
             MajorGridSecondsProperty);
     }
 
@@ -84,17 +77,6 @@ public sealed class StripChartRecorder : TimeSeriesControlBase
     {
         get => GetValue(IsRunningProperty);
         set => SetValue(IsRunningProperty, value);
-    }
-
-    /// <summary>
-    /// Velocità nominale riportata nell'intestazione del registratore.
-    /// La relazione geometrica con la finestra temporale viene definita
-    /// separatamente da <c>TimeWindowSeconds</c>.
-    /// </summary>
-    public double PaperSpeed
-    {
-        get => GetValue(PaperSpeedProperty);
-        set => SetValue(PaperSpeedProperty, value);
     }
 
     public double MajorGridSeconds
@@ -634,11 +616,15 @@ public sealed class StripChartRecorder : TimeSeriesControlBase
             IsRunning
                 ? "RUN"
                 : "PAUSE",
-            " | ",
-            PaperSpeed.ToString(
+            " | WINDOW ",
+            TimeWindowSeconds.ToString(
                 "0.##",
                 CultureInfo.InvariantCulture),
-            " mm/s");
+            " s | GRID ",
+            MajorGridSeconds.ToString(
+                "0.##",
+                CultureInfo.InvariantCulture),
+            " s");
 
         var status =
             new FormattedText(

@@ -36,7 +36,7 @@
 
 Release candidate corrente:
 
-- versione `1.0.0-rc.8`;
+- versione `1.0.0-rc.9`;
 - contratto API pubblico;
 - metadati di accessibilità;
 - live region per allarmi;
@@ -49,11 +49,11 @@ Release candidate corrente:
 - ispezione automatica del pacchetto;
 - documentazione di integrazione e rilascio.
 
-Stato: **CANDIDATE — RC5**
+Stato: **CANDIDATE — RC6-D**
 
 ## Gate finale
 
-Dopo la validazione locale di M8 RC1 verrà preparata la release stabile `1.0.0`.
+Dopo la validazione locale di RC6-D verrà preparata la release stabile `1.0.0`.
 
 
 ### RC2 — Allocation & update-path optimization
@@ -124,7 +124,7 @@ Gestione pseudo-classi tramite `IPseudoClasses.Add/Remove`.
 - fallback accessibilità senza SynchronizationContext;
 - gate validate fail-fast e compatibile con MTP.
 
-Stato: **CANDIDATE**
+Stato: **VALIDATED**
 
 
 ### RC6-B Hotfix 1
@@ -142,7 +142,7 @@ Correzione literal C# nel test del gate di validazione.
 - benchmark render-plan da 100.000 campioni;
 - pseudo-classe interlocked comune.
 
-Stato: **CANDIDATE**
+Stato: **VALIDATED — HOTFIX 2**
 
 
 ### RC6-C Hotfix 1
@@ -153,3 +153,32 @@ Correzione `cref` XML della proprietà ereditata `TimeWindowSeconds`.
 ### RC6-C Hotfix 2
 
 Diagnostica esplicita delle discontinuità e dei punti incerti nello strip chart.
+
+
+### RC6-D — Final API Cleanup & Release Gate
+
+- rimozione dell'API decorativa `PaperSpeed`;
+- header strip-chart basato su finestra e griglia reali;
+- comportamento bistabile condiviso internamente;
+- normalizzazione robusta degli automation ID;
+- validazione esatta del `.nupkg`;
+- smoke test con applicazione consumer indipendente;
+- checklist finale e documentazione API riallineate.
+
+Stato: **CANDIDATE**
+
+
+### RC6-D Hotfix 1
+
+Correzione del literal C# nel test del `PackageReference` consumer.
+
+
+### RC6-D Hotfix 2
+
+Riallineamento del test XML-doc al contratto finale dello strip chart.
+
+
+### RC6-D Hotfix 3
+
+Isolamento del progetto consumer temporaneo dalla Central Package Management
+del repository.

@@ -9,32 +9,43 @@ namespace IndustrialControls.Avalonia.Controls;
 public sealed class IndustrialRockerSwitch : ToggleButton
 {
     public static readonly StyledProperty<string> TitleProperty =
-        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(nameof(Title), string.Empty);
+        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(
+            nameof(Title),
+            string.Empty);
 
     public static readonly StyledProperty<string> OnCaptionProperty =
-        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(nameof(OnCaption), "ON");
+        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(
+            nameof(OnCaption),
+            "ON");
 
     public static readonly StyledProperty<string> OffCaptionProperty =
-        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(nameof(OffCaption), "OFF");
+        AvaloniaProperty.Register<IndustrialRockerSwitch, string>(
+            nameof(OffCaption),
+            "OFF");
 
     public static readonly StyledProperty<bool> IsInterlockedProperty =
-        AvaloniaProperty.Register<IndustrialRockerSwitch, bool>(nameof(IsInterlocked));
+        AvaloniaProperty.Register<IndustrialRockerSwitch, bool>(
+            nameof(IsInterlocked));
 
     public static readonly StyledProperty<string> InterlockReasonProperty =
         AvaloniaProperty.Register<IndustrialRockerSwitch, string>(
-            nameof(InterlockReason), "SWITCHING NOT PERMITTED");
+            nameof(InterlockReason),
+            "SWITCHING NOT PERMITTED");
 
     public static readonly DirectProperty<IndustrialRockerSwitch, bool> IsOnProperty =
         AvaloniaProperty.RegisterDirect<IndustrialRockerSwitch, bool>(
-            nameof(IsOn), control => control.IsOn);
+            nameof(IsOn),
+            control => control.IsOn);
 
     public static readonly DirectProperty<IndustrialRockerSwitch, string> StateTextProperty =
         AvaloniaProperty.RegisterDirect<IndustrialRockerSwitch, string>(
-            nameof(StateText), control => control.StateText);
+            nameof(StateText),
+            control => control.StateText);
 
     public static readonly DirectProperty<IndustrialRockerSwitch, string> StatusTextProperty =
         AvaloniaProperty.RegisterDirect<IndustrialRockerSwitch, string>(
-            nameof(StatusText), control => control.StatusText);
+            nameof(StatusText),
+            control => control.StatusText);
 
     private bool _isOn;
     private string _stateText = "OFF";
@@ -95,35 +106,39 @@ public sealed class IndustrialRockerSwitch : ToggleButton
     public bool IsOn
     {
         get => _isOn;
-        private set => SetAndRaise(IsOnProperty, ref _isOn, value);
+        private set => SetAndRaise(
+            IsOnProperty,
+            ref _isOn,
+            value);
     }
 
     public string StateText
     {
         get => _stateText;
-        private set => SetAndRaise(StateTextProperty, ref _stateText, value);
+        private set => SetAndRaise(
+            StateTextProperty,
+            ref _stateText,
+            value);
     }
 
     public string StatusText
     {
         get => _statusText;
-        private set => SetAndRaise(StatusTextProperty, ref _statusText, value);
+        private set => SetAndRaise(
+            StatusTextProperty,
+            ref _statusText,
+            value);
     }
 
-    public bool TryToggle()
-    {
-        if (IsInterlocked)
-        {
-            return false;
-        }
-
-        IsChecked = IsChecked != true;
-        return true;
-    }
+    public bool TryToggle() =>
+        IndustrialBistableSwitchBehavior.TryToggle(
+            this,
+            IsInterlocked);
 
     protected override void OnClick()
     {
-        if (IsInterlocked)
+        if (!IndustrialBistableSwitchBehavior.CanInvoke(
+                IsInterlocked))
         {
             return;
         }
@@ -133,11 +148,17 @@ public sealed class IndustrialRockerSwitch : ToggleButton
 
     private void RefreshState()
     {
-        IsOn = IsChecked == true;
-        StateText = IsOn ? OnCaption : OffCaption;
-        StatusText = IsInterlocked
-            ? string.Concat("INTERLOCK — ", InterlockReason)
-            : "SWITCHING AVAILABLE";
+        var state =
+            IndustrialBistableSwitchBehavior.Evaluate(
+                IsChecked,
+                OnCaption,
+                OffCaption,
+                IsInterlocked,
+                InterlockReason);
+
+        IsOn = state.IsOn;
+        StateText = state.StateText;
+        StatusText = state.StatusText;
 
         if (IsInterlocked)
         {
@@ -151,7 +172,8 @@ public sealed class IndustrialRockerSwitch : ToggleButton
         IndustrialAutomationMetadata.Apply(
             this,
             Title,
-            string.Concat("State ", StateText, "; ", StatusText),
+            IndustrialBistableSwitchBehavior
+                .BuildAutomationHelp(state),
             "IndustrialRockerSwitch");
     }
 }

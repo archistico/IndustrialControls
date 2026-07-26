@@ -573,7 +573,7 @@
               </industrial:IndustrialScreen>
 
               <industrial:IndustrialScreen Title="STRIP-CHART RECORDER"
-                                           StatusText="PAPER FEED"
+                                           StatusText="TIME WINDOW"
                                            Height="330">
                 <industrial:StripChartRecorder x:Name="Recorder"
                                                Title="THERMAL PROCESS RECORDER"
@@ -582,7 +582,6 @@
                                                TimeWindowSeconds="45"
                                                MaxSamplesPerSeries="600"
                                                AutoScale="False"
-                                               PaperSpeed="10"
                                                MajorGridSeconds="10"
                                                IsRunning="True" />
               </industrial:IndustrialScreen>
