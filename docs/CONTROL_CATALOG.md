@@ -132,3 +132,47 @@ Indicatore centralizzato di permissivi soddisfatti, stato consentito/interblocca
 ## IndustrialRockerSwitch
 
 Interruttore ON/OFF a bilanciere in stile pannello industriale, con simbologia `I / O`, stato bistabile e interlock.
+
+
+## TrendChart
+
+Trend multicanale con finestra temporale, griglia, legenda, cursore, auto-scaling e qualità dei campioni.
+
+## OscilloscopeDisplay
+
+Oscilloscopio a singola traccia con scala verticale, trigger, base dei tempi, capacità limitata e qualità del segnale.
+
+## StripChartRecorder
+
+Registratore multicanale a carta continua. Accetta nuovi campioni solo quando `IsRunning` è attivo.
+
+## SignalQualityIndicator
+
+Indicatore visuale per stati `Good`, `Uncertain`, `Bad` e `Unavailable`.
+
+## IndustrialScreen
+
+Cornice riutilizzabile per monitor operativi, con titolo, stato online e sovrapposizione scanline opzionale.
+
+## TimeSeriesControlBase
+
+Contratto comune per serie temporali, capacità, range, auto-scaling, visibilità e gestione dei campioni.
+
+
+# Planned M7 controls
+
+## BacklitAlarmIndicator
+
+Indicatore di allarme retroilluminato con testo, priorità, lampeggio, riconoscimento e stato latched.
+
+## AlarmIndicatorPanel
+
+Matrice configurabile di indicatori di allarme retroilluminati.
+
+## SafetyPlacard
+
+Pannello statico con viti agli angoli, icona e testo di attenzione o sicurezza.
+
+## BoltedDataPlate
+
+Targhetta statica per dati tecnici, valori nominali, identificativi o istruzioni, con fissaggi agli angoli.

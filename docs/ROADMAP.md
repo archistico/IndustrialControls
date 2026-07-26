@@ -22,31 +22,44 @@
 
 ## M5 — Operator controls
 
-Candidate corrente:
-
-- `IndustrialSlider`;
-- `RotaryKnob`;
-- `SelectorSwitch`;
-- `IndustrialToggleSwitch`;
-- `SpringReturnSwitch`;
-- `InterlockIndicator`;
-- interazione via mouse, rotella e tastiera dove applicabile;
-- interlock con motivo esplicito;
-- permissivi centralizzati;
-- demo interattiva;
-- test di contratto.
-
-Stato: **CANDIDATE — HOTFIX 3**
+**VALIDATED — HOTFIX 3**
 
 ## M6 — Trends and screens
 
-- trend multicanale;
-- asse temporale;
-- griglia e cursore;
-- oscilloscopio;
-- registratore a carta;
-- stato qualità del segnale.
+Candidate corrente:
 
-## M7 — Stabilization and release
+- `TimeSeriesControlBase`;
+- `TrendChart`;
+- `OscilloscopeDisplay`;
+- `StripChartRecorder`;
+- `SignalQualityIndicator`;
+- `IndustrialScreen`;
+- serie multicanale;
+- capacità limitata e trimming deterministico;
+- cursore temporale;
+- auto-scaling;
+- qualità dei campioni;
+- demo dinamica;
+- test di contratto.
 
-API review, rendering test, benchmark e NuGet 1.0.
+Stato: **CANDIDATE — HOTFIX 2**
+
+## M7 — Alarm Indicators & Static Panel Elements
+
+- indicatori di allarme retroilluminati;
+- pannello di indicatori di allarme;
+- stati attivo, riconosciuto, rientrato e latched;
+- pannelli statici con viti agli angoli;
+- icone di attenzione e sicurezza;
+- targhette dati imbullonate;
+- varianti di materiale e colore;
+- demo e test dedicati.
+
+## M8 — Stabilization and release
+
+- revisione API pubbliche;
+- accessibilità e navigazione tastiera;
+- rendering test;
+- benchmark;
+- documentazione NuGet;
+- pacchetto 1.0.

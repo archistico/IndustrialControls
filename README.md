@@ -2,23 +2,26 @@
 
 Libreria Avalonia riutilizzabile per interfacce industriali e sale controllo, con estetica anni Novanta.
 
-## M5 Hotfix 3
+## Baseline M6
 
-Include le milestone M0–M4 validate e aggiunge:
+Include le milestone M0–M5 validate e aggiunge:
 
-- `IndustrialSlider`;
-- `RotaryKnob`;
-- `SelectorSwitch`;
-- `IndustrialToggleSwitch`;
-- `SpringReturnSwitch`;
-- `InterlockIndicator`;
-- slider con `Track` e `Thumb` industriali;
-- manopola vettoriale con mouse, rotella e tastiera;
-- selettori da due a cinque posizioni;
-- comando bistabile ON/OFF;
-- comando momentaneo con ritorno automatico al centro;
-- interlock e permissivi espliciti;
-- demo interattiva;
+- `TimeSeriesControlBase`;
+- `SignalTraceSeries`;
+- `SignalSample`;
+- `SignalQuality`;
+- `TrendChart`;
+- `OscilloscopeDisplay`;
+- `StripChartRecorder`;
+- `SignalQualityIndicator`;
+- `IndustrialScreen`;
+- trend multicanale;
+- cursore temporale e lettura dei valori;
+- auto-scaling opzionale;
+- qualità dei campioni;
+- oscilloscopio con trigger;
+- registratore a carta continua;
+- demo dinamica e deterministica;
 - test xUnit v3 con Microsoft Testing Platform.
 
 ## Validazione
@@ -35,30 +38,37 @@ dotnet run --project src/IndustrialControls.Avalonia.Demo
 
 ## Stato
 
-M0–M4 Hotfix 4: **VALIDATED**  
-M5 Hotfix 3: **CANDIDATE**
+M0–M5 Hotfix 3: **VALIDATED**  
+M6 Hotfix 2: **CANDIDATE**
 
 
-## Hotfix 1 visual refinements
+## M6 Hotfix 1
 
-- `RotaryKnob`: il valore numerico verde è ora sotto la manopola e sopra lo stato;
-- `RotaryKnobDial`: aggiunta indicazione colorata del livello attuale;
-- `SelectorSwitch`: la didascalia della posizione selezionata è stata abbassata;
-- `ToggleSwitchDial`: leva ridisegnata in stile losanga, più grande e con movimento quasi verticale;
-- versione libreria aggiornata a `0.5.3`.
-
-
-## Hotfix 2 visual refinements
-
-- `IndustrialToggleSwitch` è stato ridisegnato come vero interruttore a leva, ispirato al riferimento allegato;
-- nuovo `IndustrialRockerSwitch` in stile ON/OFF a bilanciere con simbologia `I / O`;
-- `SelectorSwitchDial` e `SpringReturnSwitch` hanno etichette e testi con più margine dal bordo;
-- la demo mostra ora entrambi i tipi di interruttore;
-- versione libreria aggiornata a `0.5.3`.
+- `SignalQualityIndicator`: lampada grafica ridisegnata come luce circolare dedicata, senza deformazioni;
+- `TrendChart`: resa dei campioni aggiornata con punti al posto delle marcature a X;
+- `TrendChart`: decimazione grafica automatica quando i campioni visibili sono più densi dei pixel disponibili;
+- `TimeSeriesControlBase`: se `MaxSamplesPerSeries` viene abbassato, le serie esistenti vengono subito ritagliate alla nuova capacità;
+- memoria dei campioni sempre limitata da capacità per serie.
 
 
-## Hotfix 3 layout refinements
+## M6 Hotfix 2
 
-- `SelectorSwitchDial`: etichette delle posizioni nuovamente all'esterno del quadrante;
-- `SpringReturnSwitch`: `LOWER`, `HOLD` e `RAISE` all'esterno con margine maggiore;
-- `IndustrialToggleSwitch`: leva resa verticale, con stato alto/basso più coerente.
+- i punti del `TrendChart` sono ora cerchi pieni senza bordo;
+- anche i campioni `Bad` e `Unavailable` usano un marcatore circolare pieno;
+- nessuna modifica al limite di memoria o alla decimazione;
+- versione libreria `0.6.2`.
+
+## Prossima milestone
+
+### M7 — Alarm Indicators & Static Panel Elements
+
+Controlli previsti:
+
+- `BacklitAlarmIndicator`;
+- `AlarmIndicatorPanel`;
+- pannelli statici con viti agli angoli;
+- icone di sicurezza e avvertimento;
+- targhette dati imbullonate;
+- varianti di materiale, colore e livello di attenzione.
+
+La stabilizzazione e il rilascio 1.0 vengono spostati a M8.

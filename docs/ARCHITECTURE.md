@@ -47,3 +47,19 @@ I controlli operatore espongono proprietà Avalonia bindabili e metodi determini
 - `PressLeft`, `PressRight`, `Release`.
 
 I metodi restituiscono `false` quando un interlock impedisce il comando. Questa separazione consente di testare la semantica senza dipendere dagli eventi grafici.
+
+
+## M6 time-series architecture
+
+`TimeSeriesControlBase` possiede soltanto buffer e contratti di visualizzazione. Non avvia thread, timer o acquisizioni autonome.
+
+L'applicazione chiama esplicitamente:
+
+- `AddSeries`;
+- `AddSample`;
+- `SetSeriesVisibility`;
+- `ClearSamples`.
+
+`TrendChart` e `StripChartRecorder` condividono il modello delle serie, ma mantengono renderer distinti. `OscilloscopeDisplay` usa un buffer a singola traccia ottimizzato per finestre dense.
+
+La demo genera segnali sintetici tramite `DispatcherTimer`; questa dipendenza resta confinata nel progetto Demo.

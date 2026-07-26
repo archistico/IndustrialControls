@@ -741,6 +741,113 @@
   </Setter>
 </ControlTheme>
 
+  
+<ControlTheme x:Key="{x:Type controls:SignalQualityIndicator}"
+              TargetType="controls:SignalQualityIndicator">
+  <Setter Property="MinWidth" Value="250" />
+  <Setter Property="MinHeight" Value="88" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#191C1E"
+              BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="3"
+              CornerRadius="3"
+              Padding="10">
+        <Grid ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto"
+              ColumnSpacing="14"
+              RowSpacing="3">
+          <Grid Grid.RowSpan="2"
+                Width="42"
+                Height="42"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+            <Ellipse Fill="#101214"
+                     Stroke="#2C3135"
+                     StrokeThickness="3" />
+            <Ellipse Margin="5"
+                     Fill="#1A1F22"
+                     Stroke="#8D9398"
+                     StrokeThickness="1.5" />
+            <Ellipse Margin="9"
+                     Fill="{TemplateBinding QualityBrush}"
+                     Stroke="#0E1011"
+                     StrokeThickness="1.5" />
+          </Grid>
+
+          <TextBlock Grid.Column="1"
+                     Text="{TemplateBinding SignalName}"
+                     FontSize="11"
+                     FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+
+          <TextBlock Grid.Column="2"
+                     Text="{TemplateBinding QualityText}"
+                     FontSize="11"
+                     FontWeight="Bold"
+                     Foreground="{TemplateBinding QualityBrush}" />
+
+          <TextBlock Grid.Row="1"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Text="{TemplateBinding Source}"
+                     FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </Grid>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:IndustrialScreen}"
+              TargetType="controls:IndustrialScreen">
+  <Setter Property="Padding" Value="12" />
+  <Setter Property="MinHeight" Value="180" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#151819"
+              BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="6"
+              CornerRadius="5"
+              Padding="3">
+        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                BorderThickness="1"
+                CornerRadius="2">
+          <Grid RowDefinitions="Auto,*">
+            <Border Padding="10,7"
+                    Background="#202426"
+                    BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                    BorderThickness="0,0,0,2">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="{TemplateBinding Title}"
+                           FontSize="12"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource Industrial90.TextBrush}" />
+                <TextBlock Grid.Column="1"
+                           Text="{TemplateBinding StatusText}"
+                           FontSize="10"
+                           FontWeight="Bold"
+                           Foreground="{TemplateBinding StatusBrush}" />
+              </Grid>
+            </Border>
+
+            <Grid Grid.Row="1"
+                  Background="#080B0C">
+              <ContentPresenter Margin="{TemplateBinding Padding}"
+                                Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+              <Border IsHitTestVisible="False"
+                      IsVisible="{TemplateBinding ShowScanlines}"
+                      Background="#08FFFFFF" />
+            </Grid>
+          </Grid>
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
   </Styles.Resources>
 
   <Style Selector="controls|EngravedLabel[Variant=Red]">
