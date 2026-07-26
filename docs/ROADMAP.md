@@ -36,7 +36,7 @@
 
 Release candidate corrente:
 
-- versione `1.0.0-rc.2`;
+- versione `1.0.0-rc.5`;
 - contratto API pubblico;
 - metadati di accessibilità;
 - live region per allarmi;
@@ -49,7 +49,7 @@ Release candidate corrente:
 - ispezione automatica del pacchetto;
 - documentazione di integrazione e rilascio.
 
-Stato: **CANDIDATE — RC2**
+Stato: **CANDIDATE — RC5**
 
 ## Gate finale
 
@@ -65,3 +65,28 @@ Dopo la validazione locale di M8 RC1 verrà preparata la release stabile `1.0.0`
 - cache di pennelli, formati e label;
 - metadati di accessibilità coalescenti;
 - benchmark con bytes/operazione.
+
+
+### RC3 — Demo catalog & startup hardening
+
+- `FocusAdornerTemplate` corretto;
+- diagnostica di avvio;
+- finestra di fallback;
+- demo completa in sette schede;
+- test di copertura del catalogo.
+
+
+### RC4 — Lamps & LED visual refinement
+
+- marquee adattivo alla larghezza;
+- ingresso del testo dal bordo destro;
+- annunciatori legacy con palette neutra;
+- lente circolare esplicita;
+- cursore a mano sui controlli cliccabili.
+
+
+### RC5 — Dispatcher-independent alarm palette
+
+- `AlarmAnnunciator.PriorityColor`;
+- test palette non dipendente da `SolidColorBrush`;
+- rendering legacy invariato.

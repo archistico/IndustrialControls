@@ -4,11 +4,13 @@
     xmlns:controls="using:IndustrialControls.Avalonia.Controls">
 
   <Styles.Resources>
-    <ControlTemplate x:Key="Industrial90.FocusAdorner">
-      <Border BorderBrush="#F1F1DF"
+    <FocusAdornerTemplate x:Key="Industrial90.FocusAdorner">
+      <Border Margin="-3"
+              BorderBrush="#F1F1DF"
               BorderThickness="2"
-              CornerRadius="4" />
-    </ControlTemplate>
+              CornerRadius="4"
+              IsHitTestVisible="False" />
+    </FocusAdornerTemplate>
 <Color x:Key="Industrial90.PanelDarkColor">#292C2F</Color>
     <Color x:Key="Industrial90.PanelColor">#454A4E</Color>
     <Color x:Key="Industrial90.PanelLightColor">#686E72</Color>
@@ -200,7 +202,8 @@
   </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:IlluminatedPushButton}" TargetType="controls:IlluminatedPushButton">
-      <Setter Property="Focusable" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="132" />
     <Setter Property="MinHeight" Value="150" />
@@ -273,14 +276,27 @@
               BasedOn="{StaticResource {x:Type controls:LedMatrixDisplay}}">
   <Setter Property="Template">
     <ControlTemplate>
-      <Border Background="#080B09" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
-              BorderThickness="4" CornerRadius="3" Padding="{TemplateBinding Padding}">
-        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}" BorderThickness="1"
-                Background="#101713" Padding="8,5">
-          <TextBlock Text="{TemplateBinding DisplayText}" FontFamily="Cascadia Mono,Consolas,monospace"
-                     FontSize="22" FontWeight="Bold" LetterSpacing="2"
-                     Foreground="{TemplateBinding LedBrush}" Opacity="{TemplateBinding EffectiveOpacity}"
-                     VerticalAlignment="Center" />
+      <Border Background="#080B09"
+              BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4"
+              CornerRadius="3"
+              Padding="{TemplateBinding Padding}">
+        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                BorderThickness="1"
+                Background="#101713"
+                Padding="8,5"
+                ClipToBounds="True">
+          <TextBlock Text="{TemplateBinding DisplayText}"
+                     FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontSize="22"
+                     FontWeight="Bold"
+                     LetterSpacing="2"
+                     Foreground="{TemplateBinding LedBrush}"
+                     Opacity="{TemplateBinding EffectiveOpacity}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     TextWrapping="NoWrap"
+                     TextTrimming="None" />
         </Border>
       </Border>
     </ControlTemplate>
@@ -304,18 +320,59 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:AlarmAnnunciator}" TargetType="controls:AlarmAnnunciator">
-  <Setter Property="MinWidth" Value="190" />
-  <Setter Property="MinHeight" Value="62" />
+  <Setter Property="MinWidth" Value="205" />
+  <Setter Property="MinHeight" Value="74" />
   <Setter Property="Template">
     <ControlTemplate>
-      <Border Background="#302116" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
-              BorderThickness="3" CornerRadius="2" Padding="10">
-        <Grid ColumnDefinitions="*,Auto">
-          <TextBlock Text="{TemplateBinding Text}" FontSize="12" FontWeight="Bold"
-                     TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#E9D8B6" />
-          <controls:IndustrialLamp Grid.Column="1" Width="28" Height="28" ShowLabel="False"
-                                   IsOn="{TemplateBinding IsActive}" LampColor="Amber" />
-        </Grid>
+      <Border Background="#171A1C"
+              BorderBrush="#090B0C"
+              BorderThickness="3"
+              CornerRadius="3"
+              Padding="4">
+        <Border Background="#292D30"
+                BorderBrush="#777E82"
+                BorderThickness="1"
+                CornerRadius="2">
+          <Grid ColumnDefinitions="6,*,Auto">
+            <Border Background="{TemplateBinding PriorityBrush}"
+                    Opacity="0.90" />
+
+            <Grid Grid.Column="1"
+                  Margin="10,7"
+                  RowDefinitions="*,Auto">
+              <TextBlock Text="{TemplateBinding Text}"
+                         FontSize="12"
+                         FontWeight="Bold"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Center"
+                         Foreground="#ECEEE7" />
+
+              <TextBlock Grid.Row="1"
+                         Text="{TemplateBinding StateText}"
+                         Margin="0,4,0,0"
+                         FontSize="8"
+                         FontWeight="Bold"
+                         Foreground="#AAB0B2" />
+            </Grid>
+
+            <Grid Grid.Column="2"
+                  Width="34"
+                  Height="34"
+                  Margin="6,0,10,0"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+              <Ellipse Fill="#0C0F10"
+                       Stroke="#858C90"
+                       StrokeThickness="2" />
+
+              <Ellipse Margin="6"
+                       Fill="{TemplateBinding PriorityBrush}"
+                       Opacity="{TemplateBinding LampOpacity}"
+                       Stroke="#0B0D0E"
+                       StrokeThickness="1" />
+            </Grid>
+          </Grid>
+        </Border>
       </Border>
     </ControlTemplate>
   </Setter>
@@ -324,14 +381,23 @@
 <ControlTheme x:Key="{x:Type controls:AlarmAnnunciatorPanel}" TargetType="controls:AlarmAnnunciatorPanel">
   <Setter Property="ItemsPanel">
     <ItemsPanelTemplate>
-      <WrapPanel Orientation="Horizontal" ItemWidth="220" ItemHeight="72" />
+      <WrapPanel Orientation="Horizontal"
+                 ItemWidth="230"
+                 ItemHeight="82" />
     </ItemsPanelTemplate>
   </Setter>
   <Setter Property="Template">
     <ControlTemplate>
-      <Border Background="#181A1B" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
-              BorderThickness="4" Padding="10">
-        <ItemsPresenter />
+      <Border Background="#202427"
+              BorderBrush="#090B0C"
+              BorderThickness="4"
+              CornerRadius="3"
+              Padding="10">
+        <Border BorderBrush="#6F767A"
+                BorderThickness="1"
+                Padding="8">
+          <ItemsPresenter />
+        </Border>
       </Border>
     </ControlTemplate>
   </Setter>
@@ -559,7 +625,8 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:RotaryKnob}" TargetType="controls:RotaryKnob">
-    <Setter Property="Focusable" Value="True" />
+      <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="230" />
   <Setter Property="MinHeight" Value="315" />
@@ -587,7 +654,8 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:SelectorSwitch}" TargetType="controls:SelectorSwitch">
-    <Setter Property="Focusable" Value="True" />
+      <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="260" />
   <Setter Property="MinHeight" Value="326" />
@@ -616,7 +684,8 @@
 
 <ControlTheme x:Key="{x:Type controls:IndustrialToggleSwitch}"
               TargetType="controls:IndustrialToggleSwitch">
-    <Setter Property="Focusable" Value="True" />
+      <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="230" />
   <Setter Property="MinHeight" Value="310" />
@@ -657,7 +726,8 @@
 
 <ControlTheme x:Key="{x:Type controls:SpringReturnSwitch}"
               TargetType="controls:SpringReturnSwitch">
-    <Setter Property="Focusable" Value="True" />
+      <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="280" />
   <Setter Property="MinHeight" Value="326" />
@@ -732,7 +802,8 @@
 
   <ControlTheme x:Key="{x:Type controls:IndustrialRockerSwitch}"
               TargetType="controls:IndustrialRockerSwitch">
-    <Setter Property="Focusable" Value="True" />
+      <Setter Property="Cursor" Value="Hand" />
+<Setter Property="Focusable" Value="True" />
   <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
 <Setter Property="MinWidth" Value="220" />
   <Setter Property="MinHeight" Value="310" />

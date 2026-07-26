@@ -14,7 +14,7 @@ public sealed class M8ReleaseContractTests
             "IndustrialControls.Avalonia",
             IndustrialControlsRelease.ProductName);
         Assert.Equal(
-            "1.0.0-rc.2",
+            "1.0.0-rc.5",
             IndustrialControlsRelease.Version);
         Assert.Equal(
             "avares://IndustrialControls.Avalonia/Themes/IndustrialControlsTheme.axaml",
@@ -112,6 +112,19 @@ public sealed class M8ReleaseContractTests
             AutomationProperties.GetHelpText(indicator) ?? string.Empty;
 
         Assert.Contains("NEW ALARM", alarmHelpText);
+    }
+
+    [Fact]
+    public void LegacyAlarmPriorityColor_IsDispatcherIndependent()
+    {
+        var annunciator = new AlarmAnnunciator
+        {
+            Priority = AlarmPriority.Critical
+        };
+
+        Assert.Equal(
+            global::Avalonia.Media.Color.Parse("#F14C4C"),
+            annunciator.PriorityColor);
     }
 
     [Fact]

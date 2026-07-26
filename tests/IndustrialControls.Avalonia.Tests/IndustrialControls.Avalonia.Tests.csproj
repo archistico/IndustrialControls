@@ -19,5 +19,8 @@
     <None Include="..\..\src\IndustrialControls.Avalonia\Themes\Industrial90.axaml"
           Link="Assets\Industrial90.axaml"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia.Demo\MainWindow.axaml"
+          Link="Assets\DemoMainWindow.axaml"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

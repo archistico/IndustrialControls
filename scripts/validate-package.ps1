@@ -25,6 +25,7 @@ try {
         'docs/PACKAGE_USAGE.md',
         'docs/PUBLIC_API.md',
         'docs/ACCESSIBILITY.md',
+        'docs/DEMO_CATALOG.md',
         'lib/net10.0/IndustrialControls.Avalonia.dll',
         'lib/net10.0/IndustrialControls.Avalonia.xml'
     )

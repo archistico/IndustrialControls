@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.2`
+Version: `1.0.0-rc.5`
 
 The following control families are release-gated:
 
@@ -60,3 +60,13 @@ trend.AddSample(power, time, value);
 ```
 
 The direct overload is additive and does not change the existing API contract.
+
+
+## Legacy annunciator priority
+
+`AlarmAnnunciator` exposes both:
+
+- `PriorityColor`, a dispatcher-independent `Color`;
+- `PriorityBrush`, the brush consumed by the Industrial90 template.
+
+Use `PriorityColor` in tests and non-rendering logic.

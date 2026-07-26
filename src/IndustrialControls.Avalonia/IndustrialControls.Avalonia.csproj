@@ -7,11 +7,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageId>IndustrialControls.Avalonia</PackageId>
-    <Version>1.0.0-rc.2</Version>
+    <Version>1.0.0-rc.5</Version>
     <Authors>Emilie Rollandin</Authors>
     <Title>IndustrialControls.Avalonia</Title>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
-    <PackageReleaseNotes>Second 1.0 release candidate: O(1) bounded time-series buffers, dictionary and direct-handle ingestion, lazy trend cursor readout, cached visual resources, coalesced automation metadata and allocation diagnostics.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fifth 1.0 release candidate: dispatcher-independent legacy annunciator priority-color contract and corrected palette regression tests.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -33,5 +33,6 @@
     <None Include="..\..\docs\PACKAGE_USAGE.md" Pack="true" PackagePath="docs\" Link="PACKAGE_USAGE.md" />
     <None Include="..\..\docs\PUBLIC_API.md" Pack="true" PackagePath="docs\" Link="PUBLIC_API.md" />
     <None Include="..\..\docs\ACCESSIBILITY.md" Pack="true" PackagePath="docs\" Link="ACCESSIBILITY.md" />
+    <None Include="..\..\docs\DEMO_CATALOG.md" Pack="true" PackagePath="docs\" Link="DEMO_CATALOG.md" />
   </ItemGroup>
 </Project>
