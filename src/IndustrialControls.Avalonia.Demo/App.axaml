@@ -1,0 +1,11 @@
+<Application
+    x:Class="IndustrialControls.Avalonia.Demo.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:theme="using:IndustrialControls.Avalonia.Themes"
+    RequestedThemeVariant="Dark">
+  <Application.Styles>
+    <FluentTheme />
+    <theme:IndustrialControlsTheme />
+  </Application.Styles>
+</Application>

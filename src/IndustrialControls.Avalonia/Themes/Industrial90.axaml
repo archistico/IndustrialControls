@@ -1,0 +1,483 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:IndustrialControls.Avalonia.Controls">
+
+  <Styles.Resources>
+<Color x:Key="Industrial90.PanelDarkColor">#292C2F</Color>
+    <Color x:Key="Industrial90.PanelColor">#454A4E</Color>
+    <Color x:Key="Industrial90.PanelLightColor">#686E72</Color>
+    <Color x:Key="Industrial90.RecessColor">#111416</Color>
+    <Color x:Key="Industrial90.EdgeLightColor">#969DA1</Color>
+    <Color x:Key="Industrial90.EdgeDarkColor">#17191B</Color>
+    <Color x:Key="Industrial90.TextColor">#E5E7DE</Color>
+    <Color x:Key="Industrial90.MutedTextColor">#A8ADA8</Color>
+    <Color x:Key="Industrial90.LabelBlackColor">#121313</Color>
+    <Color x:Key="Industrial90.LabelRedColor">#6F1616</Color>
+    <Color x:Key="Industrial90.LabelAluminumColor">#A8ADB0</Color>
+    <Color x:Key="Industrial90.ScrewColor">#858B8E</Color>
+    <Color x:Key="Industrial90.GlassColor">#2A091018</Color>
+
+    <SolidColorBrush x:Key="Industrial90.PanelDarkBrush" Color="{StaticResource Industrial90.PanelDarkColor}" />
+    <SolidColorBrush x:Key="Industrial90.PanelBrush" Color="{StaticResource Industrial90.PanelColor}" />
+    <SolidColorBrush x:Key="Industrial90.PanelLightBrush" Color="{StaticResource Industrial90.PanelLightColor}" />
+    <SolidColorBrush x:Key="Industrial90.RecessBrush" Color="{StaticResource Industrial90.RecessColor}" />
+    <SolidColorBrush x:Key="Industrial90.EdgeLightBrush" Color="{StaticResource Industrial90.EdgeLightColor}" />
+    <SolidColorBrush x:Key="Industrial90.EdgeDarkBrush" Color="{StaticResource Industrial90.EdgeDarkColor}" />
+    <SolidColorBrush x:Key="Industrial90.TextBrush" Color="{StaticResource Industrial90.TextColor}" />
+    <SolidColorBrush x:Key="Industrial90.MutedTextBrush" Color="{StaticResource Industrial90.MutedTextColor}" />
+    <SolidColorBrush x:Key="Industrial90.LabelBlackBrush" Color="{StaticResource Industrial90.LabelBlackColor}" />
+    <SolidColorBrush x:Key="Industrial90.LabelRedBrush" Color="{StaticResource Industrial90.LabelRedColor}" />
+    <SolidColorBrush x:Key="Industrial90.LabelAluminumBrush" Color="{StaticResource Industrial90.LabelAluminumColor}" />
+    <SolidColorBrush x:Key="Industrial90.ScrewBrush" Color="{StaticResource Industrial90.ScrewColor}" />
+    <SolidColorBrush x:Key="Industrial90.GlassBrush" Color="{StaticResource Industrial90.GlassColor}" />
+
+<ControlTheme x:Key="{x:Type controls:IndustrialPanel}" TargetType="controls:IndustrialPanel">
+    <Setter Property="Foreground" Value="{DynamicResource Industrial90.TextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource Industrial90.PanelBrush}" />
+    <Setter Property="Padding" Value="18" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="2"
+                CornerRadius="4">
+          <Border Margin="2"
+                  BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                  BorderThickness="1"
+                  CornerRadius="2">
+            <Grid RowDefinitions="Auto,*">
+              <Border Padding="14,9"
+                      Background="{DynamicResource Industrial90.PanelDarkBrush}"
+                      BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                      BorderThickness="0,0,0,2">
+                <Grid ColumnDefinitions="*,Auto">
+                  <StackPanel Spacing="2">
+                    <ContentPresenter Content="{TemplateBinding Header}"
+                                      FontSize="15"
+                                      FontWeight="Bold"
+                                      Foreground="{DynamicResource Industrial90.TextBrush}" />
+                    <TextBlock Text="{TemplateBinding Subtitle}"
+                               FontSize="11"
+                               Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1"
+                              Orientation="Horizontal"
+                              Spacing="6"
+                              IsVisible="{TemplateBinding ShowFasteners}">
+                    <Ellipse Width="8" Height="8" Fill="{DynamicResource Industrial90.ScrewBrush}" />
+                    <Ellipse Width="8" Height="8" Fill="{DynamicResource Industrial90.ScrewBrush}" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+              <ContentPresenter Grid.Row="1"
+                                Margin="{TemplateBinding Padding}"
+                                Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+          </Border>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:InstrumentBezel}" TargetType="controls:InstrumentBezel">
+    <Setter Property="Foreground" Value="{DynamicResource Industrial90.TextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource Industrial90.RecessBrush}" />
+    <Setter Property="Padding" Value="12" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel Spacing="7">
+          <TextBlock Text="{TemplateBinding Title}"
+                     HorizontalAlignment="Center"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <Border Background="{TemplateBinding Background}"
+                  BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                  BorderThickness="4"
+                  CornerRadius="5"
+                  MinHeight="72">
+            <Border Margin="2"
+                    Padding="{TemplateBinding Padding}"
+                    BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                    BorderThickness="1"
+                    CornerRadius="2">
+              <Grid>
+                <ContentPresenter Content="{TemplateBinding Content}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                <Border Background="{DynamicResource Industrial90.GlassBrush}"
+                        IsHitTestVisible="False"
+                        IsVisible="{TemplateBinding ShowGlass}" />
+              </Grid>
+            </Border>
+          </Border>
+          <TextBlock Text="{TemplateBinding Unit}"
+                     HorizontalAlignment="Center"
+                     FontSize="11"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:EngravedLabel}" TargetType="controls:EngravedLabel">
+    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="MinWidth" Value="90" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="Background" Value="{DynamicResource Industrial90.LabelBlackBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="2"
+                CornerRadius="2"
+                Padding="12,5">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Ellipse Width="6"
+                     Height="6"
+                     Fill="{DynamicResource Industrial90.ScrewBrush}"
+                     VerticalAlignment="Center"
+                     IsVisible="{TemplateBinding ShowFasteners}" />
+            <TextBlock Grid.Column="1"
+                       Text="{TemplateBinding Text}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       FontWeight="Bold"
+                       Foreground="{TemplateBinding Foreground}" />
+            <Ellipse Grid.Column="2"
+                     Width="6"
+                     Height="6"
+                     Fill="{DynamicResource Industrial90.ScrewBrush}"
+                     VerticalAlignment="Center"
+                     IsVisible="{TemplateBinding ShowFasteners}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:IndustrialLamp}" TargetType="controls:IndustrialLamp">
+    <Setter Property="MinWidth" Value="34" />
+    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel Spacing="7">
+          <Border Padding="4"
+                  Background="{DynamicResource Industrial90.PanelDarkBrush}"
+                  BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                  BorderThickness="2"
+                  CornerRadius="{TemplateBinding LampCornerRadius}">
+            <Border Background="{TemplateBinding InactiveBrush}"
+                    BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{TemplateBinding LampCornerRadius}">
+              <Border Margin="3"
+                      MinWidth="24"
+                      MinHeight="24"
+                      Background="{TemplateBinding ActiveBrush}"
+                      Opacity="{TemplateBinding EffectiveOpacity}"
+                      CornerRadius="{TemplateBinding LampCornerRadius}" />
+            </Border>
+          </Border>
+          <TextBlock Text="{TemplateBinding Label}"
+                     IsVisible="{TemplateBinding ShowLabel}"
+                     HorizontalAlignment="Center"
+                     FontSize="10"
+                     FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:IlluminatedPushButton}" TargetType="controls:IlluminatedPushButton">
+    <Setter Property="MinWidth" Value="132" />
+    <Setter Property="MinHeight" Value="150" />
+    <Setter Property="Padding" Value="12" />
+    <Setter Property="Background" Value="{DynamicResource Industrial90.PanelBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Industrial90.EdgeDarkBrush}" />
+    <Setter Property="BorderThickness" Value="3" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="4"
+                Padding="{TemplateBinding Padding}">
+          <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                  BorderThickness="1"
+                  CornerRadius="2"
+                  Padding="10">
+            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+              <controls:IndustrialLamp Grid.Row="0"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Width="52"
+                                       Height="52"
+                                       Shape="Round"
+                                       ShowLabel="False"
+                                       IsOn="{TemplateBinding IsLampOn}"
+                                       LampColor="{TemplateBinding LampColor}"
+                                       State="{TemplateBinding LampState}" />
+              <ContentPresenter Grid.Row="1"
+                                Content="{TemplateBinding Content}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{TemplateBinding CaptionForeground}" />
+              <TextBlock Grid.Row="2"
+                         Text="{TemplateBinding SecondaryCaption}"
+                         HorizontalAlignment="Center"
+                         TextAlignment="Center"
+                         FontSize="9"
+                         Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+            </Grid>
+          </Border>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+  
+<ControlTheme x:Key="{x:Type controls:LedMatrixDisplay}" TargetType="controls:LedMatrixDisplay">
+  <Setter Property="MinHeight" Value="54" />
+  <Setter Property="Padding" Value="12,9" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#080B09" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4" CornerRadius="3" Padding="{TemplateBinding Padding}">
+        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}" BorderThickness="1"
+                Background="#101713" Padding="8,5">
+          <TextBlock Text="{TemplateBinding Text}" FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontSize="22" FontWeight="Bold" LetterSpacing="2"
+                     Foreground="{TemplateBinding LedBrush}" Opacity="{TemplateBinding EffectiveOpacity}"
+                     VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:LedMarqueeDisplay}" TargetType="controls:LedMarqueeDisplay"
+              BasedOn="{StaticResource {x:Type controls:LedMatrixDisplay}}">
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#080B09" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4" CornerRadius="3" Padding="{TemplateBinding Padding}">
+        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}" BorderThickness="1"
+                Background="#101713" Padding="8,5">
+          <TextBlock Text="{TemplateBinding DisplayText}" FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontSize="22" FontWeight="Bold" LetterSpacing="2"
+                     Foreground="{TemplateBinding LedBrush}" Opacity="{TemplateBinding EffectiveOpacity}"
+                     VerticalAlignment="Center" />
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:SevenSegmentDisplay}" TargetType="controls:SevenSegmentDisplay"
+              BasedOn="{StaticResource {x:Type controls:LedMatrixDisplay}}">
+  <Setter Property="MinHeight" Value="68" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#060806" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="5" CornerRadius="3" Padding="14,8">
+        <TextBlock Text="{TemplateBinding Text}" FontFamily="Cascadia Mono,Consolas,monospace"
+                   FontSize="32" FontWeight="Bold" LetterSpacing="3"
+                   Foreground="{TemplateBinding LedBrush}" Opacity="{TemplateBinding EffectiveOpacity}"
+                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:AlarmAnnunciator}" TargetType="controls:AlarmAnnunciator">
+  <Setter Property="MinWidth" Value="190" />
+  <Setter Property="MinHeight" Value="62" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#302116" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="3" CornerRadius="2" Padding="10">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{TemplateBinding Text}" FontSize="12" FontWeight="Bold"
+                     TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#E9D8B6" />
+          <controls:IndustrialLamp Grid.Column="1" Width="28" Height="28" ShowLabel="False"
+                                   IsOn="{TemplateBinding IsActive}" LampColor="Amber" />
+        </Grid>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:AlarmAnnunciatorPanel}" TargetType="controls:AlarmAnnunciatorPanel">
+  <Setter Property="ItemsPanel">
+    <ItemsPanelTemplate>
+      <WrapPanel Orientation="Horizontal" ItemWidth="220" ItemHeight="72" />
+    </ItemsPanelTemplate>
+  </Setter>
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#181A1B" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4" Padding="10">
+        <ItemsPresenter />
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+  
+<ControlTheme x:Key="{x:Type controls:RadialGauge}" TargetType="controls:RadialGauge">
+  <Setter Property="MinWidth" Value="220" />
+  <Setter Property="MinHeight" Value="272" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="5">
+        <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                   FontSize="12" FontWeight="Bold"
+                   Foreground="{DynamicResource Industrial90.TextBrush}" />
+        <controls:RadialGaugeDial Width="210" Height="210" HorizontalAlignment="Center"
+                                  Minimum="{TemplateBinding Minimum}"
+                                  Maximum="{TemplateBinding Maximum}"
+                                  Value="{TemplateBinding Value}"
+                                  StartAngle="{TemplateBinding StartAngle}"
+                                  SweepAngle="{TemplateBinding SweepAngle}"
+                                  MajorTickCount="{TemplateBinding MajorTickCount}"
+                                  MinorTicksPerInterval="{TemplateBinding MinorTicksPerInterval}"
+                                  ScaleDecimalPlaces="{TemplateBinding ScaleDecimalPlaces}"
+                                  ShowScaleLabels="{TemplateBinding ShowScaleLabels}"
+                                  ShowOperatingBands="{TemplateBinding ShowOperatingBands}"
+                                  CautionLow="{TemplateBinding CautionLow}"
+                                  CautionHigh="{TemplateBinding CautionHigh}"
+                                  WarningLow="{TemplateBinding WarningLow}"
+                                  WarningHigh="{TemplateBinding WarningHigh}"
+                                  NeedleBrush="{TemplateBinding StatusBrush}" />
+        <StackPanel HorizontalAlignment="Center" Margin="0,-64,0,8">
+          <TextBlock Text="{TemplateBinding FormattedValue}"
+                     HorizontalAlignment="Center" FontSize="18" FontWeight="Bold"
+                     Foreground="{TemplateBinding StatusBrush}" />
+          <TextBlock Text="{TemplateBinding Status}"
+                     HorizontalAlignment="Center" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </StackPanel>
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:LinearGauge}" TargetType="controls:LinearGauge">
+  <Setter Property="MinWidth" Value="220" />
+  <Setter Property="MinHeight" Value="84" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="6">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{TemplateBinding Title}" FontSize="11" FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <TextBlock Grid.Column="1" Text="{TemplateBinding FormattedValue}"
+                     FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontWeight="Bold" Foreground="{TemplateBinding StatusBrush}" />
+        </Grid>
+        <Border Background="#111415" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="3" Padding="4">
+          <ProgressBar Minimum="0" Maximum="100" Value="{TemplateBinding Percentage}"
+                       Height="22" Foreground="{TemplateBinding StatusBrush}"
+                       Background="#252A2C" />
+        </Border>
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <TextBlock Text="{TemplateBinding Minimum}" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+          <TextBlock Grid.Column="2" Text="{TemplateBinding Maximum}" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </Grid>
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:DigitalGauge}" TargetType="controls:DigitalGauge">
+  <Setter Property="MinWidth" Value="210" />
+  <Setter Property="MinHeight" Value="100" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{TemplateBinding Title}" FontSize="11" FontWeight="Bold"
+                   Foreground="{DynamicResource Industrial90.TextBrush}" />
+        <Border Background="#060806" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="5" CornerRadius="3" Padding="14,10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{TemplateBinding FormattedValue}"
+                       FontFamily="Cascadia Mono,Consolas,monospace"
+                       FontSize="27" FontWeight="Bold" LetterSpacing="2"
+                       Foreground="{TemplateBinding StatusBrush}" />
+            <TextBlock Grid.Column="1" Text="{TemplateBinding Status}"
+                       VerticalAlignment="Bottom" FontSize="9"
+                       Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+          </Grid>
+        </Border>
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:DeviationGauge}" TargetType="controls:DeviationGauge">
+  <Setter Property="MinWidth" Value="260" />
+  <Setter Property="MinHeight" Value="110" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="7">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{TemplateBinding Title}" FontSize="11" FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <TextBlock Grid.Column="1" Text="{TemplateBinding FormattedDeviation}"
+                     FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontWeight="Bold" Foreground="{TemplateBinding StatusBrush}" />
+        </Grid>
+        <Border Background="#111415" BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="3" Padding="4">
+          <Grid>
+            <ProgressBar Minimum="0" Maximum="100" Value="{TemplateBinding Percentage}"
+                         Height="24" Foreground="{TemplateBinding StatusBrush}"
+                         Background="#252A2C" />
+            <Border Width="2" Background="#F1F1DF" HorizontalAlignment="Center" />
+          </Grid>
+        </Border>
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <TextBlock Text="NEG" FontSize="9" Foreground="#A8ADA8" />
+          <TextBlock Grid.Column="1" Text="SETPOINT" HorizontalAlignment="Center"
+                     FontSize="9" Foreground="#A8ADA8" />
+          <TextBlock Grid.Column="2" Text="POS" FontSize="9" Foreground="#A8ADA8" />
+        </Grid>
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+  </Styles.Resources>
+
+  <Style Selector="controls|EngravedLabel[Variant=Red]">
+      <Setter Property="Background" Value="{DynamicResource Industrial90.LabelRedBrush}" />
+    </Style>
+
+  <Style Selector="controls|EngravedLabel[Variant=Aluminum]">
+      <Setter Property="Background" Value="{DynamicResource Industrial90.LabelAluminumBrush}" />
+      <Setter Property="Foreground" Value="#17191B" />
+    </Style>
+
+  <Style Selector="controls|IlluminatedPushButton:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Industrial90.PanelLightBrush}" />
+    </Style>
+
+  <Style Selector="controls|IlluminatedPushButton:pressed">
+      <Setter Property="Padding" Value="11,12,9,8" />
+      <Setter Property="Background" Value="{DynamicResource Industrial90.PanelDarkBrush}" />
+    </Style>
+
+  <Style Selector="controls|IlluminatedPushButton:disabled">
+      <Setter Property="Opacity" Value="0.45" />
+    </Style>
+</Styles>

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>IndustrialControls.Avalonia</RootNamespace>
+    <AssemblyName>IndustrialControls.Avalonia</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsPackable>true</IsPackable>
+    <PackageId>IndustrialControls.Avalonia</PackageId>
+    <Version>0.4.4</Version>
+    <Authors>Emilie Rollandin</Authors>
+    <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
+    <PackageTags>avalonia;controls;industrial;hmi;gauge;led</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
+</Project>
