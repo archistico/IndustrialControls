@@ -13,7 +13,7 @@ if errorlevel 1 goto :fail
 dotnet build IndustrialControls.Avalonia.sln -c Release --no-restore
 if errorlevel 1 goto :fail
 
-dotnet test tests\IndustrialControls.Avalonia.Tests\IndustrialControls.Avalonia.Tests.csproj -c Release --no-build
+dotnet test --project tests\IndustrialControls.Avalonia.Tests\IndustrialControls.Avalonia.Tests.csproj -c Release --no-build
 if errorlevel 1 goto :fail
 
 dotnet pack src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj -c Release --no-build -o artifacts\packages
@@ -23,7 +23,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-package.ps1
 if errorlevel 1 goto :fail
 
 echo.
-echo M8 RC1 VALIDATION PASSED
+echo M8 RC6-B VALIDATION PASSED
 popd
 exit /b 0
 

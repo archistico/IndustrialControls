@@ -6,7 +6,7 @@ M7 Hotfix 3 / versione `0.7.3` è la baseline validata.
 
 ## Candidate corrente
 
-M8 RC5 — dispatcher-independent alarm palette / versione `1.0.0-rc.6`.
+M8 RC6-B — Avalonia Property & Reactive Contracts / versione `1.0.0-rc.7`.
 
 ## Contenuto
 
@@ -179,3 +179,30 @@ Definitive pseudo-class compile correction:
   `IPseudoClasses.Add(name)` / `Remove(name)` calls;
 - removed the incorrect `Avalonia.Styling` import;
 - added a source-level regression test for both affected controls.
+
+
+## M8 RC6-B candidate
+
+Cumulative candidate based on RC6-A Hotfix 2:
+
+- dynamic capacities and ranges are enforced through Avalonia-property
+  handlers rather than CLR setters;
+- `SetCurrentValue` preserves bindings and styles during normalization;
+- alarm summary counts are observable;
+- cosmetic alarm text changes preserve blink phase;
+- cursor readout tracks time-window changes;
+- accessibility metadata has a synchronous fallback;
+- validation scripts fail on native command errors and use the Microsoft
+  Testing Platform `--project` syntax.
+
+After validation, the planned next phase is RC6-C rendering and performance
+hardening.
+
+
+## M8 RC6-B Hotfix 1
+
+Compile-only test correction:
+
+- escaped the trailing backslash in the validation-script regression test;
+- production code and validation scripts are unchanged;
+- package version remains `1.0.0-rc.7`.

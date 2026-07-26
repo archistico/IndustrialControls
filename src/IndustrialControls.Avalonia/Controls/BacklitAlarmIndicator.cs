@@ -14,19 +14,23 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 {
     public static readonly StyledProperty<string> AlarmIdProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, string>(
-            nameof(AlarmId), string.Empty);
+            nameof(AlarmId),
+            string.Empty);
 
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, string>(
-            nameof(Text), string.Empty);
+            nameof(Text),
+            string.Empty);
 
     public static readonly StyledProperty<string> SecondaryTextProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, string>(
-            nameof(SecondaryText), string.Empty);
+            nameof(SecondaryText),
+            string.Empty);
 
     public static readonly StyledProperty<AlarmPriority> PriorityProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, AlarmPriority>(
-            nameof(Priority), AlarmPriority.Warning);
+            nameof(Priority),
+            AlarmPriority.Warning);
 
     public static readonly StyledProperty<bool> IsConditionActiveProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, bool>(
@@ -38,7 +42,8 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 
     public static readonly StyledProperty<bool> IsLatchedProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, bool>(
-            nameof(IsLatched), true);
+            nameof(IsLatched),
+            true);
 
     public static readonly StyledProperty<int> FlashIntervalMillisecondsProperty =
         AvaloniaProperty.Register<BacklitAlarmIndicator, int>(
@@ -48,37 +53,46 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 
     public static readonly DirectProperty<BacklitAlarmIndicator, bool> HasLatchedAlarmProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, bool>(
-            nameof(HasLatchedAlarm), control => control.HasLatchedAlarm);
+            nameof(HasLatchedAlarm),
+            control => control.HasLatchedAlarm);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, bool> ShouldFlashProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, bool>(
-            nameof(ShouldFlash), control => control.ShouldFlash);
+            nameof(ShouldFlash),
+            control => control.ShouldFlash);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, bool> IsIlluminatedProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, bool>(
-            nameof(IsIlluminated), control => control.IsIlluminated);
+            nameof(IsIlluminated),
+            control => control.IsIlluminated);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, double> EffectiveOpacityProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, double>(
-            nameof(EffectiveOpacity), control => control.EffectiveOpacity);
+            nameof(EffectiveOpacity),
+            control => control.EffectiveOpacity);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, string> StateTextProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, string>(
-            nameof(StateText), control => control.StateText);
+            nameof(StateText),
+            control => control.StateText);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, AlarmIndicatorVisualState> VisualStateProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, AlarmIndicatorVisualState>(
-            nameof(VisualState), control => control.VisualState);
+            nameof(VisualState),
+            control => control.VisualState);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, IBrush> DisplayBrushProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, IBrush>(
-            nameof(DisplayBrush), control => control.DisplayBrush);
+            nameof(DisplayBrush),
+            control => control.DisplayBrush);
 
     public static readonly DirectProperty<BacklitAlarmIndicator, IBrush> DisplayForegroundBrushProperty =
         AvaloniaProperty.RegisterDirect<BacklitAlarmIndicator, IBrush>(
-            nameof(DisplayForegroundBrush), control => control.DisplayForegroundBrush);
+            nameof(DisplayForegroundBrush),
+            control => control.DisplayForegroundBrush);
 
     private readonly DispatcherTimer _blinkTimer;
+
     private bool _hasLatchedAlarm;
     private bool _shouldFlash;
     private bool _isIlluminated;
@@ -86,38 +100,55 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
     private bool _previousConditionActive;
     private double _effectiveOpacity = 0.18;
     private string _stateText = "CLEAR";
-    private AlarmIndicatorVisualState _visualState = AlarmIndicatorVisualState.Clear;
-    private IBrush _displayBrush = new SolidColorBrush(Color.Parse("#FFB238"));
-    private IBrush _displayForegroundBrush = new SolidColorBrush(Color.Parse("#111315"));
+    private AlarmIndicatorVisualState _visualState =
+        AlarmIndicatorVisualState.Clear;
+    private IBrush _displayBrush =
+        new SolidColorBrush(
+            Color.Parse("#FFB238"));
+    private IBrush _displayForegroundBrush =
+        new SolidColorBrush(
+            Color.Parse("#111315"));
 
     static BacklitAlarmIndicator()
     {
         AlarmIdProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshAutomationMetadata());
+
         TextProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshAutomationMetadata());
+
         SecondaryTextProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshAutomationMetadata());
+
         IsConditionActiveProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
             (control, _) => control.OnConditionChanged());
+
         IsAcknowledgedProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshOperationalState());
+
         IsLatchedProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshOperationalState());
+
         PriorityProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.OnPriorityChanged());
+
         FlashIntervalMillisecondsProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshBlinkTimer());
+            (control, _) => control.UpdateBlinkInterval());
+
         IsEnabledProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshOperationalState());
     }
 
     public BacklitAlarmIndicator()
     {
         _blinkTimer = new DispatcherTimer();
         _blinkTimer.Tick += OnBlinkTimerTick;
-        _previousConditionActive = IsConditionActive;
-        RefreshState();
+
+        _previousConditionActive =
+            IsConditionActive;
+
+        UpdateBlinkInterval();
+        RefreshOperationalState();
     }
 
     public string AlarmId
@@ -165,7 +196,9 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
     public int FlashIntervalMilliseconds
     {
         get => GetValue(FlashIntervalMillisecondsProperty);
-        set => SetValue(FlashIntervalMillisecondsProperty, value);
+        set => SetValue(
+            FlashIntervalMillisecondsProperty,
+            value);
     }
 
     public bool HasLatchedAlarm
@@ -240,11 +273,13 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
             value);
     }
 
-    public void Activate() => IsConditionActive = true;
+    public void Activate() =>
+        IsConditionActive = true;
 
     public bool Acknowledge()
     {
-        if (!IsConditionActive && !HasLatchedAlarm)
+        if (!IsConditionActive &&
+            !HasLatchedAlarm)
         {
             return false;
         }
@@ -253,7 +288,8 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
         return true;
     }
 
-    public void ClearCondition() => IsConditionActive = false;
+    public void ClearCondition() =>
+        IsConditionActive = false;
 
     public bool Reset()
     {
@@ -266,15 +302,17 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 
         HasLatchedAlarm = false;
         IsAcknowledged = false;
-        RefreshState();
+        RefreshOperationalState();
         return true;
     }
 
     private void OnConditionChanged()
     {
-        var isActive = IsConditionActive;
+        var isActive =
+            IsConditionActive;
 
-        if (isActive && !_previousConditionActive)
+        if (isActive &&
+            !_previousConditionActive)
         {
             HasLatchedAlarm = true;
             IsAcknowledged = false;
@@ -288,63 +326,43 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
         }
 
         _previousConditionActive = isActive;
-        RefreshState();
+        RefreshOperationalState();
     }
 
-    private void RefreshState()
+    private void OnPriorityChanged()
     {
-        VisualState = CalculateVisualState();
-        ShouldFlash = VisualState is
-            AlarmIndicatorVisualState.NewAlarm or
-            AlarmIndicatorVisualState.ReturnedUnacknowledged;
+        RefreshVisualAppearance();
+        RefreshAutomationMetadata();
+    }
+
+    private void RefreshOperationalState()
+    {
+        VisualState =
+            CalculateVisualState();
 
         StateText = VisualState switch
         {
-            AlarmIndicatorVisualState.NewAlarm => "NEW ALARM",
-            AlarmIndicatorVisualState.AcknowledgedActive => "ACK / ACTIVE",
-            AlarmIndicatorVisualState.ReturnedUnacknowledged => "RETURNED / ACK",
-            AlarmIndicatorVisualState.ReadyToReset => "READY TO RESET",
-            AlarmIndicatorVisualState.Disabled => "UNAVAILABLE",
-            _ => "CLEAR"
+            AlarmIndicatorVisualState.NewAlarm =>
+                "NEW ALARM",
+            AlarmIndicatorVisualState.AcknowledgedActive =>
+                "ACK / ACTIVE",
+            AlarmIndicatorVisualState.ReturnedUnacknowledged =>
+                "RETURNED / ACK",
+            AlarmIndicatorVisualState.ReadyToReset =>
+                "READY TO RESET",
+            AlarmIndicatorVisualState.Disabled =>
+                "UNAVAILABLE",
+            _ =>
+                "CLEAR"
         };
 
-        var activeColor = Priority switch
-        {
-            AlarmPriority.Advisory => Color.Parse("#57A8E8"),
-            AlarmPriority.Caution => Color.Parse("#F2DD4B"),
-            AlarmPriority.Critical => Color.Parse("#F14C4C"),
-            _ => Color.Parse("#FFB238")
-        };
+        UpdateBlinkSchedule(
+            VisualState is
+                AlarmIndicatorVisualState.NewAlarm or
+                AlarmIndicatorVisualState.ReturnedUnacknowledged);
 
-        DisplayBrush = new SolidColorBrush(activeColor);
-
-        var foregroundColor = VisualState switch
-        {
-            AlarmIndicatorVisualState.Clear => Color.Parse("#D9D2BC"),
-            AlarmIndicatorVisualState.Disabled => Color.Parse("#8C908A"),
-            _ when Priority == AlarmPriority.Critical => Color.Parse("#F7F7ED"),
-            _ => Color.Parse("#111315")
-        };
-
-        DisplayForegroundBrush = new SolidColorBrush(foregroundColor);
-
-        RefreshBlinkTimer();
-        RefreshAppearance();
-
-        IndustrialAutomationMetadata.Apply(
-            this,
-            Text,
-            string.Concat(SecondaryText, "; ", StateText),
-            string.IsNullOrWhiteSpace(AlarmId)
-                ? "BacklitAlarm"
-                : string.Concat("BacklitAlarm.", AlarmId));
-
-        IndustrialAutomationMetadata.SetLiveRegion(
-            this,
-            VisualState is AlarmIndicatorVisualState.NewAlarm or
-                AlarmIndicatorVisualState.ReturnedUnacknowledged
-                ? AutomationLiveSetting.Assertive
-                : AutomationLiveSetting.Polite);
+        RefreshVisualAppearance();
+        RefreshAutomationMetadata();
     }
 
     private AlarmIndicatorVisualState CalculateVisualState()
@@ -371,12 +389,16 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
         return AlarmIndicatorVisualState.Clear;
     }
 
-    private void RefreshBlinkTimer()
+    private void UpdateBlinkSchedule(bool shouldFlash)
     {
+        if (ShouldFlash == shouldFlash)
+        {
+            return;
+        }
+
+        ShouldFlash = shouldFlash;
         _blinkTimer.Stop();
         _blinkPhase = true;
-        _blinkTimer.Interval =
-            TimeSpan.FromMilliseconds(FlashIntervalMilliseconds);
 
         if (ShouldFlash)
         {
@@ -384,9 +406,56 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
         }
     }
 
-    private void OnBlinkTimerTick(object? sender, EventArgs e)
+    private void UpdateBlinkInterval()
+    {
+        _blinkTimer.Interval =
+            TimeSpan.FromMilliseconds(
+                FlashIntervalMilliseconds);
+    }
+
+    private void OnBlinkTimerTick(
+        object? sender,
+        EventArgs e)
     {
         _blinkPhase = !_blinkPhase;
+        RefreshAppearance();
+    }
+
+    private void RefreshVisualAppearance()
+    {
+        var activeColor = Priority switch
+        {
+            AlarmPriority.Advisory =>
+                Color.Parse("#57A8E8"),
+            AlarmPriority.Caution =>
+                Color.Parse("#F2DD4B"),
+            AlarmPriority.Critical =>
+                Color.Parse("#F14C4C"),
+            _ =>
+                Color.Parse("#FFB238")
+        };
+
+        DisplayBrush =
+            new SolidColorBrush(
+                activeColor);
+
+        var foregroundColor = VisualState switch
+        {
+            AlarmIndicatorVisualState.Clear =>
+                Color.Parse("#D9D2BC"),
+            AlarmIndicatorVisualState.Disabled =>
+                Color.Parse("#8C908A"),
+            _ when Priority ==
+                AlarmPriority.Critical =>
+                    Color.Parse("#F7F7ED"),
+            _ =>
+                Color.Parse("#111315")
+        };
+
+        DisplayForegroundBrush =
+            new SolidColorBrush(
+                foregroundColor);
+
         RefreshAppearance();
     }
 
@@ -394,18 +463,50 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
     {
         EffectiveOpacity = VisualState switch
         {
-            AlarmIndicatorVisualState.Clear => 0.18,
-            AlarmIndicatorVisualState.Disabled => 0.10,
-            AlarmIndicatorVisualState.AcknowledgedActive => 0.88,
-            AlarmIndicatorVisualState.ReadyToReset => 0.52,
-            _ when ShouldFlash && !_blinkPhase => 0.24,
-            _ => 1.0
+            AlarmIndicatorVisualState.Clear =>
+                0.18,
+            AlarmIndicatorVisualState.Disabled =>
+                0.10,
+            AlarmIndicatorVisualState.AcknowledgedActive =>
+                0.88,
+            AlarmIndicatorVisualState.ReadyToReset =>
+                0.52,
+            _ when ShouldFlash &&
+                !_blinkPhase =>
+                    0.24,
+            _ =>
+                1.0
         };
 
         IsIlluminated =
             VisualState is not
                 AlarmIndicatorVisualState.Clear and not
                 AlarmIndicatorVisualState.Disabled &&
-            (!ShouldFlash || _blinkPhase);
+            (!ShouldFlash ||
+             _blinkPhase);
+    }
+
+    private void RefreshAutomationMetadata()
+    {
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Text,
+            string.Concat(
+                SecondaryText,
+                "; ",
+                StateText),
+            string.IsNullOrWhiteSpace(AlarmId)
+                ? "BacklitAlarm"
+                : string.Concat(
+                    "BacklitAlarm.",
+                    AlarmId));
+
+        IndustrialAutomationMetadata.SetLiveRegion(
+            this,
+            VisualState is
+                AlarmIndicatorVisualState.NewAlarm or
+                AlarmIndicatorVisualState.ReturnedUnacknowledged
+                ? AutomationLiveSetting.Assertive
+                : AutomationLiveSetting.Polite);
     }
 }

@@ -369,9 +369,14 @@ public abstract class GaugeBase : TemplatedControl
 
     private void RequestAutomationMetadataRefresh()
     {
-        if (_automationRefreshPending ||
-            _automationContext is null)
+        if (_automationRefreshPending)
         {
+            return;
+        }
+
+        if (_automationContext is null)
+        {
+            RefreshAutomationMetadata();
             return;
         }
 

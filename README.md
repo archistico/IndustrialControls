@@ -46,7 +46,7 @@ il file generato.
 Esempio con una sorgente locale configurata:
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.6
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.7
 ```
 
 ### Da riferimento al progetto
@@ -456,13 +456,16 @@ AlarmPanel.ClearAllConditions();
 AlarmPanel.ResetAll();
 ```
 
-Contatori disponibili:
+Contatori osservabili disponibili:
 
 ```csharp
 AlarmPanel.ActiveConditionCount;
 AlarmPanel.LatchedAlarmCount;
 AlarmPanel.UnacknowledgedCount;
 ```
+
+I tre contatori sono `DirectProperty<int>` e notificano automaticamente i
+binding quando cambia lo stato di un indicatore o la raccolta viene modificata.
 
 ### Gauge
 
@@ -958,16 +961,20 @@ Il gate esegue:
 1. pulizia di `bin`, `obj`, `TestResults` e `artifacts`;
 2. restore;
 3. build Release;
-4. suite completa dei test;
-5. creazione del pacchetto NuGet;
-6. verifica del contenuto del pacchetto.
+4. suite completa dei test tramite Microsoft Testing Platform;
+5. controllo del codice di uscita di ogni comando;
+6. creazione del pacchetto NuGet;
+7. verifica del contenuto del pacchetto.
+
+Qualunque errore interrompe immediatamente lo script: il messaggio finale di
+successo viene stampato soltanto dopo test e package validation completati.
 
 Comandi separati:
 
 ```powershell
 dotnet restore
 dotnet build
-dotnet test
+dotnet test --project .\tests\IndustrialControls.Avalonia.Tests\IndustrialControls.Avalonia.Tests.csproj
 dotnet run --project .\src\IndustrialControls.Avalonia.Demo\
 ```
 
@@ -985,23 +992,13 @@ dotnet run --project .\src\IndustrialControls.Avalonia.Demo\
 Consulta il file `LICENSE` incluso nel progetto.
 
 
-## RC6-A Hotfix 1
-
-Correzione di compilazione:
-
-- aggiunto `using Avalonia.Styling;` ai controlli che usano
-  `PseudoClasses.Set(...)`;
-- nessuna modifica al comportamento funzionale di RC6-A;
-- versione NuGet invariata: `1.0.0-rc.6`.
 
 
-## RC6-A Hotfix 2
+## RC6-B Hotfix 1
 
-Correzione definitiva della gestione delle pseudo-classi:
+Correzione di compilazione limitata alla suite di test:
 
-- rimosso l'uso dell'estensione `PseudoClasses.Set(...)`;
-- usati direttamente `PseudoClasses.Add(...)` e
-  `PseudoClasses.Remove(...)`, disponibili su `IPseudoClasses`;
-- rimossa la dipendenza dal namespace dell'estensione;
-- nessuna modifica al comportamento funzionale di RC6-A;
-- versione NuGet invariata: `1.0.0-rc.6`.
+- escape corretto del backslash nel controllo del vecchio comando
+  `dotnet test tests\...`;
+- nessuna modifica alla libreria, alla demo o agli script di validazione;
+- versione NuGet invariata: `1.0.0-rc.7`.

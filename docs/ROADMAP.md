@@ -36,7 +36,7 @@
 
 Release candidate corrente:
 
-- versione `1.0.0-rc.6`;
+- versione `1.0.0-rc.7`;
 - contratto API pubblico;
 - metadati di accessibilità;
 - live region per allarmi;
@@ -112,3 +112,21 @@ Correzione namespace `Avalonia.Styling` per le pseudo-classi.
 ### RC6-A Hotfix 2
 
 Gestione pseudo-classi tramite `IPseudoClasses.Add/Remove`.
+
+
+### RC6-B — Avalonia property and reactive contracts
+
+- side effect spostati negli handler AvaloniaProperty;
+- coercizione binding-safe di selettore e manopola;
+- contatori allarmi osservabili;
+- cursore trend correttamente invalidato;
+- lampeggio non riavviato dai testi;
+- fallback accessibilità senza SynchronizationContext;
+- gate validate fail-fast e compatibile con MTP.
+
+Stato: **CANDIDATE**
+
+
+### RC6-B Hotfix 1
+
+Correzione literal C# nel test del gate di validazione.

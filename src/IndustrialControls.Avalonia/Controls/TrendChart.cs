@@ -83,6 +83,9 @@ public sealed class TrendChart : TimeSeriesControlBase
 
         CursorFractionProperty.Changed.AddClassHandler<TrendChart>(
             (control, _) => control.MarkCursorReadoutDirty());
+
+        TimeWindowSecondsProperty.Changed.AddClassHandler<TrendChart>(
+            (control, _) => control.MarkCursorReadoutDirty());
     }
 
     public bool ShowCursor

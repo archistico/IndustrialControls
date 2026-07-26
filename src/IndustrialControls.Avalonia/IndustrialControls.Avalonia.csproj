@@ -7,11 +7,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageId>IndustrialControls.Avalonia</PackageId>
-    <Version>1.0.0-rc.6</Version>
+    <Version>1.0.0-rc.7</Version>
     <Authors>Emilie Rollandin</Authors>
     <Title>IndustrialControls.Avalonia</Title>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
-    <PackageReleaseNotes>Sixth 1.0 release candidate, phase A: deviation-based gauge evaluation with deadband, true legacy alarm latching, captured spring-return pointer interaction, and fully interlocked illuminated push buttons.</PackageReleaseNotes>
+    <PackageReleaseNotes>Seventh 1.0 release candidate: binding-safe value coercion, reactive alarm-panel counters, stable alarm blinking, cursor-readout invalidation, accessibility fallback updates, and fail-fast validation scripts.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

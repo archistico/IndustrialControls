@@ -1,22 +1,71 @@
 $ErrorActionPreference = 'Stop'
+
 $root = Split-Path -Parent $PSScriptRoot
 Push-Location $root
 
+function Invoke-DotNet {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]] $Arguments
+    )
+
+    & dotnet @Arguments
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet $($Arguments -join ' ') failed with exit code $LASTEXITCODE."
+    }
+}
+
 try {
     Get-ChildItem -Path . -Directory -Recurse -Force |
-        Where-Object { $_.Name -in @('bin', 'obj', 'TestResults', 'artifacts') } |
+        Where-Object {
+            $_.Name -in @(
+                'bin',
+                'obj',
+                'TestResults',
+                'artifacts'
+            )
+        } |
         Sort-Object FullName -Descending |
         Remove-Item -Recurse -Force
 
-    dotnet restore IndustrialControls.Avalonia.sln --force-evaluate
-    dotnet build IndustrialControls.Avalonia.sln -c Release --no-restore
-    dotnet test tests\IndustrialControls.Avalonia.Tests\IndustrialControls.Avalonia.Tests.csproj -c Release --no-build
-    dotnet pack src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj -c Release --no-build -o artifacts\packages
+    Invoke-DotNet -Arguments @(
+        'restore',
+        'IndustrialControls.Avalonia.sln',
+        '--force-evaluate'
+    )
+
+    Invoke-DotNet -Arguments @(
+        'build',
+        'IndustrialControls.Avalonia.sln',
+        '-c',
+        'Release',
+        '--no-restore'
+    )
+
+    Invoke-DotNet -Arguments @(
+        'test',
+        '--project',
+        'tests\IndustrialControls.Avalonia.Tests\IndustrialControls.Avalonia.Tests.csproj',
+        '-c',
+        'Release',
+        '--no-build'
+    )
+
+    Invoke-DotNet -Arguments @(
+        'pack',
+        'src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj',
+        '-c',
+        'Release',
+        '--no-build',
+        '-o',
+        'artifacts\packages'
+    )
 
     & "$PSScriptRoot\validate-package.ps1"
 
     Write-Host ''
-    Write-Host 'M8 RC1 VALIDATION PASSED'
+    Write-Host 'M8 RC6-B VALIDATION PASSED'
 }
 finally {
     Pop-Location

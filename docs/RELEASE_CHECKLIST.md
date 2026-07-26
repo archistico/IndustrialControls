@@ -35,7 +35,7 @@ The gate performs:
 
 After the release candidate passes all gates:
 
-- change version from `1.0.0-rc.6` to `1.0.0`;
+- change version from `1.0.0-rc.7` to `1.0.0`;
 - update the changelog;
 - rebuild, test and pack;
 - archive the validated complete ZIP.

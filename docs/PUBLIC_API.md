@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.6`
+Version: `1.0.0-rc.7`
 
 The following control families are release-gated:
 
@@ -93,3 +93,15 @@ Use `PriorityColor` in tests and non-rendering logic.
 - `CanInvoke`;
 - `StatusText`;
 - `TryInvoke()`.
+
+
+## Reactive summary properties
+
+`AlarmIndicatorPanel` exposes observable direct properties:
+
+- `ActiveConditionCount`;
+- `LatchedAlarmCount`;
+- `UnacknowledgedCount`.
+
+Bindings update when indicators are added, removed, activated, acknowledged,
+returned or reset.

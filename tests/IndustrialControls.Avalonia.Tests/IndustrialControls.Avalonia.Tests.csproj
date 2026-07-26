@@ -28,5 +28,11 @@
     <None Include="..\..\src\IndustrialControls.Avalonia\Controls\IlluminatedPushButton.cs"
           Link="Assets\IlluminatedPushButton.cs"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\scripts\validate.ps1"
+          Link="Assets\validate.ps1"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\scripts\validate.cmd"
+          Link="Assets\validate.cmd"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

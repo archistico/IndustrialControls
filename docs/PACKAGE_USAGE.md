@@ -3,7 +3,7 @@
 ## Install
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.6
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.7
 ```
 
 ## Include the theme

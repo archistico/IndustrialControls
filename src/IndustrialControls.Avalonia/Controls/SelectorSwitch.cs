@@ -1,8 +1,8 @@
 using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using System.Threading;
 
 namespace IndustrialControls.Avalonia.Controls;
 
@@ -13,19 +13,25 @@ public sealed class SelectorSwitch : TemplatedControl
 {
     public static readonly StyledProperty<int> PositionCountProperty =
         AvaloniaProperty.Register<SelectorSwitch, int>(
-            nameof(PositionCount), 3, validate: value => value is >= 2 and <= 5);
+            nameof(PositionCount),
+            3,
+            validate: value => value is >= 2 and <= 5);
 
     public static readonly StyledProperty<int> PositionProperty =
         AvaloniaProperty.Register<SelectorSwitch, int>(
-            nameof(Position), 0, validate: value => value is >= 0 and <= 4);
+            nameof(Position),
+            0,
+            validate: value => value is >= 0 and <= 4);
 
     public static readonly StyledProperty<string> PositionLabelsProperty =
         AvaloniaProperty.Register<SelectorSwitch, string>(
-            nameof(PositionLabels), "OFF|AUTO|MANUAL");
+            nameof(PositionLabels),
+            "OFF|AUTO|MANUAL");
 
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<SelectorSwitch, string>(
-            nameof(Title), string.Empty);
+            nameof(Title),
+            string.Empty);
 
     public static readonly StyledProperty<bool> IsInterlockedProperty =
         AvaloniaProperty.Register<SelectorSwitch, bool>(
@@ -33,19 +39,23 @@ public sealed class SelectorSwitch : TemplatedControl
 
     public static readonly StyledProperty<string> InterlockReasonProperty =
         AvaloniaProperty.Register<SelectorSwitch, string>(
-            nameof(InterlockReason), "SELECTION NOT PERMITTED");
+            nameof(InterlockReason),
+            "SELECTION NOT PERMITTED");
 
     public static readonly DirectProperty<SelectorSwitch, double> HandleAngleProperty =
         AvaloniaProperty.RegisterDirect<SelectorSwitch, double>(
-            nameof(HandleAngle), control => control.HandleAngle);
+            nameof(HandleAngle),
+            control => control.HandleAngle);
 
     public static readonly DirectProperty<SelectorSwitch, string> SelectedLabelProperty =
         AvaloniaProperty.RegisterDirect<SelectorSwitch, string>(
-            nameof(SelectedLabel), control => control.SelectedLabel);
+            nameof(SelectedLabel),
+            control => control.SelectedLabel);
 
     public static readonly DirectProperty<SelectorSwitch, string> StatusTextProperty =
         AvaloniaProperty.RegisterDirect<SelectorSwitch, string>(
-            nameof(StatusText), control => control.StatusText);
+            nameof(StatusText),
+            control => control.StatusText);
 
     private readonly SynchronizationContext? _automationContext;
     private readonly SendOrPostCallback _flushAutomationMetadataCallback;
@@ -59,10 +69,10 @@ public sealed class SelectorSwitch : TemplatedControl
     static SelectorSwitch()
     {
         PositionCountProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.OnPositionCountChanged());
 
         PositionProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState(false));
+            (control, _) => control.OnPositionChanged());
 
         TitleProperty.Changed.AddClassHandler<SelectorSwitch>(
             (control, _) => control.RefreshState(true));
@@ -83,32 +93,22 @@ public sealed class SelectorSwitch : TemplatedControl
         _automationContext = SynchronizationContext.Current;
         _flushAutomationMetadataCallback =
             static state => ((SelectorSwitch)state!).FlushAutomationMetadata();
+
         RefreshLabelsAndState();
     }
 
     public int PositionCount
     {
         get => GetValue(PositionCountProperty);
-        set
-        {
-            SetValue(PositionCountProperty, value);
-
-            if (Position >= value)
-            {
-                Position = value - 1;
-            }
-        }
+        set => SetValue(PositionCountProperty, value);
     }
 
     public int Position
     {
         get => GetValue(PositionProperty);
-        set => SetValue(
+        set => SetCurrentValue(
             PositionProperty,
-            Math.Clamp(
-                value,
-                0,
-                Math.Max(0, PositionCount - 1)));
+            ClampPosition(value));
     }
 
     public string PositionLabels
@@ -183,7 +183,8 @@ public sealed class SelectorSwitch : TemplatedControl
             Position - 1,
             0));
 
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    protected override void OnPointerPressed(
+        PointerPressedEventArgs e)
     {
         if (IsInterlocked)
         {
@@ -244,6 +245,48 @@ public sealed class SelectorSwitch : TemplatedControl
         }
     }
 
+    private void OnPositionCountChanged()
+    {
+        if (NormalizePosition())
+        {
+            return;
+        }
+
+        RefreshState(true);
+    }
+
+    private void OnPositionChanged()
+    {
+        if (NormalizePosition())
+        {
+            return;
+        }
+
+        RefreshState(false);
+    }
+
+    private bool NormalizePosition()
+    {
+        var normalized = ClampPosition(Position);
+
+        if (normalized == Position)
+        {
+            return false;
+        }
+
+        SetCurrentValue(
+            PositionProperty,
+            normalized);
+
+        return true;
+    }
+
+    private int ClampPosition(int position) =>
+        Math.Clamp(
+            position,
+            0,
+            Math.Max(0, PositionCount - 1));
+
     private void RefreshLabelsAndState()
     {
         _labels = PositionLabels.Split(
@@ -254,23 +297,22 @@ public sealed class SelectorSwitch : TemplatedControl
         RefreshState(true);
     }
 
-    private void RefreshState(bool refreshAutomationImmediately)
+    private void RefreshState(
+        bool refreshAutomationImmediately)
     {
-        var count = Math.Max(2, PositionCount);
-        var safePosition = Math.Clamp(
-            Position,
-            0,
-            count - 1);
+        var count = Math.Max(
+            2,
+            PositionCount);
 
         HandleAngle =
             -60.0 +
-            (safePosition * (120.0 / (count - 1)));
+            (Position * (120.0 / (count - 1)));
 
-        SelectedLabel = safePosition < _labels.Length
-            ? _labels[safePosition]
+        SelectedLabel = Position < _labels.Length
+            ? _labels[Position]
             : string.Concat(
                 "POSITION ",
-                safePosition + 1);
+                Position + 1);
 
         StatusText = IsInterlocked
             ? string.Concat(
@@ -290,9 +332,14 @@ public sealed class SelectorSwitch : TemplatedControl
 
     private void RequestAutomationMetadataRefresh()
     {
-        if (_automationRefreshPending ||
-            _automationContext is null)
+        if (_automationRefreshPending)
         {
+            return;
+        }
+
+        if (_automationContext is null)
+        {
+            RefreshAutomationMetadata();
             return;
         }
 

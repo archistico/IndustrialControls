@@ -76,6 +76,9 @@ public sealed class OscilloscopeDisplay : Control
             (control, _) => control.RefreshAutomationMetadata());
         QualityProperty.Changed.AddClassHandler<OscilloscopeDisplay>(
             (control, _) => control.RefreshAutomationMetadata());
+
+        MaxSamplesProperty.Changed.AddClassHandler<OscilloscopeDisplay>(
+            (control, _) => control.OnMaxSamplesChanged());
     }
 
     public OscilloscopeDisplay() => RefreshAutomationMetadata();
@@ -113,11 +116,7 @@ public sealed class OscilloscopeDisplay : Control
     public int MaxSamples
     {
         get => GetValue(MaxSamplesProperty);
-        set
-        {
-            SetValue(MaxSamplesProperty, value);
-            TrimToCapacity();
-        }
+        set => SetValue(MaxSamplesProperty, value);
     }
 
     public Color TraceColor
@@ -367,6 +366,13 @@ public sealed class OscilloscopeDisplay : Control
                 "; quality ",
                 Quality),
             "Oscilloscope");
+    }
+
+    private void OnMaxSamplesChanged()
+    {
+        TrimToCapacity();
+        RefreshAutomationMetadata();
+        InvalidateVisual();
     }
 
     private void TrimToCapacity()
