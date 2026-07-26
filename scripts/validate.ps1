@@ -66,7 +66,7 @@ try {
     & "$PSScriptRoot\validate-package-consumer.ps1"
 
     Write-Host ''
-    Write-Host 'M8 RC6-D VALIDATION PASSED'
+    Write-Host '1.0.0 VALIDATION PASSED'
 }
 finally {
     Pop-Location

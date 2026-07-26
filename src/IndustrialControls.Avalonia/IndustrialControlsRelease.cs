@@ -7,7 +7,7 @@ public static class IndustrialControlsRelease
 {
     public const string ProductName = "IndustrialControls.Avalonia";
 
-    public const string Version = "1.0.0-rc.9";
+    public const string Version = "1.0.0";
 
     public const string ThemeTypeName =
         "IndustrialControls.Avalonia.Themes.IndustrialControlsTheme";

@@ -85,3 +85,10 @@ continuity.
 `TimeWindowSeconds` is the authoritative horizontal time span and
 `MajorGridSeconds` is the authoritative temporal grid interval. No physical
 screen-millimetre conversion is claimed by the control.
+
+
+## Stable baseline measurement
+
+The benchmark output produced from the validated `1.0.0` ZIP is the
+authoritative stable performance baseline. Record it together with the
+validation output before publication.

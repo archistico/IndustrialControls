@@ -165,7 +165,7 @@ Diagnostica esplicita delle discontinuità e dei punti incerti nello strip chart
 - smoke test con applicazione consumer indipendente;
 - checklist finale e documentazione API riallineate.
 
-Stato: **CANDIDATE**
+Stato: **VALIDATED — HOTFIX 3**
 
 
 ### RC6-D Hotfix 1
@@ -182,3 +182,25 @@ Riallineamento del test XML-doc al contratto finale dello strip chart.
 
 Isolamento del progetto consumer temporaneo dalla Central Package Management
 del repository.
+
+
+### IndustrialControls.Avalonia 1.0.0
+
+- promozione della versione stabile;
+- metadati NuGet e runtime allineati;
+- changelog stabile;
+- gate rinominato `1.0.0 VALIDATION PASSED`;
+- package consumer configurato sulla versione stabile;
+- checklist finale convertita in gate di accettazione della baseline.
+
+Stato: **VALIDATED — 167 TESTS, PACKAGE AND CONSUMER GATES PASSED**
+
+
+### IndustrialControls.Avalonia 1.0.0 Docs1
+
+- cartella radice `screenshot`;
+- sette schermate del catalogo demo;
+- galleria visuale nel README;
+- immagini incluse e verificate nel pacchetto NuGet.
+
+Stato: **DOCUMENTATION CANDIDATE — PACKAGE REVALIDATION REQUIRED**

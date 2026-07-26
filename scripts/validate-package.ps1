@@ -51,6 +51,13 @@ try {
         'docs/CONTROL_CATALOG.md',
         'docs/PERFORMANCE.md',
         'docs/RELEASE_CHECKLIST.md',
+        'screenshot/01-foundation.png',
+        'screenshot/02-lamps-and-led.png',
+        'screenshot/03-gauges.png',
+        'screenshot/04-operator-controls.png',
+        'screenshot/05-trends-and-screens.png',
+        'screenshot/06-alarm-indicators.png',
+        'screenshot/07-static-and-release.png',
         'lib/net10.0/IndustrialControls.Avalonia.dll',
         'lib/net10.0/IndustrialControls.Avalonia.xml'
     )

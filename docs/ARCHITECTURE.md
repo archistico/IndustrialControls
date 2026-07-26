@@ -114,3 +114,11 @@ The release gate now validates both package structure and actual package
 consumption. A temporary standalone application restores the generated
 candidate package, builds against its public API and executes a deterministic
 smoke scenario.
+
+
+## Stable 1.0 API lock
+
+Version `1.0.0` promotes the validated RC6-D API without adding new public
+control types or changing runtime behavior. Internal implementation helpers
+remain internal, and the package-consumer gate validates the installed NuGet
+surface rather than repository project references.

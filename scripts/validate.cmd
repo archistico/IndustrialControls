@@ -26,7 +26,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-package-con
 if errorlevel 1 goto :fail
 
 echo.
-echo M8 RC6-D VALIDATION PASSED
+echo 1.0.0 VALIDATION PASSED
 popd
 exit /b 0
 

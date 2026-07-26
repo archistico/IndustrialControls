@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.0.0 documentation update 1
+
+### Screenshots
+
+- added the seven complete demo-catalog screenshots under `screenshot/`;
+- added a README gallery for Foundation, Lamps & LED, Gauges, Operator
+  Controls, Trends & Screens, Alarm Indicators and Static & Release;
+- included the screenshot gallery in the NuGet package;
+- extended package validation and tests to require every PNG.
+
+
+## 1.0.0
+
+### Stable release
+
+- first stable release of the reusable Avalonia industrial-control library;
+- includes the complete Industrial90 theme and public control catalog;
+- includes lamps, LED displays, alarm annunciators, gauges, operator controls,
+  trends, oscilloscope, strip-chart recorder, industrial screens, alarm
+  indicators, safety placards and bolted data plates;
+- preserves deterministic interlock, acknowledgement, latching, reset and
+  spring-return behavior;
+- provides binding-safe Avalonia property handling and observable summary
+  properties;
+- uses bounded time-series storage, responsive marquee caching and
+  pixel-decimated strip-chart rendering;
+- includes accessibility metadata, keyboard operation and visible focus;
+- ships with complete integration, API, accessibility, performance and release
+  documentation;
+- validated through Release build, the complete test suite, NuGet package
+  inspection and standalone package-consumer execution.
+
+
 ## 1.0.0-rc.9 Hotfix 3
 
 ### Package-consumer gate

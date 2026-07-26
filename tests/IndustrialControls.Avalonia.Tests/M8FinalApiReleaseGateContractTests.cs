@@ -7,10 +7,10 @@ namespace IndustrialControls.Avalonia.Tests;
 public sealed class M8FinalApiReleaseGateContractTests
 {
     [Fact]
-    public void FinalCandidateVersionIsConsistent()
+    public void StableVersionIsConsistent()
     {
         Assert.Equal(
-            "1.0.0-rc.9",
+            "1.0.0",
             IndustrialControlsRelease.Version);
     }
 
@@ -168,7 +168,7 @@ public sealed class M8FinalApiReleaseGateContractTests
     }
 
     [Fact]
-    public void ReleaseGateUsesFinalLabelAndPackageConsumer()
+    public void ReleaseGateUsesStableLabelAndPackageConsumer()
     {
         var powerShell =
             ReadAsset(
@@ -183,19 +183,19 @@ public sealed class M8FinalApiReleaseGateContractTests
                 "validate-package-consumer.ps1");
 
         Assert.Contains(
-            "M8 RC6-D VALIDATION PASSED",
+            "1.0.0 VALIDATION PASSED",
             powerShell);
 
         Assert.Contains(
-            "M8 RC6-D VALIDATION PASSED",
+            "1.0.0 VALIDATION PASSED",
             command);
 
         Assert.DoesNotContain(
-            "M8 RC6-B VALIDATION PASSED",
+            "M8 RC6-D VALIDATION PASSED",
             powerShell);
 
         Assert.DoesNotContain(
-            "M8 RC6-B VALIDATION PASSED",
+            "M8 RC6-D VALIDATION PASSED",
             command);
 
         Assert.Contains(

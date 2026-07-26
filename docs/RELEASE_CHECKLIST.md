@@ -1,6 +1,6 @@
-# Release checklist
+# IndustrialControls.Avalonia 1.0.0 release checklist
 
-## Automated candidate gate
+## Automated stable-release gate
 
 Run:
 
@@ -18,12 +18,12 @@ The gate must complete every step:
 - standalone consumer restore from the generated `.nupkg`;
 - standalone consumer build and execution.
 
-Expected final lines for this candidate:
+Expected final lines for the stable release:
 
 ```text
-PACKAGE CONTENT PASSED: IndustrialControls.Avalonia.1.0.0-rc.9.nupkg
-PACKAGE CONSUMER PASSED: 1.0.0-rc.9
-M8 RC6-D VALIDATION PASSED
+PACKAGE CONTENT PASSED: IndustrialControls.Avalonia.1.0.0.nupkg
+PACKAGE CONSUMER PASSED: 1.0.0
+1.0.0 VALIDATION PASSED
 ```
 
 ## Performance gate
@@ -101,7 +101,7 @@ Verify all seven catalog tabs.
 In a separate Avalonia application:
 
 1. add the local package source;
-2. install `IndustrialControls.Avalonia` version `1.0.0-rc.9`;
+2. install `IndustrialControls.Avalonia` version `1.0.0`;
 3. add `IndustrialControlsTheme` after the application theme;
 4. render at least one gauge, one operator control and one alarm indicator;
 5. confirm keyboard focus and automation metadata;
@@ -115,7 +115,7 @@ Management so that its `PackageReference` pins the exact candidate version.
 
 ## API lock review
 
-Before changing the version to `1.0.0`, confirm:
+For the stable `1.0.0` API lock, confirm:
 
 - no public property is decorative or behaviorless;
 - `PaperSpeed` is absent;
@@ -124,13 +124,12 @@ Before changing the version to `1.0.0`, confirm:
 - public API documentation matches the assembly;
 - all package documentation uses the final candidate version.
 
-## Stable release
+## Stable baseline acceptance
 
-After this candidate passes every gate:
+After this package passes every gate:
 
-1. change `1.0.0-rc.9` to `1.0.0` in authoritative release metadata;
-2. add the stable changelog entry;
-3. change the gate label to `1.0.0 VALIDATION PASSED`;
-4. run the complete automated gate;
-5. repeat the manual demo gate;
-6. archive the complete validated ZIP as the stable baseline.
+1. confirm the complete automated output;
+2. repeat the manual demo gate;
+3. record the benchmark output;
+4. archive the complete validated ZIP as the official `1.0.0` baseline;
+5. create any repository tag or publication only from that validated baseline.

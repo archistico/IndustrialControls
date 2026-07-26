@@ -2,11 +2,11 @@
 
 ## Baseline ufficiale
 
-M8 RC6-C Hotfix 2 / versione `1.0.0-rc.8` è la baseline validata.
+IndustrialControls.Avalonia `1.0.0` è la baseline funzionale validata: build Release, 167 test, package content e consumer smoke sono passati.
 
 ## Candidate corrente
 
-M8 RC6-D — Final API Cleanup & Release Gate / versione `1.0.0-rc.9`.
+IndustrialControls.Avalonia `1.0.0 Docs1` — screenshot and README documentation update.
 
 ## Contenuto
 
@@ -307,3 +307,39 @@ Package-consumer gate correction:
 - its explicit `PackageReference` version therefore validates the exact
   candidate package without conflicting with repository CPM;
 - library, public API and package version are unchanged.
+
+
+## IndustrialControls.Avalonia 1.0.0 stable release candidate
+
+This candidate is a version-promotion-only release based on validated RC6-D
+Hotfix 3.
+
+Changes:
+
+- package version changed from `1.0.0-rc.9` to `1.0.0`;
+- runtime release metadata changed to `1.0.0`;
+- README and package-usage examples target `1.0.0`;
+- package, consumer and gate expectations target the stable version;
+- gate label changed to `1.0.0 VALIDATION PASSED`;
+- stable changelog and release-checklist entries added;
+- no functional production behavior changed after the validated RC6-D
+  baseline.
+
+The stable baseline becomes official only after the complete local gate and
+manual demo validation pass.
+
+
+## IndustrialControls.Avalonia 1.0.0 Docs1
+
+Documentation-only update based on the validated stable `1.0.0` candidate:
+
+- seven user-provided PNG screenshots copied to the root `screenshot` folder;
+- README gallery uses repository-relative image paths;
+- images are included in the NuGet package;
+- package validation requires all seven entries;
+- a stable-release test verifies every README reference, file and PNG
+  signature;
+- production code and public API are unchanged.
+
+Because the `.nupkg` contents changed, rerun the complete validation gate before
+accepting Docs1 as the final archived stable baseline.

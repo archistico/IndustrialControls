@@ -52,5 +52,35 @@
     <None Include="..\..\README.md"
           Link="Assets\README.md"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj"
+          Link="Assets\IndustrialControls.Avalonia.csproj"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\docs\RELEASE_CHECKLIST.md"
+          Link="Assets\RELEASE_CHECKLIST.md"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\CHANGELOG.md"
+          Link="Assets\CHANGELOG.md"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\01-foundation.png"
+          Link="Assets\screenshot\01-foundation.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\02-lamps-and-led.png"
+          Link="Assets\screenshot\02-lamps-and-led.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\03-gauges.png"
+          Link="Assets\screenshot\03-gauges.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\04-operator-controls.png"
+          Link="Assets\screenshot\04-operator-controls.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\05-trends-and-screens.png"
+          Link="Assets\screenshot\05-trends-and-screens.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\06-alarm-indicators.png"
+          Link="Assets\screenshot\06-alarm-indicators.png"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\07-static-and-release.png"
+          Link="Assets\screenshot\07-static-and-release.png"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

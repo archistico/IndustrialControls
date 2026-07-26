@@ -17,6 +17,39 @@ La libreria è pensata per:
 I controlli sono separati dalla demo e possono essere importati in qualunque
 applicazione Avalonia compatibile con `.NET 10`.
 
+## Anteprima del catalogo
+
+La demo inclusa nel repository raccoglie l'intero catalogo dei controlli in
+sette sezioni.
+
+### Foundation
+
+![IndustrialControls.Avalonia — Foundation](screenshot/01-foundation.png)
+
+### Lamps & LED
+
+![IndustrialControls.Avalonia — Lamps and LED](screenshot/02-lamps-and-led.png)
+
+### Gauges
+
+![IndustrialControls.Avalonia — Gauges](screenshot/03-gauges.png)
+
+### Operator Controls
+
+![IndustrialControls.Avalonia — Operator Controls](screenshot/04-operator-controls.png)
+
+### Trends & Screens
+
+![IndustrialControls.Avalonia — Trends and Screens](screenshot/05-trends-and-screens.png)
+
+### Alarm Indicators
+
+![IndustrialControls.Avalonia — Alarm Indicators](screenshot/06-alarm-indicators.png)
+
+### Static & Release
+
+![IndustrialControls.Avalonia — Static and Release](screenshot/07-static-and-release.png)
+
 ## Requisiti
 
 - .NET 10 SDK
@@ -46,7 +79,7 @@ il file generato.
 Esempio con una sorgente locale configurata:
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.9
+dotnet add package IndustrialControls.Avalonia --version 1.0.0
 ```
 
 ### Da riferimento al progetto

@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.9`
+Version: `1.0.0`
 
 The following control families are release-gated:
 
@@ -107,7 +107,7 @@ Bindings update when indicators are added, removed, activated, acknowledged,
 returned or reset.
 
 
-## Final candidate API decisions
+## Stable 1.0 API decisions
 
 ### StripChartRecorder
 
