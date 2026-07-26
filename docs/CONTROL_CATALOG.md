@@ -102,3 +102,33 @@ Indicatore numerico ad alta leggibilità con unità e stato.
 ## DeviationGauge
 
 Indicatore centrato sul setpoint per mostrare scostamenti positivi e negativi.
+
+
+## IndustrialSlider
+
+Slider industriale per valori di riferimento e comandi analogici. Mostra titolo, valore formattato, unità, estremi del campo e stato di interlock.
+
+## RotaryKnob
+
+Manopola rotativa vettoriale con campo numerico, incremento discreto, indicatore angolare e supporto per click, rotella e tastiera.
+
+## SelectorSwitch
+
+Selettore rotativo configurabile da due a cinque posizioni, con etichette e blocco interlock.
+
+## IndustrialToggleSwitch
+
+Interruttore a leva bistabile con didascalie ON/OFF personalizzabili e comando impedito quando interbloccato.
+
+## SpringReturnSwitch
+
+Comando momentaneo a tre posizioni sinistra-centro-destra. Al rilascio ritorna sempre nella posizione centrale.
+
+## InterlockIndicator
+
+Indicatore centralizzato di permissivi soddisfatti, stato consentito/interbloccato e motivo operativo.
+
+
+## IndustrialRockerSwitch
+
+Interruttore ON/OFF a bilanciere in stile pannello industriale, con simbologia `I / O`, stato bistabile e interlock.

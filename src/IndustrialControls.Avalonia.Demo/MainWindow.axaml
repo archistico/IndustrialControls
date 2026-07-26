@@ -3,19 +3,21 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:industrial="using:IndustrialControls.Avalonia.Controls"
-    Title="IndustrialControls.Avalonia — M4"
-    Width="1320" Height="930" MinWidth="1020" MinHeight="720"
+    Title="IndustrialControls.Avalonia — M5"
+    Width="1380" Height="940" MinWidth="1060" MinHeight="740"
     Background="#1C1F21">
 
   <Grid RowDefinitions="Auto,*">
-    <Border Padding="22,16" Background="#111315" BorderBrush="#686E72" BorderThickness="0,0,0,2">
+    <Border Padding="22,16" Background="#111315"
+            BorderBrush="#686E72" BorderThickness="0,0,0,2">
       <Grid ColumnDefinitions="*,Auto">
         <StackPanel>
-          <TextBlock Text="INDUSTRIAL CONTROLS" FontSize="25" FontWeight="Bold" Foreground="#ECEEE7" />
-          <TextBlock Text="M4 · strumenti radiali, lineari, digitali e di deviazione"
+          <TextBlock Text="INDUSTRIAL CONTROLS"
+                     FontSize="25" FontWeight="Bold" Foreground="#ECEEE7" />
+          <TextBlock Text="M5 · slider, manopole, selettori, interruttori e interlock"
                      Foreground="#A8ADA8" Margin="0,4,0,0" />
         </StackPanel>
-        <industrial:EngravedLabel Grid.Column="1" Text="M4 CANDIDATE"
+        <industrial:EngravedLabel Grid.Column="1" Text="M5 CANDIDATE"
                                   Variant="Aluminum" ShowFasteners="True"
                                   VerticalAlignment="Center" MinWidth="170" />
       </Grid>
@@ -23,98 +25,121 @@
 
     <ScrollViewer Grid.Row="1">
       <StackPanel Margin="24" Spacing="20">
-        <industrial:IndustrialPanel Header="STRUMENTI RADIALI"
-                                    Subtitle="VALORE, CAMPO OPERATIVO E SOGLIE">
-          <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="18">
-            <industrial:RadialGauge x:Name="PowerGauge" Title="GENERATOR POWER"
-                                    Minimum="0" Maximum="10" Value="5"
-                                    Unit="MWe" DecimalPlaces="2" ScaleDecimalPlaces="0"
-                                    MajorTickCount="11" MinorTicksPerInterval="4"
-                                    CautionHigh="8" WarningHigh="9.2" />
-            <industrial:RadialGauge Grid.Column="1" Title="STEAM PRESSURE"
-                                    Minimum="0" Maximum="8" Value="6.85"
-                                    Unit="MPa" DecimalPlaces="2" ScaleDecimalPlaces="1"
-                                    MajorTickCount="9" MinorTicksPerInterval="4"
-                                    CautionLow="5.5" WarningLow="4.8"
-                                    CautionHigh="7.2" WarningHigh="7.6" />
-            <industrial:RadialGauge Grid.Column="2" Title="TURBINE SPEED"
-                                    Minimum="0" Maximum="1800" Value="1500"
-                                    Unit="rpm" DecimalPlaces="0" ScaleDecimalPlaces="0"
-                                    MajorTickCount="7" MinorTicksPerInterval="4"
-                                    CautionHigh="1560" WarningHigh="1620" />
-            <industrial:RadialGauge Grid.Column="3" Title="CONDENSER VACUUM"
-                                    Minimum="0" Maximum="100" Value="91"
-                                    Unit="%" DecimalPlaces="1" ScaleDecimalPlaces="0"
-                                    MajorTickCount="11" MinorTicksPerInterval="4"
-                                    CautionLow="80" WarningLow="70" />
-          </Grid>
-        </industrial:IndustrialPanel>
-
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
-          <industrial:IndustrialPanel Header="STRUMENTI LINEARI"
-                                      Subtitle="LIVELLI E POSIZIONI">
-            <StackPanel Spacing="16">
-              <industrial:LinearGauge x:Name="LevelGauge" Title="STEAM DRUM LEVEL"
-                                      Minimum="0" Maximum="100" Value="52"
-                                      Unit="%" DecimalPlaces="1"
-                                      CautionLow="30" WarningLow="20"
-                                      CautionHigh="70" WarningHigh="80" />
-              <industrial:LinearGauge x:Name="ValveGauge" Title="TURBINE CONTROL VALVE"
-                                      Minimum="0" Maximum="100" Value="48"
-                                      Unit="%" DecimalPlaces="1"
-                                      CautionHigh="90" WarningHigh="98" />
-              <industrial:LinearGauge Title="FEEDWATER FLOW"
-                                      Minimum="0" Maximum="25" Value="14.2"
-                                      Unit="kg/s" DecimalPlaces="1"
-                                      CautionLow="8" WarningLow="5" />
+        <Grid ColumnDefinitions="1.2*,0.8*" ColumnSpacing="20">
+          <industrial:IndustrialPanel Header="COMANDI ANALOGICI"
+                                      Subtitle="VALORI DI RIFERIMENTO E REGOLAZIONE FINE">
+            <StackPanel Spacing="22">
+              <industrial:IndustrialSlider x:Name="FeedwaterSlider"
+                                           Title="FEEDWATER FLOW SETPOINT"
+                                           Minimum="0" Maximum="25" Value="14.2"
+                                           SmallChange="0.1" LargeChange="1"
+                                           TickFrequency="0.1"
+                                           Unit="kg/s" DecimalPlaces="1"
+                                           InterlockReason="FEEDWATER CONTROL NOT IN MANUAL" />
+              <industrial:IndustrialSlider x:Name="ValveSlider"
+                                           Title="TURBINE CONTROL VALVE DEMAND"
+                                           Minimum="0" Maximum="100" Value="48"
+                                           SmallChange="1" LargeChange="5"
+                                           TickFrequency="1"
+                                           Unit="%" DecimalPlaces="1"
+                                           InterlockReason="GOVERNOR OWNS VALVE DEMAND" />
             </StackPanel>
           </industrial:IndustrialPanel>
 
-          <industrial:IndustrialPanel Grid.Column="1" Header="DIGITALI E DEVIAZIONE"
-                                      Subtitle="MISURA PRINCIPALE E SCOSTAMENTO">
-            <StackPanel Spacing="16">
-              <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
-                <industrial:DigitalGauge x:Name="TemperatureGauge"
-                                         Title="MAIN STEAM TEMPERATURE"
-                                         Minimum="0" Maximum="350" Value="278.4"
-                                         Unit="°C" DecimalPlaces="1"
-                                         CautionHigh="310" WarningHigh="330" />
-                <industrial:DigitalGauge Grid.Column="1"
-                                         Title="GRID FREQUENCY"
-                                         Minimum="45" Maximum="55" Value="50.02"
-                                         Unit="Hz" DecimalPlaces="2"
-                                         CautionLow="49.5" WarningLow="49"
-                                         CautionHigh="50.5" WarningHigh="51" />
-              </Grid>
-              <industrial:DeviationGauge x:Name="DeviationGauge"
-                                         Title="POWER SETPOINT DEVIATION"
-                                         Minimum="-5" Maximum="5"
-                                         Value="5" Setpoint="5"
-                                         Unit="MWe" DecimalPlaces="2"
-                                         CautionLow="-1" WarningLow="-2"
-                                         CautionHigh="1" WarningHigh="2" />
+          <industrial:IndustrialPanel Grid.Column="1"
+                                      Header="MANOPOLA ROTATIVA"
+                                      Subtitle="CLICK, ROTELLA O TASTI DIREZIONALI">
+            <industrial:RotaryKnob x:Name="LoadKnob"
+                                   Title="GENERATOR LOAD SETPOINT"
+                                   Minimum="0" Maximum="10" Value="5"
+                                   SmallChange="0.25" TickCount="11"
+                                   Unit="MWe" DecimalPlaces="2"
+                                   InterlockReason="GENERATOR BREAKER OPEN" />
+          </industrial:IndustrialPanel>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="20">
+          <industrial:IndustrialPanel Header="SELETTORE MULTIPOSIZIONE"
+                                      Subtitle="OFF / AUTO / MANUAL">
+            <industrial:SelectorSwitch x:Name="ModeSelector"
+                                       Title="FEEDWATER CONTROL MODE"
+                                       PositionCount="3"
+                                       Position="1"
+                                       PositionLabels="OFF|AUTO|MANUAL"
+                                       InterlockReason="MODE TRANSFER IN PROGRESS" />
+          </industrial:IndustrialPanel>
+
+          <industrial:IndustrialPanel Grid.Column="1"
+                                      Header="INTERRUTTORE A LEVA"
+                                      Subtitle="COMANDO BISTABILE">
+            <industrial:IndustrialToggleSwitch x:Name="BreakerSwitch"
+                                               Title="GENERATOR BREAKER"
+                                               OnCaption="CLOSED"
+                                               OffCaption="OPEN"
+                                               InterlockReason="SYNCHRONISM NOT PERMITTED" />
+          </industrial:IndustrialPanel>
+
+          <industrial:IndustrialPanel Grid.Column="2"
+                                      Header="INTERRUTTORE ON/OFF"
+                                      Subtitle="BILANCIERE INDUSTRIALE">
+            <industrial:IndustrialRockerSwitch x:Name="PumpSwitch"
+                                               Title="CONDENSATE PUMP"
+                                               OnCaption="ON"
+                                               OffCaption="OFF"
+                                               InterlockReason="START PERMISSIVE NOT SATISFIED" />
+          </industrial:IndustrialPanel>
+
+          <industrial:IndustrialPanel Grid.Column="3"
+                                      Header="RITORNO A MOLLA"
+                                      Subtitle="TENERE PREMUTO A SINISTRA O DESTRA">
+            <industrial:SpringReturnSwitch x:Name="SpeedTrimSwitch"
+                                           Title="TURBINE SPEED TRIM"
+                                           LeftCaption="LOWER"
+                                           CenterCaption="HOLD"
+                                           RightCaption="RAISE"
+                                           InterlockReason="TURBINE TRIPPED" />
+          </industrial:IndustrialPanel>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+          <industrial:IndustrialPanel Header="PERMISSIVI E INTERLOCK"
+                                      Subtitle="STATO CENTRALIZZATO DELLA CATENA DI COMANDO">
+            <industrial:InterlockIndicator x:Name="InterlockState"
+                                           Title="GENERATOR CONTROL PERMISSIVES"
+                                           IsInterlocked="False"
+                                           SatisfiedPermissiveCount="4"
+                                           RequiredPermissiveCount="4"
+                                           Reason="SPEED, VOLTAGE, PHASE AND PROTECTION PERMISSIVES SATISFIED" />
+          </industrial:IndustrialPanel>
+
+          <industrial:IndustrialPanel Grid.Column="1"
+                                      Header="PROVA INTERATTIVA"
+                                      Subtitle="APPLICA O RIMUOVE IL BLOCCO">
+            <StackPanel Orientation="Horizontal" Spacing="14">
+              <industrial:IlluminatedPushButton Content="INTERLOCK"
+                                                SecondaryCaption="SIMULATE BLOCK"
+                                                LampColor="Red"
+                                                IsLampOn="True"
+                                                Click="OnApplyInterlock" />
+              <industrial:IlluminatedPushButton Content="PERMIT"
+                                                SecondaryCaption="RESTORE"
+                                                LampColor="Green"
+                                                IsLampOn="True"
+                                                Click="OnClearInterlock" />
             </StackPanel>
           </industrial:IndustrialPanel>
         </Grid>
 
-        <industrial:IndustrialPanel Header="PROVA INTERATTIVA"
-                                    Subtitle="I COMANDI MODIFICANO TUTTI GLI STRUMENTI">
-          <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="14">
-            <industrial:IlluminatedPushButton Content="LOAD +" SecondaryCaption="+0.25 MWe"
-                                              LampColor="Green" IsLampOn="True"
-                                              Click="OnLoadRaise" />
-            <industrial:IlluminatedPushButton Grid.Column="1" Content="LOAD -" SecondaryCaption="-0.25 MWe"
-                                              LampColor="Amber" IsLampOn="True"
-                                              Click="OnLoadLower" />
-            <industrial:IlluminatedPushButton Grid.Column="2" Content="DISTURB"
-                                              SecondaryCaption="PROCESS"
-                                              LampColor="Red" IsLampOn="True"
-                                              Click="OnDisturb" />
-            <industrial:LedMatrixDisplay x:Name="StatusDisplay" Grid.Column="3"
-                                         Text="UNIT STABLE - ALL PARAMETERS NORMAL"
-                                         LedColor="Green" VerticalAlignment="Center" />
-            <industrial:EngravedLabel Grid.Column="4" Text="NEXT: M5 CONTROLS"
-                                      Variant="Red" ShowFasteners="True"
+        <industrial:IndustrialPanel Header="STATO OPERATORE"
+                                    Subtitle="RISULTATO DELLA PROVA INTERATTIVA">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+            <industrial:LedMatrixDisplay x:Name="StatusDisplay"
+                                         Text="ALL OPERATOR CONTROLS AVAILABLE"
+                                         LedColor="Green" />
+            <industrial:EngravedLabel Grid.Column="1"
+                                      Text="NEXT: M6 TRENDS"
+                                      Variant="Red"
+                                      ShowFasteners="True"
                                       VerticalAlignment="Center" />
           </Grid>
         </industrial:IndustrialPanel>

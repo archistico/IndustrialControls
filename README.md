@@ -2,19 +2,22 @@
 
 Libreria Avalonia riutilizzabile per interfacce industriali e sale controllo, con estetica anni Novanta.
 
-## M4 Hotfix 4
+## M5 Hotfix 3
 
-Include le milestone M0–M3 validate e aggiunge:
+Include le milestone M0–M4 validate e aggiunge:
 
-- `GaugeBase`;
-- `RadialGauge`;
-- `LinearGauge`;
-- `DigitalGauge`;
-- `DeviationGauge`;
-- normalizzazione del valore;
-- formattazione con unità ingegneristiche;
-- soglie di cautela e allarme;
-- stati normale, cautela, allarme, fuori scala e indisponibile;
+- `IndustrialSlider`;
+- `RotaryKnob`;
+- `SelectorSwitch`;
+- `IndustrialToggleSwitch`;
+- `SpringReturnSwitch`;
+- `InterlockIndicator`;
+- slider con `Track` e `Thumb` industriali;
+- manopola vettoriale con mouse, rotella e tastiera;
+- selettori da due a cinque posizioni;
+- comando bistabile ON/OFF;
+- comando momentaneo con ritorno automatico al centro;
+- interlock e permissivi espliciti;
 - demo interattiva;
 - test xUnit v3 con Microsoft Testing Platform.
 
@@ -32,33 +35,30 @@ dotnet run --project src/IndustrialControls.Avalonia.Demo
 
 ## Stato
 
-M0–M3: **VALIDATED**  
-M4 Hotfix 4: **CANDIDATE**
-
-La hotfix rende il formato dello scostamento indipendente dalla cultura del sistema operativo.
+M0–M4 Hotfix 4: **VALIDATED**  
+M5 Hotfix 3: **CANDIDATE**
 
 
-## RadialGauge Hotfix 2
+## Hotfix 1 visual refinements
 
-Il quadrante radiale usa ora rendering vettoriale:
-
-- lancetta ancorata al perno centrale;
-- scala coerente fra lancetta, tacche e valori;
-- tacche maggiori e minori;
-- valori numerici configurabili;
-- bande operative verdi, gialle e rosse ricavate dalle soglie;
-- ridimensionamento senza disallineamenti geometrici.
+- `RotaryKnob`: il valore numerico verde è ora sotto la manopola e sopra lo stato;
+- `RotaryKnobDial`: aggiunta indicazione colorata del livello attuale;
+- `SelectorSwitch`: la didascalia della posizione selezionata è stata abbassata;
+- `ToggleSwitchDial`: leva ridisegnata in stile losanga, più grande e con movimento quasi verticale;
+- versione libreria aggiornata a `0.5.3`.
 
 
-## Hotfix 3 visual refinements
+## Hotfix 2 visual refinements
 
-- `RadialGauge`: valore e stato sollevati per evitare contatto col bordo inferiore;
-- `IlluminatedPushButton`: lampada più grande, circolare e separata dal testo;
-- `IlluminatedPushButton`: layout verticale corretto, senza sovrapposizione tra luce e didascalie.
+- `IndustrialToggleSwitch` è stato ridisegnato come vero interruttore a leva, ispirato al riferimento allegato;
+- nuovo `IndustrialRockerSwitch` in stile ON/OFF a bilanciere con simbologia `I / O`;
+- `SelectorSwitchDial` e `SpringReturnSwitch` hanno etichette e testi con più margine dal bordo;
+- la demo mostra ora entrambi i tipi di interruttore;
+- versione libreria aggiornata a `0.5.3`.
 
 
-## Hotfix 4 build correction
+## Hotfix 3 layout refinements
 
-- corretto `M2ControlContractTests.cs`;
-- rimosso il metodo di test accidentalmente collocato dopo la chiusura della classe;
-- nessuna modifica ai controlli o alla resa grafica approvata con Hotfix 3.
+- `SelectorSwitchDial`: etichette delle posizioni nuovamente all'esterno del quadrante;
+- `SpringReturnSwitch`: `LOWER`, `HOLD` e `RAISE` all'esterno con margine maggiore;
+- `IndustrialToggleSwitch`: leva resa verticale, con stato alto/basso più coerente.

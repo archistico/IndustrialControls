@@ -2,32 +2,29 @@
 
 ## Baseline ufficiale
 
-M3 è la baseline validata.
+M4 Hotfix 4 è la baseline validata.
 
 ## Candidate corrente
 
-M4 Hotfix 4 — Test source structure correction.
+M5 Hotfix 3 — External dial labels and vertical lever refinement.
 
 ## Controlli aggiunti
 
-- `GaugeBase`
-- `RadialGauge`
-- `LinearGauge`
-- `DigitalGauge`
-- `DeviationGauge`
+- `IndustrialSlider`
+- `RotaryKnob`
+- `SelectorSwitch`
+- `IndustrialToggleSwitch`
+- `SpringReturnSwitch`
+- `InterlockIndicator`
 
-## Contratto comune
+## Principi M5
 
-Tutti gli strumenti condividono:
-
-- minimo e massimo;
-- valore;
-- unità;
-- decimali;
-- normalizzazione;
-- soglie caution e warning;
-- stato operativo;
-- stato indisponibile.
+- comando e stato visuale restano separati;
+- un interlock impedisce la modifica del comando;
+- il motivo dell'interlock resta visibile;
+- il comando a molla ritorna sempre al centro;
+- i valori numerici usano `InvariantCulture`;
+- i renderer vettoriali mantengono la geometria a qualsiasi dimensione.
 
 ## Gate
 
@@ -35,11 +32,11 @@ Tutti gli strumenti condividono:
 .\scripts\validate.ps1
 ```
 
-La candidate M4 diventa validata solo dopo conferma dell'utente che build, test e demo sono riusciti.
+La candidate M5 diventa validata solo dopo conferma dell'utente che build, test e prova manuale della demo sono riusciti.
 
 ## Prossima milestone
 
-M5 — Operator controls.
+M6 — Trends and screens.
 
 ## Consegna
 
@@ -48,45 +45,34 @@ Ogni consegna deve essere uno ZIP completo dell'intero progetto pronto per compi
 
 ## Hotfix 1
 
-Correzione mirata:
+Correzioni visuali richieste dal controllo manuale:
 
-- `DeviationGauge.FormattedDeviation` usa `CultureInfo.InvariantCulture`;
-- il separatore decimale del contratto visuale resta `.` anche su sistemi `it-IT`;
-- aggiunto un test di regressione esplicito con cultura italiana;
-- versione libreria aggiornata a `0.4.1`.
+- `RotaryKnob`: il testo del valore non si sovrappone più al quadrante;
+- `RotaryKnobDial`: aggiunto arco segmentato con indicazione colorata del livello;
+- `SelectorSwitch`: la posizione selezionata non entra più nel bordo del quadrante;
+- `ToggleSwitchDial`: leva più grande, a losanga, con corsa quasi verticale coerente con `CLOSED` sopra e `OPEN` sotto;
+- nessuna modifica al contratto comportamentale dei controlli;
+- versione libreria `0.5.3`.
 
 
 ## Hotfix 2
 
-Correzione visuale strutturale di `RadialGauge`:
+Correzioni ed estensioni richieste dal controllo manuale:
 
-- nuovo renderer vettoriale `RadialGaugeDial`;
-- lancetta calcolata e disegnata dal perno centrale;
-- tacche maggiori e minori;
-- etichette numeriche della scala;
-- bande verde, gialla e rossa derivate dalle soglie operative;
-- API aggiunte: `MinorTicksPerInterval`, `ScaleDecimalPlaces`,
-  `ShowScaleLabels`, `ShowOperatingBands`, `GetAngleForValue`;
-- test di regressione sulla geometria angolare;
-- versione libreria `0.4.2`.
+- `IndustrialToggleSwitch` ora adotta una resa da interruttore a leva con piastra quadrata, sede circolare e testa colorata;
+- introdotto `IndustrialRockerSwitch` per il classico comando ON/OFF a bilanciere;
+- `SelectorSwitchDial` usa etichette più interne con maggiore distanza dal bordo;
+- `SpringReturnSwitch` e `SelectorSwitch` hanno il testo di stato più in basso rispetto al quadrante;
+- nessuna modifica alla logica di interlock già validata;
+- versione libreria `0.5.3`.
 
 
 ## Hotfix 3
 
-Affinamenti visuali richiesti dal controllo manuale:
+Ulteriori affinamenti visuali:
 
-- il testo verde degli strumenti radiali è spostato più in alto;
-- la riga di stato non tocca più il bordo inferiore;
-- nei pulsanti `IlluminatedPushButton` la lampada è più grande e circolare;
-- testo principale e secondario non si sovrappongono più alla lampada;
-- versione libreria `0.4.3`.
-
-
-## Hotfix 4
-
-Correzione esclusivamente strutturale:
-
-- rimosso da `M2ControlContractTests.cs` un test ridondante inserito fuori dalla classe;
-- risolti gli errori `CS1519` e `CS1513`;
-- nessuna variazione al tema Industrial90 o ai controlli visuali di Hotfix 3;
-- versione libreria `0.4.4`.
+- etichette di `SelectorSwitch` e `SpringReturnSwitch` riportate all'esterno del quadrante;
+- aumentato il margine tra quadrante e testo di stato inferiore;
+- `IndustrialToggleSwitch` aggiornato con leva verticale;
+- nessuna modifica alla logica dei controlli;
+- versione libreria `0.5.3`.

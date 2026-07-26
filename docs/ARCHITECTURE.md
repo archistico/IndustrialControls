@@ -35,3 +35,15 @@ La libreria è predisposta per:
 - `ProjectReference`;
 - pacchetto NuGet locale;
 - pacchetto NuGet pubblico o privato.
+
+
+## M5 interaction model
+
+I controlli operatore espongono proprietà Avalonia bindabili e metodi deterministici per i comandi:
+
+- `TrySetValue`, `Increase`, `Decrease`;
+- `Select`, `SelectNext`, `SelectPrevious`;
+- `TryToggle`;
+- `PressLeft`, `PressRight`, `Release`.
+
+I metodi restituiscono `false` quando un interlock impedisce il comando. Questa separazione consente di testare la semantica senza dipendere dagli eventi grafici.

@@ -18,33 +18,34 @@
 
 ## M4 — Gauges
 
-Candidate corrente:
-
-- `GaugeBase`;
-- `RadialGauge`;
-- `LinearGauge`;
-- `DigitalGauge`;
-- `DeviationGauge`;
-- limiti e normalizzazione;
-- soglie operative;
-- stato visuale;
-- demo interattiva;
-- test di contratto.
-
-Stato: **CANDIDATE — HOTFIX 4**
+**VALIDATED — HOTFIX 4**
 
 ## M5 — Operator controls
 
-- slider industriale;
-- manopola rotativa;
-- selettore multiposizione;
-- interruttore toggle;
-- ritorno a molla;
-- interlock visuale.
+Candidate corrente:
+
+- `IndustrialSlider`;
+- `RotaryKnob`;
+- `SelectorSwitch`;
+- `IndustrialToggleSwitch`;
+- `SpringReturnSwitch`;
+- `InterlockIndicator`;
+- interazione via mouse, rotella e tastiera dove applicabile;
+- interlock con motivo esplicito;
+- permissivi centralizzati;
+- demo interattiva;
+- test di contratto.
+
+Stato: **CANDIDATE — HOTFIX 3**
 
 ## M6 — Trends and screens
 
-Trend, oscilloscopio e registratore a carta.
+- trend multicanale;
+- asse temporale;
+- griglia e cursore;
+- oscilloscopio;
+- registratore a carta;
+- stato qualità del segnale.
 
 ## M7 — Stabilization and release
 

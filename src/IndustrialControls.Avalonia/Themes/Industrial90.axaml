@@ -457,6 +457,290 @@
   </Setter>
 </ControlTheme>
 
+  
+<ControlTheme x:Key="IndustrialSliderRepeatTrackTheme" TargetType="RepeatButton">
+  <Setter Property="Focusable" Value="False" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:IndustrialSlider}" TargetType="controls:IndustrialSlider">
+  <Setter Property="MinWidth" Value="300" />
+  <Setter Property="MinHeight" Value="116" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Grid x:Name="SliderRoot" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="7">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{TemplateBinding Title}" FontSize="11" FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <TextBlock Grid.Column="1" Text="{TemplateBinding FormattedValue}"
+                     FontFamily="Cascadia Mono,Consolas,monospace"
+                     FontSize="15" FontWeight="Bold" Foreground="#58D46C" />
+        </Grid>
+
+        <Border Grid.Row="1" Background="#111415"
+                BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+                BorderThickness="4" Padding="5" CornerRadius="3">
+          <Grid Height="34">
+            <Border x:Name="TrackBackground" Height="12"
+                    Margin="12,0" VerticalAlignment="Center"
+                    Background="#252A2C"
+                    BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                    BorderThickness="1" CornerRadius="2" />
+            <Track x:Name="PART_Track"
+                   Margin="12,0"
+                   Orientation="Horizontal"
+                   IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+              <Track.DecreaseButton>
+                <RepeatButton x:Name="PART_DecreaseButton"
+                              Background="#3E9B50"
+                              Theme="{StaticResource IndustrialSliderRepeatTrackTheme}" />
+              </Track.DecreaseButton>
+              <Track.IncreaseButton>
+                <RepeatButton x:Name="PART_IncreaseButton"
+                              Background="Transparent"
+                              Theme="{StaticResource IndustrialSliderRepeatTrackTheme}" />
+              </Track.IncreaseButton>
+              <Track.Thumb>
+                <Thumb x:Name="thumb" Width="24" Height="34">
+                  <Thumb.Template>
+                    <ControlTemplate>
+                      <Border Background="#B8BDC0"
+                              BorderBrush="#111315"
+                              BorderThickness="3"
+                              CornerRadius="3">
+                        <Border Margin="4"
+                                BorderBrush="#737A7E"
+                                BorderThickness="1" />
+                      </Border>
+                    </ControlTemplate>
+                  </Thumb.Template>
+                </Thumb>
+              </Track.Thumb>
+            </Track>
+          </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
+          <TextBlock Text="{TemplateBinding Minimum}" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+          <TextBlock Grid.Column="2" Text="{TemplateBinding Maximum}" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </Grid>
+
+        <TextBlock Grid.Row="3" Text="{TemplateBinding InterlockText}"
+                   HorizontalAlignment="Center" FontSize="9"
+                   Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+      </Grid>
+    </ControlTemplate>
+  </Setter>
+
+  <Style Selector="^ /template/ Track#PART_Track">
+    <Setter Property="Minimum" Value="{TemplateBinding Minimum}" />
+    <Setter Property="Maximum" Value="{TemplateBinding Maximum}" />
+    <Setter Property="Value" Value="{TemplateBinding Value, Mode=TwoWay}" />
+  </Style>
+
+  <Style Selector="^:disabled /template/ Grid#SliderRoot">
+    <Setter Property="Opacity" Value="0.55" />
+  </Style>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:RotaryKnob}" TargetType="controls:RotaryKnob">
+  <Setter Property="MinWidth" Value="230" />
+  <Setter Property="MinHeight" Value="315" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                   FontSize="12" FontWeight="Bold"
+                   Foreground="{DynamicResource Industrial90.TextBrush}" />
+        <controls:RotaryKnobDial Width="190" Height="190"
+                                 HorizontalAlignment="Center"
+                                 IndicatorAngle="{TemplateBinding IndicatorAngle}"
+                                 TickCount="{TemplateBinding TickCount}"
+                                 IsInterlocked="{TemplateBinding IsInterlocked}" />
+        <TextBlock Text="{TemplateBinding FormattedValue}"
+                   HorizontalAlignment="Center" Margin="0,4,0,0"
+                   FontFamily="Cascadia Mono,Consolas,monospace"
+                   FontSize="19" FontWeight="Bold" Foreground="#58D46C" />
+        <TextBlock Text="{TemplateBinding StatusText}"
+                   HorizontalAlignment="Center" FontSize="9"
+                   Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:SelectorSwitch}" TargetType="controls:SelectorSwitch">
+  <Setter Property="MinWidth" Value="260" />
+  <Setter Property="MinHeight" Value="326" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                   FontSize="12" FontWeight="Bold"
+                   Foreground="{DynamicResource Industrial90.TextBrush}" />
+        <controls:SelectorSwitchDial Width="250" Height="210"
+                                     HorizontalAlignment="Center"
+                                     PositionCount="{TemplateBinding PositionCount}"
+                                     Position="{TemplateBinding Position}"
+                                     PositionLabels="{TemplateBinding PositionLabels}"
+                                     IsInterlocked="{TemplateBinding IsInterlocked}" />
+        <TextBlock Text="{TemplateBinding SelectedLabel}"
+                   HorizontalAlignment="Center" Margin="0,16,0,0"
+                   FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
+        <TextBlock Text="{TemplateBinding StatusText}"
+                   HorizontalAlignment="Center" FontSize="9"
+                   Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:IndustrialToggleSwitch}"
+              TargetType="controls:IndustrialToggleSwitch">
+  <Setter Property="MinWidth" Value="230" />
+  <Setter Property="MinHeight" Value="310" />
+  <Setter Property="Background" Value="Transparent" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="{TemplateBinding Background}" Padding="6">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                     FontSize="12" FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <Grid Width="180" Height="175" HorizontalAlignment="Center">
+            <TextBlock Text="{TemplateBinding OnCaption}"
+                       HorizontalAlignment="Center" VerticalAlignment="Top"
+                       Margin="0,2,0,0"
+                       FontSize="10" FontWeight="Bold" Foreground="#58D46C" />
+            <TextBlock Text="{TemplateBinding OffCaption}"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                       Margin="0,0,0,2"
+                       FontSize="10" FontWeight="Bold" Foreground="#F14C4C" />
+            <controls:ToggleSwitchDial Width="150" Height="150"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       IsOn="{TemplateBinding IsOn}"
+                                       IsInterlocked="{TemplateBinding IsInterlocked}" />
+          </Grid>
+          <TextBlock Text="{TemplateBinding StateText}"
+                     HorizontalAlignment="Center" Margin="0,4,0,0"
+                     FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
+          <TextBlock Text="{TemplateBinding StatusText}"
+                     HorizontalAlignment="Center" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </StackPanel>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:SpringReturnSwitch}"
+              TargetType="controls:SpringReturnSwitch">
+  <Setter Property="MinWidth" Value="280" />
+  <Setter Property="MinHeight" Value="326" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <StackPanel Spacing="6">
+        <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                   FontSize="12" FontWeight="Bold"
+                   Foreground="{DynamicResource Industrial90.TextBrush}" />
+        <controls:SelectorSwitchDial Width="250" Height="210"
+                                     HorizontalAlignment="Center"
+                                     PositionCount="3"
+                                     Position="{TemplateBinding PositionIndex}"
+                                     PositionLabels="{TemplateBinding PositionLabels}"
+                                     IsInterlocked="{TemplateBinding IsInterlocked}" />
+        <TextBlock Text="{TemplateBinding StateText}"
+                   HorizontalAlignment="Center" Margin="0,16,0,0"
+                   FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
+        <TextBlock Text="{TemplateBinding StatusText}"
+                   HorizontalAlignment="Center" FontSize="9"
+                   Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+      </StackPanel>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+<ControlTheme x:Key="{x:Type controls:InterlockIndicator}"
+              TargetType="controls:InterlockIndicator">
+  <Setter Property="MinWidth" Value="330" />
+  <Setter Property="MinHeight" Value="150" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="#191C1E"
+              BorderBrush="{DynamicResource Industrial90.EdgeDarkBrush}"
+              BorderThickness="4" CornerRadius="4" Padding="14">
+        <Border BorderBrush="{DynamicResource Industrial90.EdgeLightBrush}"
+                BorderThickness="1" Padding="12">
+          <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto"
+                ColumnSpacing="14" RowSpacing="5">
+            <controls:IndustrialLamp Grid.RowSpan="3"
+                                     Width="52" Height="52"
+                                     VerticalAlignment="Center"
+                                     ShowLabel="False"
+                                     Shape="Round"
+                                     IsOn="True"
+                                     LampColor="{TemplateBinding LampColor}" />
+
+            <TextBlock Grid.Column="1" Text="{TemplateBinding Title}"
+                       FontSize="12" FontWeight="Bold"
+                       Foreground="{DynamicResource Industrial90.TextBrush}" />
+
+            <TextBlock Grid.Column="2" Text="{TemplateBinding CountText}"
+                       FontFamily="Cascadia Mono,Consolas,monospace"
+                       FontSize="15" FontWeight="Bold"
+                       Foreground="{TemplateBinding StatusBrush}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                       Text="{TemplateBinding StatusText}"
+                       FontSize="18" FontWeight="Bold"
+                       Foreground="{TemplateBinding StatusBrush}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                       Text="{TemplateBinding Reason}"
+                       TextWrapping="Wrap" FontSize="9"
+                       Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+          </Grid>
+        </Border>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
+  <ControlTheme x:Key="{x:Type controls:IndustrialRockerSwitch}"
+              TargetType="controls:IndustrialRockerSwitch">
+  <Setter Property="MinWidth" Value="220" />
+  <Setter Property="MinHeight" Value="310" />
+  <Setter Property="Background" Value="Transparent" />
+  <Setter Property="Template">
+    <ControlTemplate>
+      <Border Background="{TemplateBinding Background}" Padding="6">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{TemplateBinding Title}" HorizontalAlignment="Center"
+                     FontSize="12" FontWeight="Bold"
+                     Foreground="{DynamicResource Industrial90.TextBrush}" />
+          <controls:RockerSwitchDial Width="118" Height="168"
+                                     HorizontalAlignment="Center"
+                                     IsOn="{TemplateBinding IsOn}"
+                                     IsInterlocked="{TemplateBinding IsInterlocked}" />
+          <TextBlock Text="{TemplateBinding StateText}"
+                     HorizontalAlignment="Center" Margin="0,2,0,0"
+                     FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
+          <TextBlock Text="{TemplateBinding StatusText}"
+                     HorizontalAlignment="Center" FontSize="9"
+                     Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+        </StackPanel>
+      </Border>
+    </ControlTemplate>
+  </Setter>
+</ControlTheme>
+
   </Styles.Resources>
 
   <Style Selector="controls|EngravedLabel[Variant=Red]">
