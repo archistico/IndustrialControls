@@ -66,6 +66,7 @@ public sealed class RotaryKnob : TemplatedControl
         MinimumProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
         MaximumProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
         ValueProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
+        TitleProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
         UnitProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
         DecimalPlacesProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
         IsInterlockedProperty.Changed.AddClassHandler<RotaryKnob>((control, _) => control.RefreshState());
@@ -274,5 +275,11 @@ public sealed class RotaryKnob : TemplatedControl
         StatusText = IsInterlocked
             ? string.Concat("INTERLOCK — ", InterlockReason)
             : "COMMAND AVAILABLE";
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(FormattedValue, "; ", StatusText),
+            "RotaryKnob");
     }
 }

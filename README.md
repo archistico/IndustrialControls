@@ -1,69 +1,73 @@
 # IndustrialControls.Avalonia
 
-Libreria Avalonia riutilizzabile per interfacce industriali e sale controllo, con estetica anni Novanta.
+Reusable Avalonia control library inspired by 1990s industrial control panels.
 
-## Baseline M7
+## Release candidate
 
-Include le milestone M0–M6 validate e aggiunge:
+Current version: **1.0.0-rc.2**
 
-- `BacklitAlarmIndicator`;
-- `AlarmIndicatorPanel`;
-- `AlarmIndicatorVisualState`;
-- `SafetyPlacard`;
-- `SafetyPlacardLevel`;
-- `SafetyPlacardIcon`;
-- `BoltedDataPlate`;
-- `DataPlateMaterial`;
-- ciclo allarme con attivazione, ACK, rientro e RESET;
-- memoria latched opzionale;
-- pannello allarmi con layout multicolonna;
-- pannelli statici di sicurezza con icone e viti;
-- targhette dati imbullonate;
-- demo interattiva;
-- test xUnit v3 con Microsoft Testing Platform.
+Validated baseline before this candidate: **M7 Hotfix 3 / 0.7.3**
 
-## Validazione
+M8 adds:
+
+- stabilized public API contract;
+- accessibility metadata;
+- keyboard and focus contracts;
+- theme coverage tests;
+- bounded-buffer long-run verification;
+- benchmark smoke suite;
+- NuGet package generation and inspection;
+- release documentation.
+
+## Validate
 
 ```powershell
 .\scripts\validate.ps1
 ```
 
-## Demo
+The script restores, builds, tests, packs and inspects the NuGet package.
+
+## Run the demo
 
 ```powershell
 dotnet run --project src/IndustrialControls.Avalonia.Demo
 ```
 
-## Stato
+## Run benchmarks
 
-M0–M6 Hotfix 2: **VALIDATED**  
-M7 Hotfix 3: **CANDIDATE**
+```powershell
+.\scripts\benchmark.ps1
+```
 
+## Package integration
 
-## M7 Hotfix 1
+See `docs/PACKAGE_USAGE.md`.
 
-- `AlarmIndicatorPanel` ora deriva da `ItemsControl`;
-- rimosso l'override non consentito di `Panel.Render`;
-- cornice, intestazione e viti sono definite nel tema Industrial90;
-- gli indicatori sono disposti da un `UniformGrid`;
-- API collettive `Activate`, `AcknowledgeAll`, `ClearAllConditions` e `ResetAll` invariate;
-- versione libreria `0.7.1`.
+## Status
 
+M0–M7 Hotfix 3: **VALIDATED**
 
-## M7 Hotfix 2
-
-- `AlarmIndicatorPanel` ora deriva da `TemplatedControl`;
-- introdotta la raccolta logica `Indicators`;
-- `Indicators` è una `ObservableCollection<BacklitAlarmIndicator>` indipendente da `ItemsControl.Items`;
-- il template usa un `ItemsControl` interno soltanto per la visualizzazione;
-- eliminata la dipendenza dei test dal dispatcher Avalonia;
-- versione libreria `0.7.2`.
+M8 RC2: **CANDIDATE**
 
 
-## M7 Hotfix 3
+## M8 RC1 Hotfix 1
 
-- migliorata la leggibilità di `BacklitAlarmIndicator` quando è spento;
-- negli stati `CLEAR` e `DISABLED` il testo usa ora un tono chiaro ad alto contrasto;
-- la retroilluminazione `CLEAR` resta debole ma leggermente più leggibile;
-- aggiunto test di regressione per il foreground dello stato spento;
-- versione libreria `0.7.3`.
+- corretto il riferimento a `Avalonia.Media.Colors.Green` nel test long-run;
+- usato `global::Avalonia.Media.Colors.Green` per evitare la risoluzione relativa
+  verso `IndustrialControls.Avalonia.Media`;
+- nessuna modifica alla libreria, alla demo, alle API o al pacchetto;
+- versione NuGet invariata: `1.0.0-rc.2`.
+
+
+## RC2 allocation optimization
+
+RC2 keeps the public API and visual language intact while optimizing:
+
+- trend ingestion;
+- bounded sample storage;
+- cursor readout generation;
+- gauge updates;
+- selector transitions;
+- automation metadata assignments.
+
+For high-frequency acquisition, retain the `SignalTraceSeries` returned by `AddSeries` and use the direct `AddSample(series, ...)` overload.

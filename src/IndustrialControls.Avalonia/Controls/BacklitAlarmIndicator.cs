@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -91,6 +92,12 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 
     static BacklitAlarmIndicator()
     {
+        AlarmIdProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
+            (control, _) => control.RefreshState());
+        TextProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
+            (control, _) => control.RefreshState());
+        SecondaryTextProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
+            (control, _) => control.RefreshState());
         IsConditionActiveProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
             (control, _) => control.OnConditionChanged());
         IsAcknowledgedProperty.Changed.AddClassHandler<BacklitAlarmIndicator>(
@@ -323,6 +330,21 @@ public sealed class BacklitAlarmIndicator : TemplatedControl
 
         RefreshBlinkTimer();
         RefreshAppearance();
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Text,
+            string.Concat(SecondaryText, "; ", StateText),
+            string.IsNullOrWhiteSpace(AlarmId)
+                ? "BacklitAlarm"
+                : string.Concat("BacklitAlarm.", AlarmId));
+
+        IndustrialAutomationMetadata.SetLiveRegion(
+            this,
+            VisualState is AlarmIndicatorVisualState.NewAlarm or
+                AlarmIndicatorVisualState.ReturnedUnacknowledged
+                ? AutomationLiveSetting.Assertive
+                : AutomationLiveSetting.Polite);
     }
 
     private AlarmIndicatorVisualState CalculateVisualState()

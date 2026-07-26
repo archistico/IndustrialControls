@@ -42,6 +42,8 @@ public sealed class IndustrialToggleSwitch : ToggleButton
 
     static IndustrialToggleSwitch()
     {
+        TitleProperty.Changed.AddClassHandler<IndustrialToggleSwitch>(
+            (control, _) => control.RefreshState());
         IsCheckedProperty.Changed.AddClassHandler<IndustrialToggleSwitch>(
             (control, _) => control.RefreshState());
         OnCaptionProperty.Changed.AddClassHandler<IndustrialToggleSwitch>(
@@ -54,7 +56,11 @@ public sealed class IndustrialToggleSwitch : ToggleButton
             (control, _) => control.RefreshState());
     }
 
-    public IndustrialToggleSwitch() => RefreshState();
+    public IndustrialToggleSwitch()
+    {
+        Focusable = true;
+        RefreshState();
+    }
 
     public string Title
     {
@@ -132,5 +138,11 @@ public sealed class IndustrialToggleSwitch : ToggleButton
         StatusText = IsInterlocked
             ? string.Concat("INTERLOCK — ", InterlockReason)
             : "SWITCHING AVAILABLE";
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat("State ", StateText, "; ", StatusText),
+            "IndustrialToggleSwitch");
     }
 }

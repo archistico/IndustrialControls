@@ -87,3 +87,17 @@ La demo genera segnali sintetici tramite `DispatcherTimer`; questa dipendenza re
 - `ItemsControl` interno, usato soltanto dal template per il rendering.
 
 Questa separazione evita che test e logica applicativa dipendano da `ItemCollection`, che appartiene al dispatcher Avalonia.
+
+
+## M8 release architecture
+
+`IndustrialAutomationMetadata` centralizes Avalonia automation name, help text, automation ID and accessibility-view configuration.
+
+The release gate separates:
+
+- deterministic tests;
+- visual/manual validation;
+- diagnostic benchmark;
+- package-content inspection.
+
+The benchmark project has no third-party dependencies and is not a correctness gate.

@@ -41,6 +41,10 @@ public sealed class SignalQualityIndicator : TemplatedControl
 
     static SignalQualityIndicator()
     {
+        SignalNameProperty.Changed.AddClassHandler<SignalQualityIndicator>(
+            (control, _) => control.RefreshState());
+        SourceProperty.Changed.AddClassHandler<SignalQualityIndicator>(
+            (control, _) => control.RefreshState());
         QualityProperty.Changed.AddClassHandler<SignalQualityIndicator>(
             (control, _) => control.RefreshState());
     }
@@ -113,5 +117,11 @@ public sealed class SignalQualityIndicator : TemplatedControl
                 new SolidColorBrush(Color.Parse("#58D46C")),
                 IndustrialLampColor.Green)
         };
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            SignalName,
+            string.Concat("Quality ", QualityText, "; source ", Source),
+            "SignalQuality");
     }
 }

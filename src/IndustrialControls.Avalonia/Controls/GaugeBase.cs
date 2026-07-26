@@ -3,11 +3,29 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using System.Threading;
 
 namespace IndustrialControls.Avalonia.Controls;
 
 public abstract class GaugeBase : TemplatedControl
 {
+    private static readonly string[] NumericFormats =
+    {
+        "F0", "F1", "F2", "F3", "F4",
+        "F5", "F6", "F7", "F8"
+    };
+
+    private static readonly IBrush NormalBrush =
+        new SolidColorBrush(Color.Parse("#58D46C"));
+    private static readonly IBrush CautionBrush =
+        new SolidColorBrush(Color.Parse("#F2DD4B"));
+    private static readonly IBrush WarningBrush =
+        new SolidColorBrush(Color.Parse("#F14C4C"));
+    private static readonly IBrush OutOfRangeBrush =
+        new SolidColorBrush(Color.Parse("#D04ADF"));
+    private static readonly IBrush UnavailableBrush =
+        new SolidColorBrush(Color.Parse("#7B7F80"));
+
     public static readonly StyledProperty<double> MinimumProperty =
         AvaloniaProperty.Register<GaugeBase, double>(nameof(Minimum), 0.0);
 
@@ -62,27 +80,52 @@ public abstract class GaugeBase : TemplatedControl
         AvaloniaProperty.RegisterDirect<GaugeBase, IBrush>(
             nameof(StatusBrush), control => control.StatusBrush);
 
+    private readonly SynchronizationContext? _automationContext;
+    private readonly SendOrPostCallback _flushAutomationMetadataCallback;
+
     private double _normalizedValue;
     private double _percentage;
     private string _formattedValue = "0.0";
     private GaugeStatus _status = GaugeStatus.Normal;
-    private IBrush _statusBrush = new SolidColorBrush(Color.Parse("#58D46C"));
+    private IBrush _statusBrush = NormalBrush;
+    private string _numericFormat = "F1";
+    private string _unitSuffix = string.Empty;
+    private bool _automationRefreshPending;
 
     static GaugeBase()
     {
-        MinimumProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        MaximumProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        ValueProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        UnitProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        DecimalPlacesProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        CautionLowProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        CautionHighProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        WarningLowProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        WarningHighProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
-        IsAvailableProperty.Changed.AddClassHandler<GaugeBase>((control, _) => control.RefreshState());
+        MinimumProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        MaximumProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        ValueProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(false));
+        TitleProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        UnitProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshFormattingAndState());
+        DecimalPlacesProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshFormattingAndState());
+        CautionLowProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        CautionHighProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        WarningLowProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        WarningHighProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
+        IsAvailableProperty.Changed.AddClassHandler<GaugeBase>(
+            (control, _) => control.RefreshState(true));
     }
 
-    protected GaugeBase() => RefreshState();
+    protected GaugeBase()
+    {
+        _automationContext = SynchronizationContext.Current;
+        _flushAutomationMetadataCallback =
+            static state => ((GaugeBase)state!).FlushAutomationMetadata();
+        RefreshFormattingCache();
+        RefreshState(true);
+    }
 
     public double Minimum
     {
@@ -153,55 +196,91 @@ public abstract class GaugeBase : TemplatedControl
     public double NormalizedValue
     {
         get => _normalizedValue;
-        private set => SetAndRaise(NormalizedValueProperty, ref _normalizedValue, value);
+        private set => SetAndRaise(
+            NormalizedValueProperty,
+            ref _normalizedValue,
+            value);
     }
 
     public double Percentage
     {
         get => _percentage;
-        private set => SetAndRaise(PercentageProperty, ref _percentage, value);
+        private set => SetAndRaise(
+            PercentageProperty,
+            ref _percentage,
+            value);
     }
 
     public string FormattedValue
     {
         get => _formattedValue;
-        private set => SetAndRaise(FormattedValueProperty, ref _formattedValue, value);
+        private set => SetAndRaise(
+            FormattedValueProperty,
+            ref _formattedValue,
+            value);
     }
 
     public GaugeStatus Status
     {
         get => _status;
-        private set => SetAndRaise(StatusProperty, ref _status, value);
+        private set => SetAndRaise(
+            StatusProperty,
+            ref _status,
+            value);
     }
 
     public IBrush StatusBrush
     {
         get => _statusBrush;
-        private set => SetAndRaise(StatusBrushProperty, ref _statusBrush, value);
+        private set => SetAndRaise(
+            StatusBrushProperty,
+            ref _statusBrush,
+            value);
     }
 
-    private void RefreshState()
+    private void RefreshFormattingAndState()
+    {
+        RefreshFormattingCache();
+        RefreshState(true);
+    }
+
+    private void RefreshFormattingCache()
+    {
+        _numericFormat = NumericFormats[DecimalPlaces];
+        _unitSuffix = string.IsNullOrWhiteSpace(Unit)
+            ? string.Empty
+            : string.Concat(" ", Unit);
+    }
+
+    private void RefreshState(bool refreshAutomationImmediately)
     {
         var span = Maximum - Minimum;
         NormalizedValue = span > 0
-            ? Math.Clamp((Value - Minimum) / span, 0.0, 1.0)
+            ? Math.Clamp(
+                (Value - Minimum) / span,
+                0.0,
+                1.0)
             : 0.0;
+
         Percentage = NormalizedValue * 100.0;
 
-        var format = "F" + DecimalPlaces.ToString(CultureInfo.InvariantCulture);
         FormattedValue = string.Concat(
-            Value.ToString(format, CultureInfo.InvariantCulture),
-            string.IsNullOrWhiteSpace(Unit) ? string.Empty : " " + Unit);
+            Value.ToString(
+                _numericFormat,
+                CultureInfo.InvariantCulture),
+            _unitSuffix);
 
         Status = CalculateStatus();
-        StatusBrush = new SolidColorBrush(Status switch
+        StatusBrush = GetStatusBrush(Status);
+
+        if (refreshAutomationImmediately)
         {
-            GaugeStatus.Caution => Color.Parse("#F2DD4B"),
-            GaugeStatus.Warning => Color.Parse("#F14C4C"),
-            GaugeStatus.OutOfRange => Color.Parse("#D04ADF"),
-            GaugeStatus.Unavailable => Color.Parse("#7B7F80"),
-            _ => Color.Parse("#58D46C")
-        });
+            RefreshAutomationMetadata();
+        }
+        else
+        {
+            RequestAutomationMetadataRefresh();
+        }
     }
 
     private GaugeStatus CalculateStatus()
@@ -230,4 +309,46 @@ public abstract class GaugeBase : TemplatedControl
 
         return GaugeStatus.Normal;
     }
+
+    private void RequestAutomationMetadataRefresh()
+    {
+        if (_automationRefreshPending ||
+            _automationContext is null)
+        {
+            return;
+        }
+
+        _automationRefreshPending = true;
+        _automationContext.Post(
+            _flushAutomationMetadataCallback,
+            this);
+    }
+
+    private void FlushAutomationMetadata()
+    {
+        _automationRefreshPending = false;
+        RefreshAutomationMetadata();
+    }
+
+    private void RefreshAutomationMetadata()
+    {
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(
+                FormattedValue,
+                "; status ",
+                Status),
+            "Gauge");
+    }
+
+    private static IBrush GetStatusBrush(GaugeStatus status) =>
+        status switch
+        {
+            GaugeStatus.Caution => CautionBrush,
+            GaugeStatus.Warning => WarningBrush,
+            GaugeStatus.OutOfRange => OutOfRangeBrush,
+            GaugeStatus.Unavailable => UnavailableBrush,
+            _ => NormalBrush
+        };
 }

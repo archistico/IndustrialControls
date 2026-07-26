@@ -14,4 +14,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\src\IndustrialControls.Avalonia\Themes\Industrial90.axaml"
+          Link="Assets\Industrial90.axaml"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

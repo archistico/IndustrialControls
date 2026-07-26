@@ -34,6 +34,10 @@ public sealed class IndustrialScreen : ContentControl
 
     static IndustrialScreen()
     {
+        TitleProperty.Changed.AddClassHandler<IndustrialScreen>(
+            (control, _) => control.RefreshState());
+        StatusTextProperty.Changed.AddClassHandler<IndustrialScreen>(
+            (control, _) => control.RefreshState());
         IsOnlineProperty.Changed.AddClassHandler<IndustrialScreen>(
             (control, _) => control.RefreshState());
     }
@@ -77,5 +81,11 @@ public sealed class IndustrialScreen : ContentControl
     {
         StatusBrush = new SolidColorBrush(
             Color.Parse(IsOnline ? "#58D46C" : "#F14C4C"));
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(StatusText, "; ", IsOnline ? "online" : "offline"),
+            "IndustrialScreen");
     }
 }

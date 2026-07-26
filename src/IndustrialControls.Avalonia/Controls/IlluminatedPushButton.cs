@@ -81,6 +81,11 @@ public sealed class IlluminatedPushButton : Button
         set => SetValue(CaptionForegroundProperty, value);
     }
 
+    public IlluminatedPushButton()
+    {
+        Focusable = true;
+    }
+
     protected override void OnClick()
     {
         if (ActionMode == IlluminatedPushButtonMode.Toggle)

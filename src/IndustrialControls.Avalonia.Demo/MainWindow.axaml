@@ -3,7 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:industrial="using:IndustrialControls.Avalonia.Controls"
-    Title="IndustrialControls.Avalonia — M7"
+    Title="IndustrialControls.Avalonia — M8 RC1"
     Width="1440"
     Height="960"
     MinWidth="1120"
@@ -21,13 +21,13 @@
                      FontSize="25"
                      FontWeight="Bold"
                      Foreground="#ECEEE7" />
-          <TextBlock Text="M7 · indicatori di allarme e componenti statici da pannello"
+          <TextBlock Text="M8 · release candidate, accessibilità, API e packaging"
                      Foreground="#A8ADA8"
                      Margin="0,4,0,0" />
         </StackPanel>
 
         <industrial:EngravedLabel Grid.Column="1"
-                                  Text="M7 CANDIDATE"
+                                  Text="M8 RC1"
                                   Variant="Aluminum"
                                   ShowFasteners="True"
                                   VerticalAlignment="Center"
@@ -256,14 +256,14 @@
           </Grid>
         </industrial:IndustrialPanel>
 
-        <industrial:IndustrialPanel Header="STATO MILESTONE"
-                                    Subtitle="PROSSIMO PASSO: STABILIZZAZIONE E RELEASE">
+        <industrial:IndustrialPanel Header="RELEASE CANDIDATE STATUS"
+                                    Subtitle="API, ACCESSIBILITÀ, PERFORMANCE E NUGET">
           <Grid ColumnDefinitions="*,Auto"
                 ColumnSpacing="18">
-            <industrial:LedMatrixDisplay Text="M7 ALARM AND STATIC PANEL ELEMENTS"
+            <industrial:LedMatrixDisplay Text="INDUSTRIALCONTROLS.AVALONIA 1.0.0-RC.1"
                                          LedColor="Green" />
             <industrial:EngravedLabel Grid.Column="1"
-                                      Text="NEXT: M8 RELEASE"
+                                      Text="READY FOR 1.0 GATE"
                                       Variant="Red"
                                       ShowFasteners="True"
                                       VerticalAlignment="Center" />

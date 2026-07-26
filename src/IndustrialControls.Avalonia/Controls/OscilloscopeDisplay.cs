@@ -71,7 +71,14 @@ public sealed class OscilloscopeDisplay : Control
             TimebaseMillisecondsProperty,
             TraceColorProperty,
             QualityProperty);
+
+        TitleProperty.Changed.AddClassHandler<OscilloscopeDisplay>(
+            (control, _) => control.RefreshAutomationMetadata());
+        QualityProperty.Changed.AddClassHandler<OscilloscopeDisplay>(
+            (control, _) => control.RefreshAutomationMetadata());
     }
+
+    public OscilloscopeDisplay() => RefreshAutomationMetadata();
 
     public string Title
     {
@@ -156,6 +163,7 @@ public sealed class OscilloscopeDisplay : Control
         TrimToCapacity();
         LastValue = value;
         SampleCount = _samples.Count;
+        RefreshAutomationMetadata();
         InvalidateVisual();
         return true;
     }
@@ -174,6 +182,7 @@ public sealed class OscilloscopeDisplay : Control
         TrimToCapacity();
         SampleCount = _samples.Count;
         LastValue = _samples.Count == 0 ? 0 : _samples[^1];
+        RefreshAutomationMetadata();
         InvalidateVisual();
     }
 
@@ -182,6 +191,7 @@ public sealed class OscilloscopeDisplay : Control
         _samples.Clear();
         SampleCount = 0;
         LastValue = 0;
+        RefreshAutomationMetadata();
         InvalidateVisual();
     }
 
@@ -341,6 +351,22 @@ public sealed class OscilloscopeDisplay : Control
         context.DrawText(
             status,
             new Point(Bounds.Width - status.Width - 12, 8));
+    }
+
+    private void RefreshAutomationMetadata()
+    {
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(
+                SampleCount,
+                " samples; last value ",
+                LastValue.ToString(
+                    "0.###",
+                    CultureInfo.InvariantCulture),
+                "; quality ",
+                Quality),
+            "Oscilloscope");
     }
 
     private void TrimToCapacity()

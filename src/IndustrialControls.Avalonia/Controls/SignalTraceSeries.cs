@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Media;
 
 namespace IndustrialControls.Avalonia.Controls;
@@ -9,15 +8,20 @@ namespace IndustrialControls.Avalonia.Controls;
 /// </summary>
 public sealed class SignalTraceSeries
 {
-    private readonly List<SignalSample> _samples = new();
+    private readonly BoundedSampleCollection _samples = new();
 
-    internal SignalTraceSeries(string name, string unit, Color color)
+    internal SignalTraceSeries(
+        string name,
+        string unit,
+        Color color)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         Name = name;
         Unit = unit ?? string.Empty;
         Color = color;
+        TraceBrush = new SolidColorBrush(color);
+        TracePen = new Pen(TraceBrush, 2);
     }
 
     public string Name { get; }
@@ -31,23 +35,21 @@ public sealed class SignalTraceSeries
     public IReadOnlyList<SignalSample> Samples => _samples;
 
     public SignalSample? LatestSample =>
-        _samples.Count == 0 ? null : _samples[^1];
+        _samples.Count == 0
+            ? null
+            : _samples[^1];
 
-    internal void Add(SignalSample sample, int capacity)
-    {
-        _samples.Add(sample);
-        TrimToCapacity(capacity);
-    }
+    internal IBrush TraceBrush { get; }
 
-    internal void TrimToCapacity(int capacity)
-    {
-        var safeCapacity = Math.Max(1, capacity);
-        var excess = _samples.Count - safeCapacity;
-        if (excess > 0)
-        {
-            _samples.RemoveRange(0, excess);
-        }
-    }
+    internal Pen TracePen { get; }
+
+    internal void Add(
+        SignalSample sample,
+        int capacity) =>
+        _samples.Add(sample, capacity);
+
+    internal void TrimToCapacity(int capacity) =>
+        _samples.TrimToCapacity(capacity);
 
     internal void Clear() => _samples.Clear();
 }

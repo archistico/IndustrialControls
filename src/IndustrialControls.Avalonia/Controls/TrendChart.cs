@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using Avalonia;
 using Avalonia.Media;
@@ -13,6 +11,38 @@ namespace IndustrialControls.Avalonia.Controls;
 /// </summary>
 public sealed class TrendChart : TimeSeriesControlBase
 {
+    private static readonly IBrush FrameBrush =
+        new SolidColorBrush(Color.Parse("#080B0C"));
+    private static readonly IBrush PlotBrush =
+        new SolidColorBrush(Color.Parse("#101719"));
+    private static readonly IBrush TitleBrush =
+        new SolidColorBrush(Color.Parse("#E5E7DE"));
+    private static readonly IBrush LabelBrush =
+        new SolidColorBrush(Color.Parse("#A8ADA8"));
+    private static readonly IBrush LegendBrush =
+        new SolidColorBrush(Color.Parse("#D8DBD4"));
+    private static readonly IBrush UncertainBrush =
+        new SolidColorBrush(Color.Parse("#E3C83B"));
+    private static readonly IBrush BadBrush =
+        new SolidColorBrush(Color.Parse("#F14C4C"));
+    private static readonly IBrush UnavailableBrush =
+        new SolidColorBrush(Color.Parse("#7B7F80"));
+
+    private static readonly Pen FramePen =
+        new(new SolidColorBrush(Color.Parse("#111315")), 5);
+    private static readonly Pen EdgePen =
+        new(new SolidColorBrush(Color.Parse("#7A8286")), 1);
+    private static readonly Pen PlotPen =
+        new(new SolidColorBrush(Color.Parse("#35464B")), 1);
+    private static readonly Pen MinorGridPen =
+        new(new SolidColorBrush(Color.Parse("#243236")), 1);
+    private static readonly Pen MajorGridPen =
+        new(new SolidColorBrush(Color.Parse("#34474C")), 1);
+    private static readonly Pen CursorPen =
+        new(new SolidColorBrush(Color.Parse("#F1F1DF")), 1);
+    private static readonly Pen UncertainPen =
+        new(UncertainBrush, 2);
+
     public static readonly StyledProperty<bool> ShowCursorProperty =
         AvaloniaProperty.Register<TrendChart, bool>(
             nameof(ShowCursor), true);
@@ -39,7 +69,9 @@ public sealed class TrendChart : TimeSeriesControlBase
         AvaloniaProperty.RegisterDirect<TrendChart, string>(
             nameof(CursorReadout), control => control.CursorReadout);
 
+    private readonly StringBuilder _cursorBuilder = new(256);
     private string _cursorReadout = "NO DATA";
+    private bool _cursorReadoutDirty = true;
 
     static TrendChart()
     {
@@ -50,7 +82,7 @@ public sealed class TrendChart : TimeSeriesControlBase
             VerticalGridDivisionsProperty);
 
         CursorFractionProperty.Changed.AddClassHandler<TrendChart>(
-            (control, _) => control.RefreshCursorReadout());
+            (control, _) => control.MarkCursorReadoutDirty());
     }
 
     public bool ShowCursor
@@ -79,7 +111,12 @@ public sealed class TrendChart : TimeSeriesControlBase
 
     public string CursorReadout
     {
-        get => _cursorReadout;
+        get
+        {
+            EnsureCursorReadout();
+            return _cursorReadout;
+        }
+
         private set => SetAndRaise(
             CursorReadoutProperty,
             ref _cursorReadout,
@@ -96,15 +133,8 @@ public sealed class TrendChart : TimeSeriesControlBase
         }
 
         var frame = new Rect(0, 0, Bounds.Width, Bounds.Height);
-        context.DrawRectangle(
-            new SolidColorBrush(Color.Parse("#080B0C")),
-            new Pen(new SolidColorBrush(Color.Parse("#111315")), 5),
-            frame);
-
-        context.DrawRectangle(
-            null,
-            new Pen(new SolidColorBrush(Color.Parse("#7A8286")), 1),
-            frame.Deflate(5));
+        context.DrawRectangle(FrameBrush, FramePen, frame);
+        context.DrawRectangle(null, EdgePen, frame.Deflate(5));
 
         var plot = new Rect(
             58,
@@ -112,10 +142,7 @@ public sealed class TrendChart : TimeSeriesControlBase
             Math.Max(20, Bounds.Width - 76),
             Math.Max(20, Bounds.Height - (ShowLegend ? 82 : 52)));
 
-        context.DrawRectangle(
-            new SolidColorBrush(Color.Parse("#101719")),
-            new Pen(new SolidColorBrush(Color.Parse("#35464B")), 1),
-            plot);
+        context.DrawRectangle(PlotBrush, PlotPen, plot);
 
         var range = GetEffectiveRange();
         var windowEnd = LatestTimeSeconds;
@@ -123,16 +150,28 @@ public sealed class TrendChart : TimeSeriesControlBase
 
         if (ShowGrid)
         {
-            DrawGrid(context, plot, range.Minimum, range.Maximum, windowStart, windowEnd);
+            DrawGrid(
+                context,
+                plot,
+                range.Minimum,
+                range.Maximum,
+                windowStart,
+                windowEnd);
         }
 
-        DrawSeries(context, plot, range.Minimum, range.Maximum, windowStart, windowEnd);
+        DrawSeries(
+            context,
+            plot,
+            range.Minimum,
+            range.Maximum,
+            windowStart,
+            windowEnd);
 
         if (ShowCursor)
         {
             var cursorX = plot.X + (plot.Width * CursorFraction);
             context.DrawLine(
-                new Pen(new SolidColorBrush(Color.Parse("#F1F1DF")), 1),
+                CursorPen,
                 new Point(cursorX, plot.Top),
                 new Point(cursorX, plot.Bottom));
         }
@@ -145,9 +184,11 @@ public sealed class TrendChart : TimeSeriesControlBase
         DrawTitle(context);
     }
 
-    protected override void OnSeriesChanged() => RefreshCursorReadout();
+    protected override void OnSeriesChanged() =>
+        MarkCursorReadoutDirty();
 
-    protected override void OnSamplesChanged() => RefreshCursorReadout();
+    protected override void OnSamplesChanged() =>
+        MarkCursorReadoutDirty();
 
     private void DrawTitle(DrawingContext context)
     {
@@ -156,12 +197,9 @@ public sealed class TrendChart : TimeSeriesControlBase
             return;
         }
 
-        var text = CreateText(
-            Title,
-            12,
-            new SolidColorBrush(Color.Parse("#E5E7DE")));
-
-        context.DrawText(text, new Point(12, 8));
+        context.DrawText(
+            CreateText(Title, 12, TitleBrush),
+            new Point(12, 8));
     }
 
     private void DrawGrid(
@@ -172,30 +210,28 @@ public sealed class TrendChart : TimeSeriesControlBase
         double windowStart,
         double windowEnd)
     {
-        var minorPen = new Pen(
-            new SolidColorBrush(Color.Parse("#243236")),
-            1);
-        var majorPen = new Pen(
-            new SolidColorBrush(Color.Parse("#34474C")),
-            1);
-        var labelBrush = new SolidColorBrush(Color.Parse("#A8ADA8"));
-
         for (var index = 0; index <= HorizontalGridDivisions; index++)
         {
             var fraction = index / (double)HorizontalGridDivisions;
             var x = plot.Left + (plot.Width * fraction);
+
             context.DrawLine(
                 index is 0 || index == HorizontalGridDivisions
-                    ? majorPen
-                    : minorPen,
+                    ? MajorGridPen
+                    : MinorGridPen,
                 new Point(x, plot.Top),
                 new Point(x, plot.Bottom));
 
-            var seconds = windowStart + ((windowEnd - windowStart) * fraction);
+            var seconds =
+                windowStart +
+                ((windowEnd - windowStart) * fraction);
+
             var label = CreateText(
-                seconds.ToString("0.0", CultureInfo.InvariantCulture) + " s",
+                seconds.ToString(
+                    "0.0",
+                    CultureInfo.InvariantCulture) + " s",
                 9,
-                labelBrush);
+                LabelBrush);
 
             context.DrawText(
                 label,
@@ -208,18 +244,24 @@ public sealed class TrendChart : TimeSeriesControlBase
         {
             var fraction = index / (double)VerticalGridDivisions;
             var y = plot.Bottom - (plot.Height * fraction);
+
             context.DrawLine(
                 index is 0 || index == VerticalGridDivisions
-                    ? majorPen
-                    : minorPen,
+                    ? MajorGridPen
+                    : MinorGridPen,
                 new Point(plot.Left, y),
                 new Point(plot.Right, y));
 
-            var value = minimum + ((maximum - minimum) * fraction);
+            var value =
+                minimum +
+                ((maximum - minimum) * fraction);
+
             var label = CreateText(
-                value.ToString("0.##", CultureInfo.InvariantCulture),
+                value.ToString(
+                    "0.##",
+                    CultureInfo.InvariantCulture),
                 9,
-                labelBrush);
+                LabelBrush);
 
             context.DrawText(
                 label,
@@ -237,28 +279,93 @@ public sealed class TrendChart : TimeSeriesControlBase
         double windowStart,
         double windowEnd)
     {
-        foreach (var series in TraceSeries.Where(series => series.IsVisible))
+        foreach (var series in TraceSeries)
         {
-            var visibleSamples = series.Samples
-                .Where(sample =>
-                    sample.TimestampSeconds >= windowStart &&
-                    sample.TimestampSeconds <= windowEnd)
-                .ToList();
-
-            if (visibleSamples.Count == 0)
+            if (!series.IsVisible)
             {
                 continue;
             }
 
-            var step = Math.Max(1, visibleSamples.Count / Math.Max(1, (int)plot.Width));
-            var decimated = step == 1
-                ? visibleSamples
-                : visibleSamples.Where((_, index) => index % step == 0).ToList();
+            var samples = series.Samples;
+            var visibleCount = 0;
+            var lastVisibleIndex = -1;
 
-            SignalSample? previousConnected = null;
-
-            foreach (var sample in decimated)
+            for (var index = 0; index < samples.Count; index++)
             {
+                var timestamp = samples[index].TimestampSeconds;
+                if (timestamp < windowStart ||
+                    timestamp > windowEnd)
+                {
+                    continue;
+                }
+
+                visibleCount++;
+                lastVisibleIndex = index;
+            }
+
+            if (visibleCount == 0)
+            {
+                continue;
+            }
+
+            var step = Math.Max(
+                1,
+                visibleCount / Math.Max(1, (int)plot.Width));
+
+            var visibleIndex = 0;
+            SignalSample? previousConnected = null;
+            var uncertainSegment = false;
+
+            for (var index = 0; index < samples.Count; index++)
+            {
+                var sample = samples[index];
+                if (sample.TimestampSeconds < windowStart ||
+                    sample.TimestampSeconds > windowEnd)
+                {
+                    continue;
+                }
+
+                var mustDraw =
+                    visibleIndex % step == 0 ||
+                    index == lastVisibleIndex ||
+                    sample.Quality is not SignalQuality.Good;
+
+                visibleIndex++;
+
+                if (sample.Quality is
+                    SignalQuality.Bad or
+                    SignalQuality.Unavailable)
+                {
+                    previousConnected = null;
+                    uncertainSegment = false;
+
+                    if (mustDraw)
+                    {
+                        DrawSamplePoint(
+                            context,
+                            MapPoint(
+                                plot,
+                                minimum,
+                                maximum,
+                                windowStart,
+                                windowEnd,
+                                sample),
+                            GetPointBrush(sample.Quality));
+                    }
+
+                    continue;
+                }
+
+                if (sample.Quality == SignalQuality.Uncertain)
+                {
+                    uncertainSegment = true;
+                }
+
+                if (!mustDraw)
+                {
+                    continue;
+                }
+
                 var point = MapPoint(
                     plot,
                     minimum,
@@ -267,39 +374,32 @@ public sealed class TrendChart : TimeSeriesControlBase
                     windowEnd,
                     sample);
 
-                if (sample.Quality is SignalQuality.Good or SignalQuality.Uncertain)
+                if (previousConnected is { } previousSample)
                 {
-                    if (previousConnected is { } previousSample)
-                    {
-                        var color = sample.Quality == SignalQuality.Uncertain ||
-                                    previousSample.Quality == SignalQuality.Uncertain
-                            ? GetQualityColor(SignalQuality.Uncertain, series.Color)
-                            : series.Color;
-
-                        context.DrawLine(
-                            new Pen(new SolidColorBrush(color), 2),
-                            MapPoint(
-                                plot,
-                                minimum,
-                                maximum,
-                                windowStart,
-                                windowEnd,
-                                previousSample),
-                            point);
-                    }
-
-                    previousConnected = sample;
-                }
-                else
-                {
-                    previousConnected = null;
+                    context.DrawLine(
+                        uncertainSegment
+                            ? UncertainPen
+                            : series.TracePen,
+                        MapPoint(
+                            plot,
+                            minimum,
+                            maximum,
+                            windowStart,
+                            windowEnd,
+                            previousSample),
+                        point);
                 }
 
                 DrawSamplePoint(
                     context,
                     point,
-                    GetQualityColor(sample.Quality, series.Color),
-                    sample.Quality);
+                    sample.Quality == SignalQuality.Uncertain
+                        ? UncertainBrush
+                        : series.TraceBrush);
+
+                previousConnected = sample;
+                uncertainSegment =
+                    sample.Quality == SignalQuality.Uncertain;
             }
         }
     }
@@ -307,52 +407,50 @@ public sealed class TrendChart : TimeSeriesControlBase
     private static void DrawSamplePoint(
         DrawingContext context,
         Point point,
-        Color color,
-        SignalQuality quality)
-    {
-        var brush = new SolidColorBrush(color);
-
-        if (quality is SignalQuality.Bad or SignalQuality.Unavailable)
-        {
-            context.DrawEllipse(
-                brush,
-                null,
-                point,
-                3.2,
-                3.2);
-            return;
-        }
-
+        IBrush brush) =>
         context.DrawEllipse(
             brush,
             null,
             point,
             2.4,
             2.4);
-    }
 
-    private void DrawLegend(DrawingContext context, Rect plot)
+    private void DrawLegend(
+        DrawingContext context,
+        Rect plot)
     {
         var x = plot.Left;
         var y = plot.Bottom + 26;
 
-        foreach (var series in TraceSeries.Where(series => series.IsVisible))
+        foreach (var series in TraceSeries)
         {
+            if (!series.IsVisible)
+            {
+                continue;
+            }
+
             context.DrawLine(
-                new Pen(new SolidColorBrush(series.Color), 3),
+                series.TracePen,
                 new Point(x, y + 6),
                 new Point(x + 18, y + 6));
 
             var legendText = string.IsNullOrWhiteSpace(series.Unit)
                 ? series.Name
-                : string.Concat(series.Name, " [", series.Unit, "]");
+                : string.Concat(
+                    series.Name,
+                    " [",
+                    series.Unit,
+                    "]");
 
             var text = CreateText(
                 legendText,
                 9,
-                new SolidColorBrush(Color.Parse("#D8DBD4")));
+                LegendBrush);
 
-            context.DrawText(text, new Point(x + 24, y));
+            context.DrawText(
+                text,
+                new Point(x + 24, y));
+
             x += 36 + text.Width;
 
             if (x > plot.Right - 100)
@@ -363,53 +461,101 @@ public sealed class TrendChart : TimeSeriesControlBase
         }
     }
 
-    private void RefreshCursorReadout()
+    private void MarkCursorReadoutDirty() =>
+        _cursorReadoutDirty = true;
+
+    private void EnsureCursorReadout()
     {
-        if (TraceSeries.Count == 0 ||
-            TraceSeries.All(series => series.Samples.Count == 0))
+        if (!_cursorReadoutDirty)
+        {
+            return;
+        }
+
+        _cursorReadoutDirty = false;
+
+        if (TraceSeries.Count == 0)
         {
             CursorReadout = "NO DATA";
             return;
         }
 
+        var hasSamples = false;
         var cursorTime =
             (LatestTimeSeconds - TimeWindowSeconds) +
             (TimeWindowSeconds * CursorFraction);
 
-        var builder = new StringBuilder();
-        builder.Append(cursorTime.ToString("0.0", CultureInfo.InvariantCulture));
-        builder.Append(" s");
+        _cursorBuilder.Clear();
+        _cursorBuilder.Append(
+            cursorTime.ToString(
+                "0.0",
+                CultureInfo.InvariantCulture));
+        _cursorBuilder.Append(" s");
 
-        foreach (var series in TraceSeries.Where(series => series.IsVisible))
+        foreach (var series in TraceSeries)
         {
-            var nearest = series.Samples
-                .OrderBy(sample =>
-                    Math.Abs(sample.TimestampSeconds - cursorTime))
-                .FirstOrDefault();
-
-            if (series.Samples.Count == 0)
+            if (!series.IsVisible ||
+                series.Samples.Count == 0)
             {
                 continue;
             }
 
-            builder.Append(" | ");
-            builder.Append(series.Name);
-            builder.Append(": ");
-            builder.Append(nearest.Value.ToString("0.###", CultureInfo.InvariantCulture));
+            hasSamples = true;
+            var samples = series.Samples;
+            var nearest = samples[0];
+            var nearestDistance =
+                Math.Abs(nearest.TimestampSeconds - cursorTime);
+
+            for (var index = 1; index < samples.Count; index++)
+            {
+                var candidate = samples[index];
+                var distance =
+                    Math.Abs(candidate.TimestampSeconds - cursorTime);
+
+                if (distance >= nearestDistance)
+                {
+                    continue;
+                }
+
+                nearest = candidate;
+                nearestDistance = distance;
+            }
+
+            _cursorBuilder.Append(" | ");
+            _cursorBuilder.Append(series.Name);
+            _cursorBuilder.Append(": ");
+            _cursorBuilder.Append(
+                nearest.Value.ToString(
+                    "0.###",
+                    CultureInfo.InvariantCulture));
 
             if (!string.IsNullOrWhiteSpace(series.Unit))
             {
-                builder.Append(' ');
-                builder.Append(series.Unit);
+                _cursorBuilder.Append(' ');
+                _cursorBuilder.Append(series.Unit);
             }
 
-            builder.Append(" [");
-            builder.Append(nearest.Quality.ToString().ToUpperInvariant());
-            builder.Append(']');
+            _cursorBuilder.Append(" [");
+            _cursorBuilder.Append(
+                nearest.Quality
+                    .ToString()
+                    .ToUpperInvariant());
+            _cursorBuilder.Append(']');
         }
 
-        CursorReadout = builder.ToString();
+        CursorReadout = hasSamples
+            ? _cursorBuilder.ToString()
+            : "NO DATA";
     }
+
+    private static IBrush GetPointBrush(
+        SignalQuality quality) =>
+        quality switch
+        {
+            SignalQuality.Bad => BadBrush,
+            SignalQuality.Unavailable => UnavailableBrush,
+            SignalQuality.Uncertain => UncertainBrush,
+            _ => LegendBrush
+        };
 
     private static Point MapPoint(
         Rect plot,
@@ -419,8 +565,12 @@ public sealed class TrendChart : TimeSeriesControlBase
         double windowEnd,
         SignalSample sample)
     {
-        var timeSpan = Math.Max(1e-12, windowEnd - windowStart);
-        var valueSpan = Math.Max(1e-12, maximum - minimum);
+        var timeSpan = Math.Max(
+            1e-12,
+            windowEnd - windowStart);
+        var valueSpan = Math.Max(
+            1e-12,
+            maximum - minimum);
 
         var xFraction = Math.Clamp(
             (sample.TimestampSeconds - windowStart) / timeSpan,

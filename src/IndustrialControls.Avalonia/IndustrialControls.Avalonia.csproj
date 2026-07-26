@@ -7,9 +7,16 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageId>IndustrialControls.Avalonia</PackageId>
-    <Version>0.7.3</Version>
+    <Version>1.0.0-rc.2</Version>
     <Authors>Emilie Rollandin</Authors>
+    <Title>IndustrialControls.Avalonia</Title>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
+    <PackageReleaseNotes>Second 1.0 release candidate: O(1) bounded time-series buffers, dictionary and direct-handle ingestion, lazy trend cursor readout, cached visual resources, coalesced automation metadata and allocation diagnostics.</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <PackageTags>avalonia;controls;industrial;hmi;gauge;led;operator;switch;slider;trend;oscilloscope;recorder;alarm;annunciator;placard;nameplate</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
@@ -22,5 +29,9 @@
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+    <None Include="..\..\CHANGELOG.md" Pack="true" PackagePath="\" Link="CHANGELOG.md" />
+    <None Include="..\..\docs\PACKAGE_USAGE.md" Pack="true" PackagePath="docs\" Link="PACKAGE_USAGE.md" />
+    <None Include="..\..\docs\PUBLIC_API.md" Pack="true" PackagePath="docs\" Link="PUBLIC_API.md" />
+    <None Include="..\..\docs\ACCESSIBILITY.md" Pack="true" PackagePath="docs\" Link="ACCESSIBILITY.md" />
   </ItemGroup>
 </Project>

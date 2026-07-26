@@ -42,6 +42,8 @@ public sealed class IndustrialRockerSwitch : ToggleButton
 
     static IndustrialRockerSwitch()
     {
+        TitleProperty.Changed.AddClassHandler<IndustrialRockerSwitch>(
+            (control, _) => control.RefreshState());
         IsCheckedProperty.Changed.AddClassHandler<IndustrialRockerSwitch>(
             (control, _) => control.RefreshState());
         OnCaptionProperty.Changed.AddClassHandler<IndustrialRockerSwitch>(
@@ -54,7 +56,11 @@ public sealed class IndustrialRockerSwitch : ToggleButton
             (control, _) => control.RefreshState());
     }
 
-    public IndustrialRockerSwitch() => RefreshState();
+    public IndustrialRockerSwitch()
+    {
+        Focusable = true;
+        RefreshState();
+    }
 
     public string Title
     {
@@ -132,5 +138,11 @@ public sealed class IndustrialRockerSwitch : ToggleButton
         StatusText = IsInterlocked
             ? string.Concat("INTERLOCK — ", InterlockReason)
             : "SWITCHING AVAILABLE";
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat("State ", StateText, "; ", StatusText),
+            "IndustrialRockerSwitch");
     }
 }

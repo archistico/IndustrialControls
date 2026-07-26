@@ -2,53 +2,25 @@
 
 ## Baseline ufficiale
 
-M6 Hotfix 2 è la baseline validata.
+M7 Hotfix 3 / versione `0.7.3` è la baseline validata.
 
 ## Candidate corrente
 
-M7 Hotfix 3 — off-state annunciator readability.
+M8 RC2 — Allocation & Update-Path Optimization / versione `1.0.0-rc.2`.
 
-## Controlli aggiunti
+## Contenuto
 
-- `BacklitAlarmIndicator`
-- `AlarmIndicatorPanel`
-- `SafetyPlacard`
-- `BoltedDataPlate`
-
-## Contratto allarmi M7
-
-Il ciclo operativo è:
-
-1. `Activate()` crea un nuovo allarme e annulla l'ACK precedente;
-2. `Acknowledge()` riconosce l'allarme;
-3. `ClearCondition()` rappresenta il rientro della condizione;
-4. se `IsLatched` è attivo, l'indicatore resta memorizzato;
-5. `Reset()` è consentito solo dopo rientro e ACK.
-
-Gli stati derivati sono:
-
-- `Clear`;
-- `NewAlarm`;
-- `AcknowledgedActive`;
-- `ReturnedUnacknowledged`;
-- `ReadyToReset`;
-- `Disabled`.
-
-## Elementi statici
-
-`SafetyPlacard` fornisce:
-
-- cinque livelli di attenzione;
-- sei icone;
-- viti agli angoli;
-- testo statico.
-
-`BoltedDataPlate` fornisce:
-
-- contenuto libero;
-- titolo, sottotitolo e identificativo;
-- quattro materiali;
-- quattro fissaggi.
+- contratto API pubblico;
+- `IndustrialControlsRelease`;
+- metadati Avalonia Automation;
+- live region per annunciatori;
+- keyboard contract completo;
+- focus visuale condiviso;
+- theme-coverage gate;
+- bounded-buffer long-run gate;
+- benchmark console;
+- pack NuGet e validazione del contenuto;
+- documentazione release.
 
 ## Gate
 
@@ -56,47 +28,51 @@ Gli stati derivati sono:
 .\scripts\validate.ps1
 ```
 
-M7 diventa validata solo dopo conferma dell'utente che build, test e controllo manuale della demo sono riusciti.
+Risultati richiesti:
 
-## Prossima milestone
+- build Release senza warning;
+- suite completa superata;
+- package `.nupkg` e `.snupkg` generati;
+- contenuto del package validato;
+- demo verificata manualmente;
+- navigazione da tastiera verificata.
 
-M8 — Stabilization and Release.
+## Dopo la validazione
+
+La release stabile richiede soltanto:
+
+- versione `1.0.0`;
+- changelog finale;
+- nuova esecuzione completa del gate;
+- ZIP completo archiviato come baseline.
 
 ## Consegna
 
 Ogni consegna deve essere uno ZIP completo dell'intero progetto pronto per compilazione e test.
 
 
-## Hotfix 1
+## M8 RC1 Hotfix 1
 
-Correzione di compilazione:
+Correzione di compilazione esclusivamente nel progetto di test:
 
-- `Panel.Render(DrawingContext)` non viene più sovrascritto;
-- `AlarmIndicatorPanel` è un `ItemsControl`;
-- il rendering del pannello è demandato a `ControlTheme`;
-- il layout usa `UniformGrid` con colonne e spaziature configurabili;
-- i test usano `Items.Add` invece di `Children.Add`;
-- versione libreria `0.7.1`.
-
-
-## Hotfix 2
-
-Correzione dei test concorrenti:
-
-- `ItemsControl.Items` non viene più usato come archivio logico;
-- `AlarmIndicatorPanel.Indicators` è una collection .NET indipendente dal thread UI;
-- il template visuale consuma la collection tramite `ItemsSource`;
-- demo e test usano la proprietà `Indicators`;
-- le API collettive operano esclusivamente sulla collection logica;
-- versione libreria `0.7.2`.
+- il riferimento `Avalonia.Media.Colors.Green` era risolto come
+  `IndustrialControls.Avalonia.Media` a causa del namespace del test;
+- il test usa ora il qualificatore globale
+  `global::Avalonia.Media.Colors.Green`;
+- la libreria e il contratto release restano invariati.
 
 
-## Hotfix 3
+## M8 RC2
 
-Correzione visuale:
+Optimization candidate based on RC1 Hotfix 1:
 
-- quando l'annunciatore è in `CLEAR`, il testo non usa più il colore scuro da stato attivo;
-- `CLEAR` usa un foreground chiaro caldo, leggibile sul fondo attenuato;
-- `DISABLED` usa un foreground grigio chiaro;
-- opacità `CLEAR` alzata leggermente da `0.16` a `0.18`;
-- aggiunto test di regressione.
+- no public API removals or renames;
+- time-series storage is now a circular buffer;
+- series lookup is dictionary-backed;
+- direct-series ingestion is available;
+- trend cursor text is generated only when read;
+- gauge and selector accessibility updates are coalesced;
+- stable brushes, pens, formats and selector labels are cached;
+- benchmark output includes bytes per operation.
+
+Validation requires the complete release gate and a new benchmark run on the same machine used for RC1.

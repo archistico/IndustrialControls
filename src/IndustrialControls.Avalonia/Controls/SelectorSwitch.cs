@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using System.Threading;
 
 namespace IndustrialControls.Avalonia.Controls;
 
@@ -23,10 +24,12 @@ public sealed class SelectorSwitch : TemplatedControl
             nameof(PositionLabels), "OFF|AUTO|MANUAL");
 
     public static readonly StyledProperty<string> TitleProperty =
-        AvaloniaProperty.Register<SelectorSwitch, string>(nameof(Title), string.Empty);
+        AvaloniaProperty.Register<SelectorSwitch, string>(
+            nameof(Title), string.Empty);
 
     public static readonly StyledProperty<bool> IsInterlockedProperty =
-        AvaloniaProperty.Register<SelectorSwitch, bool>(nameof(IsInterlocked));
+        AvaloniaProperty.Register<SelectorSwitch, bool>(
+            nameof(IsInterlocked));
 
     public static readonly StyledProperty<string> InterlockReasonProperty =
         AvaloniaProperty.Register<SelectorSwitch, string>(
@@ -44,28 +47,43 @@ public sealed class SelectorSwitch : TemplatedControl
         AvaloniaProperty.RegisterDirect<SelectorSwitch, string>(
             nameof(StatusText), control => control.StatusText);
 
+    private readonly SynchronizationContext? _automationContext;
+    private readonly SendOrPostCallback _flushAutomationMetadataCallback;
+
     private double _handleAngle = -60;
     private string _selectedLabel = "OFF";
     private string _statusText = "SELECTION AVAILABLE";
+    private string[] _labels = Array.Empty<string>();
+    private bool _automationRefreshPending;
 
     static SelectorSwitch()
     {
         PositionCountProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshState(true));
+
         PositionProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshState(false));
+
+        TitleProperty.Changed.AddClassHandler<SelectorSwitch>(
+            (control, _) => control.RefreshState(true));
+
         PositionLabelsProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshLabelsAndState());
+
         IsInterlockedProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshState(true));
+
         InterlockReasonProperty.Changed.AddClassHandler<SelectorSwitch>(
-            (control, _) => control.RefreshState());
+            (control, _) => control.RefreshState(true));
     }
 
     public SelectorSwitch()
     {
         Focusable = true;
-        RefreshState();
+        _automationContext = SynchronizationContext.Current;
+        _flushAutomationMetadataCallback =
+            static state => ((SelectorSwitch)state!).FlushAutomationMetadata();
+        RefreshLabelsAndState();
     }
 
     public int PositionCount
@@ -74,6 +92,7 @@ public sealed class SelectorSwitch : TemplatedControl
         set
         {
             SetValue(PositionCountProperty, value);
+
             if (Position >= value)
             {
                 Position = value - 1;
@@ -86,7 +105,10 @@ public sealed class SelectorSwitch : TemplatedControl
         get => GetValue(PositionProperty);
         set => SetValue(
             PositionProperty,
-            Math.Clamp(value, 0, Math.Max(0, PositionCount - 1)));
+            Math.Clamp(
+                value,
+                0,
+                Math.Max(0, PositionCount - 1)));
     }
 
     public string PositionLabels
@@ -116,19 +138,28 @@ public sealed class SelectorSwitch : TemplatedControl
     public double HandleAngle
     {
         get => _handleAngle;
-        private set => SetAndRaise(HandleAngleProperty, ref _handleAngle, value);
+        private set => SetAndRaise(
+            HandleAngleProperty,
+            ref _handleAngle,
+            value);
     }
 
     public string SelectedLabel
     {
         get => _selectedLabel;
-        private set => SetAndRaise(SelectedLabelProperty, ref _selectedLabel, value);
+        private set => SetAndRaise(
+            SelectedLabelProperty,
+            ref _selectedLabel,
+            value);
     }
 
     public string StatusText
     {
         get => _statusText;
-        private set => SetAndRaise(StatusTextProperty, ref _statusText, value);
+        private set => SetAndRaise(
+            StatusTextProperty,
+            ref _statusText,
+            value);
     }
 
     public bool Select(int position)
@@ -142,9 +173,15 @@ public sealed class SelectorSwitch : TemplatedControl
         return true;
     }
 
-    public bool SelectNext() => Select(Math.Min(Position + 1, PositionCount - 1));
+    public bool SelectNext() =>
+        Select(Math.Min(
+            Position + 1,
+            PositionCount - 1));
 
-    public bool SelectPrevious() => Select(Math.Max(Position - 1, 0));
+    public bool SelectPrevious() =>
+        Select(Math.Max(
+            Position - 1,
+            0));
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
@@ -155,6 +192,7 @@ public sealed class SelectorSwitch : TemplatedControl
         }
 
         var point = e.GetPosition(this);
+
         if (point.X < Bounds.Width / 2.0)
         {
             SelectPrevious();
@@ -183,43 +221,103 @@ public sealed class SelectorSwitch : TemplatedControl
                 SelectPrevious();
                 e.Handled = true;
                 break;
+
             case Key.Right:
             case Key.Up:
                 SelectNext();
                 e.Handled = true;
                 break;
+
             case Key.Home:
                 Select(0);
                 e.Handled = true;
                 break;
+
             case Key.End:
                 Select(PositionCount - 1);
                 e.Handled = true;
                 break;
+
             default:
                 base.OnKeyDown(e);
                 break;
         }
     }
 
-    private void RefreshState()
+    private void RefreshLabelsAndState()
+    {
+        _labels = PositionLabels.Split(
+            '|',
+            StringSplitOptions.TrimEntries |
+            StringSplitOptions.RemoveEmptyEntries);
+
+        RefreshState(true);
+    }
+
+    private void RefreshState(bool refreshAutomationImmediately)
     {
         var count = Math.Max(2, PositionCount);
-        var safePosition = Math.Clamp(Position, 0, count - 1);
-        HandleAngle = count == 1
-            ? 0
-            : -60.0 + (safePosition * (120.0 / (count - 1)));
+        var safePosition = Math.Clamp(
+            Position,
+            0,
+            count - 1);
 
-        var labels = PositionLabels.Split(
-            '|',
-            StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        HandleAngle =
+            -60.0 +
+            (safePosition * (120.0 / (count - 1)));
 
-        SelectedLabel = safePosition < labels.Length
-            ? labels[safePosition]
-            : string.Concat("POSITION ", safePosition + 1);
+        SelectedLabel = safePosition < _labels.Length
+            ? _labels[safePosition]
+            : string.Concat(
+                "POSITION ",
+                safePosition + 1);
 
         StatusText = IsInterlocked
-            ? string.Concat("INTERLOCK — ", InterlockReason)
+            ? string.Concat(
+                "INTERLOCK — ",
+                InterlockReason)
             : "SELECTION AVAILABLE";
+
+        if (refreshAutomationImmediately)
+        {
+            RefreshAutomationMetadata();
+        }
+        else
+        {
+            RequestAutomationMetadataRefresh();
+        }
+    }
+
+    private void RequestAutomationMetadataRefresh()
+    {
+        if (_automationRefreshPending ||
+            _automationContext is null)
+        {
+            return;
+        }
+
+        _automationRefreshPending = true;
+        _automationContext.Post(
+            _flushAutomationMetadataCallback,
+            this);
+    }
+
+    private void FlushAutomationMetadata()
+    {
+        _automationRefreshPending = false;
+        RefreshAutomationMetadata();
+    }
+
+    private void RefreshAutomationMetadata()
+    {
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(
+                "Selected ",
+                SelectedLabel,
+                "; ",
+                StatusText),
+            "SelectorSwitch");
     }
 }

@@ -4,6 +4,11 @@
     xmlns:controls="using:IndustrialControls.Avalonia.Controls">
 
   <Styles.Resources>
+    <ControlTemplate x:Key="Industrial90.FocusAdorner">
+      <Border BorderBrush="#F1F1DF"
+              BorderThickness="2"
+              CornerRadius="4" />
+    </ControlTemplate>
 <Color x:Key="Industrial90.PanelDarkColor">#292C2F</Color>
     <Color x:Key="Industrial90.PanelColor">#454A4E</Color>
     <Color x:Key="Industrial90.PanelLightColor">#686E72</Color>
@@ -195,7 +200,9 @@
   </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:IlluminatedPushButton}" TargetType="controls:IlluminatedPushButton">
-    <Setter Property="MinWidth" Value="132" />
+      <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="132" />
     <Setter Property="MinHeight" Value="150" />
     <Setter Property="Padding" Value="12" />
     <Setter Property="Background" Value="{DynamicResource Industrial90.PanelBrush}" />
@@ -468,7 +475,9 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:IndustrialSlider}" TargetType="controls:IndustrialSlider">
-  <Setter Property="MinWidth" Value="300" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="300" />
   <Setter Property="MinHeight" Value="116" />
   <Setter Property="Template">
     <ControlTemplate>
@@ -550,7 +559,9 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:RotaryKnob}" TargetType="controls:RotaryKnob">
-  <Setter Property="MinWidth" Value="230" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="230" />
   <Setter Property="MinHeight" Value="315" />
   <Setter Property="Template">
     <ControlTemplate>
@@ -576,7 +587,9 @@
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:SelectorSwitch}" TargetType="controls:SelectorSwitch">
-  <Setter Property="MinWidth" Value="260" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="260" />
   <Setter Property="MinHeight" Value="326" />
   <Setter Property="Template">
     <ControlTemplate>
@@ -603,7 +616,9 @@
 
 <ControlTheme x:Key="{x:Type controls:IndustrialToggleSwitch}"
               TargetType="controls:IndustrialToggleSwitch">
-  <Setter Property="MinWidth" Value="230" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="230" />
   <Setter Property="MinHeight" Value="310" />
   <Setter Property="Background" Value="Transparent" />
   <Setter Property="Template">
@@ -642,7 +657,9 @@
 
 <ControlTheme x:Key="{x:Type controls:SpringReturnSwitch}"
               TargetType="controls:SpringReturnSwitch">
-  <Setter Property="MinWidth" Value="280" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="280" />
   <Setter Property="MinHeight" Value="326" />
   <Setter Property="Template">
     <ControlTemplate>
@@ -715,7 +732,9 @@
 
   <ControlTheme x:Key="{x:Type controls:IndustrialRockerSwitch}"
               TargetType="controls:IndustrialRockerSwitch">
-  <Setter Property="MinWidth" Value="220" />
+    <Setter Property="Focusable" Value="True" />
+  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+<Setter Property="MinWidth" Value="220" />
   <Setter Property="MinHeight" Value="310" />
   <Setter Property="Background" Value="Transparent" />
   <Setter Property="Template">

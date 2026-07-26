@@ -42,6 +42,8 @@ public sealed class IndustrialSlider : Slider
     {
         RangeBase.ValueProperty.Changed.AddClassHandler<IndustrialSlider>(
             (control, _) => control.RefreshState());
+        TitleProperty.Changed.AddClassHandler<IndustrialSlider>(
+            (control, _) => control.RefreshState());
         UnitProperty.Changed.AddClassHandler<IndustrialSlider>(
             (control, _) => control.RefreshState());
         DecimalPlacesProperty.Changed.AddClassHandler<IndustrialSlider>(
@@ -54,6 +56,7 @@ public sealed class IndustrialSlider : Slider
 
     public IndustrialSlider()
     {
+        Focusable = true;
         Minimum = 0;
         Maximum = 100;
         SmallChange = 1;
@@ -117,5 +120,11 @@ public sealed class IndustrialSlider : Slider
             : "COMMAND AVAILABLE";
 
         IsEnabled = !IsInterlocked;
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(FormattedValue, "; ", InterlockText),
+            "IndustrialSlider");
     }
 }

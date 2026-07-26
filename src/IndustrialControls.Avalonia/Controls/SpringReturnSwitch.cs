@@ -56,6 +56,8 @@ public sealed class SpringReturnSwitch : TemplatedControl
 
     static SpringReturnSwitch()
     {
+        TitleProperty.Changed.AddClassHandler<SpringReturnSwitch>(
+            (control, _) => control.RefreshState());
         LeftCaptionProperty.Changed.AddClassHandler<SpringReturnSwitch>(
             (control, _) => control.RefreshState());
         CenterCaptionProperty.Changed.AddClassHandler<SpringReturnSwitch>(
@@ -171,6 +173,44 @@ public sealed class SpringReturnSwitch : TemplatedControl
 
     public void Release() => SetPosition(SpringReturnPosition.Center);
 
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (IsInterlocked)
+        {
+            base.OnKeyDown(e);
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.Left:
+            case Key.Down:
+                PressLeft();
+                e.Handled = true;
+                break;
+            case Key.Right:
+            case Key.Up:
+                PressRight();
+                e.Handled = true;
+                break;
+            default:
+                base.OnKeyDown(e);
+                break;
+        }
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        if (e.Key is Key.Left or Key.Down or Key.Right or Key.Up)
+        {
+            Release();
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyUp(e);
+    }
+
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         if (IsInterlocked)
@@ -235,5 +275,11 @@ public sealed class SpringReturnSwitch : TemplatedControl
             : Position == SpringReturnPosition.Center
                 ? "SPRING RETURN READY"
                 : "COMMAND HELD";
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat("Position ", StateText, "; ", StatusText),
+            "SpringReturnSwitch");
     }
 }

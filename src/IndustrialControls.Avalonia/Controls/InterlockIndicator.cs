@@ -56,6 +56,8 @@ public sealed class InterlockIndicator : TemplatedControl
 
     static InterlockIndicator()
     {
+        TitleProperty.Changed.AddClassHandler<InterlockIndicator>(
+            (control, _) => control.RefreshState());
         IsInterlockedProperty.Changed.AddClassHandler<InterlockIndicator>(
             (control, _) => control.RefreshState());
         ReasonProperty.Changed.AddClassHandler<InterlockIndicator>(
@@ -146,5 +148,11 @@ public sealed class InterlockIndicator : TemplatedControl
         LampColor = IsPermitted
             ? IndustrialLampColor.Green
             : IndustrialLampColor.Red;
+
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(StatusText, "; ", CountText, "; ", Reason),
+            "InterlockIndicator");
     }
 }

@@ -30,29 +30,38 @@
 
 ## M7 — Alarm Indicators & Static Panel Elements
 
-Candidate corrente:
-
-- `BacklitAlarmIndicator`;
-- `AlarmIndicatorPanel`;
-- stato nuovo allarme;
-- ACK;
-- rientro;
-- memoria latched;
-- RESET;
-- `SafetyPlacard`;
-- icone di sicurezza;
-- fissaggi agli angoli;
-- `BoltedDataPlate`;
-- varianti di materiale;
-- demo e test.
-
-Stato: **CANDIDATE — HOTFIX 3**
+**VALIDATED — HOTFIX 3**
 
 ## M8 — Stabilization and release
 
-- revisione API pubbliche;
-- accessibilità e navigazione tastiera;
-- rendering test;
-- benchmark;
-- documentazione NuGet;
-- pacchetto 1.0.
+Release candidate corrente:
+
+- versione `1.0.0-rc.2`;
+- contratto API pubblico;
+- metadati di accessibilità;
+- live region per allarmi;
+- navigazione tastiera;
+- focus adorner;
+- test di copertura del tema;
+- verifica long-run dei buffer;
+- benchmark smoke;
+- pack NuGet;
+- ispezione automatica del pacchetto;
+- documentazione di integrazione e rilascio.
+
+Stato: **CANDIDATE — RC2**
+
+## Gate finale
+
+Dopo la validazione locale di M8 RC1 verrà preparata la release stabile `1.0.0`.
+
+
+### RC2 — Allocation & update-path optimization
+
+- buffer circolare O(1);
+- lookup serie tramite dizionario;
+- overload diretto con `SignalTraceSeries`;
+- cursore trend lazy;
+- cache di pennelli, formati e label;
+- metadati di accessibilità coalescenti;
+- benchmark con bytes/operazione.

@@ -193,3 +193,14 @@ Pannello statico di sicurezza con livello, icona, testo e fissaggi agli angoli.
 ## BoltedDataPlate
 
 Targhetta dati con contenuto libero, titolo, identificativo, materiale e quattro viti.
+
+
+# M8 release services
+
+## IndustrialControlsRelease
+
+Static release metadata containing the candidate version and supported theme resource URI.
+
+## Industrial90.FocusAdorner
+
+Shared keyboard-focus visual used by interactive controls.

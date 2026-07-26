@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -12,6 +11,10 @@ namespace IndustrialControls.Avalonia.Controls;
 /// </summary>
 public abstract class TimeSeriesControlBase : Control
 {
+    private static readonly Color UncertainColor = Color.Parse("#E3C83B");
+    private static readonly Color BadColor = Color.Parse("#F14C4C");
+    private static readonly Color UnavailableColor = Color.Parse("#7B7F80");
+
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<TimeSeriesControlBase, string>(
             nameof(Title), string.Empty);
@@ -55,8 +58,12 @@ public abstract class TimeSeriesControlBase : Control
             nameof(LatestTimeSeconds), control => control.LatestTimeSeconds);
 
     private readonly List<SignalTraceSeries> _series = new();
+    private readonly Dictionary<string, SignalTraceSeries> _seriesByName =
+        new(StringComparer.OrdinalIgnoreCase);
+
     private int _seriesCount;
     private double _latestTimeSeconds;
+    private bool _hasSamples;
 
     static TimeSeriesControlBase()
     {
@@ -69,9 +76,14 @@ public abstract class TimeSeriesControlBase : Control
             ShowGridProperty,
             ShowLegendProperty);
 
+        TitleProperty.Changed.AddClassHandler<TimeSeriesControlBase>(
+            (control, _) => control.RefreshAutomationMetadata());
+
         MaxSamplesPerSeriesProperty.Changed.AddClassHandler<TimeSeriesControlBase>(
             (control, _) => control.TrimAllSeriesToCapacity());
     }
+
+    protected TimeSeriesControlBase() => RefreshAutomationMetadata();
 
     public string Title
     {
@@ -124,7 +136,10 @@ public abstract class TimeSeriesControlBase : Control
     public int SeriesCount
     {
         get => _seriesCount;
-        private set => SetAndRaise(SeriesCountProperty, ref _seriesCount, value);
+        private set => SetAndRaise(
+            SeriesCountProperty,
+            ref _seriesCount,
+            value);
     }
 
     public double LatestTimeSeconds
@@ -138,12 +153,14 @@ public abstract class TimeSeriesControlBase : Control
 
     public IReadOnlyList<SignalTraceSeries> TraceSeries => _series;
 
-    public SignalTraceSeries AddSeries(string name, string unit, Color color)
+    public SignalTraceSeries AddSeries(
+        string name,
+        string unit,
+        Color color)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        if (_series.Any(series =>
-                string.Equals(series.Name, name, StringComparison.OrdinalIgnoreCase)))
+        if (_seriesByName.ContainsKey(name))
         {
             throw new InvalidOperationException(
                 $"A series named '{name}' already exists.");
@@ -151,8 +168,11 @@ public abstract class TimeSeriesControlBase : Control
 
         var created = new SignalTraceSeries(name, unit, color);
         _series.Add(created);
+        _seriesByName.Add(name, created);
+
         SeriesCount = _series.Count;
         OnSeriesChanged();
+        RefreshAutomationMetadata();
         InvalidateVisual();
         return created;
     }
@@ -163,37 +183,55 @@ public abstract class TimeSeriesControlBase : Control
         double value,
         SignalQuality quality = SignalQuality.Good)
     {
-        var series = FindSeries(seriesName);
-        if (series is null)
+        if (!_seriesByName.TryGetValue(seriesName, out var series))
         {
             return false;
         }
 
-        if (!double.IsFinite(timestampSeconds) || !double.IsFinite(value))
-        {
-            return false;
-        }
-
-        series.Add(
-            new SignalSample(timestampSeconds, value, quality),
-            MaxSamplesPerSeries);
-
-        if (timestampSeconds > LatestTimeSeconds || TotalSampleCount == 1)
-        {
-            LatestTimeSeconds = timestampSeconds;
-        }
-
-        OnSamplesChanged();
-        InvalidateVisual();
-        return true;
+        return AddSampleCore(
+            series,
+            timestampSeconds,
+            value,
+            quality);
     }
 
-    public bool SetSeriesVisibility(string seriesName, bool isVisible)
+    /// <summary>
+    /// Aggiunge un campione usando direttamente l'handle della serie,
+    /// evitando la ricerca per nome nei percorsi di acquisizione ad alta frequenza.
+    /// </summary>
+    public virtual bool AddSample(
+        SignalTraceSeries series,
+        double timestampSeconds,
+        double value,
+        SignalQuality quality = SignalQuality.Good)
     {
-        var series = FindSeries(seriesName);
-        if (series is null)
+        ArgumentNullException.ThrowIfNull(series);
+
+        if (!_seriesByName.TryGetValue(series.Name, out var registered) ||
+            !ReferenceEquals(series, registered))
         {
             return false;
+        }
+
+        return AddSampleCore(
+            series,
+            timestampSeconds,
+            value,
+            quality);
+    }
+
+    public bool SetSeriesVisibility(
+        string seriesName,
+        bool isVisible)
+    {
+        if (!_seriesByName.TryGetValue(seriesName, out var series))
+        {
+            return false;
+        }
+
+        if (series.IsVisible == isVisible)
+        {
+            return true;
         }
 
         series.IsVisible = isVisible;
@@ -209,8 +247,10 @@ public abstract class TimeSeriesControlBase : Control
             series.Clear();
         }
 
+        _hasSamples = false;
         LatestTimeSeconds = 0;
         OnSamplesChanged();
+        RefreshAutomationMetadata();
         InvalidateVisual();
     }
 
@@ -221,21 +261,37 @@ public abstract class TimeSeriesControlBase : Control
             return NormalizeRange(Minimum, Maximum);
         }
 
-        var visibleValues = _series
-            .Where(series => series.IsVisible)
-            .SelectMany(series => series.Samples)
-            .Where(sample =>
-                sample.Quality is SignalQuality.Good or SignalQuality.Uncertain)
-            .Select(sample => sample.Value)
-            .ToArray();
+        var foundValue = false;
+        var minimum = double.PositiveInfinity;
+        var maximum = double.NegativeInfinity;
 
-        if (visibleValues.Length == 0)
+        foreach (var series in _series)
+        {
+            if (!series.IsVisible)
+            {
+                continue;
+            }
+
+            var samples = series.Samples;
+            for (var index = 0; index < samples.Count; index++)
+            {
+                var sample = samples[index];
+                if (sample.Quality is not
+                    (SignalQuality.Good or SignalQuality.Uncertain))
+                {
+                    continue;
+                }
+
+                foundValue = true;
+                minimum = Math.Min(minimum, sample.Value);
+                maximum = Math.Max(maximum, sample.Value);
+            }
+        }
+
+        if (!foundValue)
         {
             return NormalizeRange(Minimum, Maximum);
         }
-
-        var minimum = visibleValues.Min();
-        var maximum = visibleValues.Max();
 
         if (Math.Abs(maximum - minimum) < 1e-12)
         {
@@ -248,15 +304,10 @@ public abstract class TimeSeriesControlBase : Control
         return (minimum - margin, maximum + margin);
     }
 
-    protected int TotalSampleCount =>
-        _series.Sum(series => series.Samples.Count);
-
     protected SignalTraceSeries? FindSeries(string seriesName) =>
-        _series.FirstOrDefault(series =>
-            string.Equals(
-                series.Name,
-                seriesName,
-                StringComparison.OrdinalIgnoreCase));
+        _seriesByName.TryGetValue(seriesName, out var series)
+            ? series
+            : null;
 
     protected virtual void OnSeriesChanged()
     {
@@ -271,11 +322,53 @@ public abstract class TimeSeriesControlBase : Control
         Color goodColor) =>
         quality switch
         {
-            SignalQuality.Uncertain => Color.Parse("#E3C83B"),
-            SignalQuality.Bad => Color.Parse("#F14C4C"),
-            SignalQuality.Unavailable => Color.Parse("#7B7F80"),
+            SignalQuality.Uncertain => UncertainColor,
+            SignalQuality.Bad => BadColor,
+            SignalQuality.Unavailable => UnavailableColor,
             _ => goodColor
         };
+
+    private bool AddSampleCore(
+        SignalTraceSeries series,
+        double timestampSeconds,
+        double value,
+        SignalQuality quality)
+    {
+        if (!double.IsFinite(timestampSeconds) ||
+            !double.IsFinite(value))
+        {
+            return false;
+        }
+
+        var firstSample = !_hasSamples;
+
+        series.Add(
+            new SignalSample(timestampSeconds, value, quality),
+            MaxSamplesPerSeries);
+
+        if (firstSample || timestampSeconds > LatestTimeSeconds)
+        {
+            LatestTimeSeconds = timestampSeconds;
+        }
+
+        _hasSamples = true;
+        OnSamplesChanged();
+        InvalidateVisual();
+        return true;
+    }
+
+    private void RefreshAutomationMetadata()
+    {
+        IndustrialAutomationMetadata.Apply(
+            this,
+            Title,
+            string.Concat(
+                SeriesCount,
+                " series; bounded history ",
+                MaxSamplesPerSeries,
+                " samples per series"),
+            GetType().Name);
+    }
 
     private void TrimAllSeriesToCapacity()
     {
@@ -285,6 +378,7 @@ public abstract class TimeSeriesControlBase : Control
         }
 
         OnSamplesChanged();
+        RefreshAutomationMetadata();
         InvalidateVisual();
     }
 
