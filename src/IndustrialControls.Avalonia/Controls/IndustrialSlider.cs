@@ -119,6 +119,17 @@ public sealed class IndustrialSlider : Slider
             ? string.Concat("INTERLOCK — ", InterlockReason)
             : "COMMAND AVAILABLE";
 
+        if (IsInterlocked)
+        {
+            PseudoClasses.Add(":interlocked");
+        }
+        else
+        {
+            PseudoClasses.Remove(":interlocked");
+        }
+
+        // Slider input remains physically blocked through the standard
+        // disabled state, while :interlocked provides a distinct HMI style.
         IsEnabled = !IsInterlocked;
 
         IndustrialAutomationMetadata.Apply(

@@ -36,7 +36,7 @@
 
 Release candidate corrente:
 
-- versione `1.0.0-rc.7`;
+- versione `1.0.0-rc.8`;
 - contratto API pubblico;
 - metadati di accessibilità;
 - live region per allarmi;
@@ -130,3 +130,26 @@ Stato: **CANDIDATE**
 ### RC6-B Hotfix 1
 
 Correzione literal C# nel test del gate di validazione.
+
+
+### RC6-C — Rendering & Performance Hardening
+
+- capacità marquee deterministica;
+- sorgente marquee in cache;
+- decimazione per pixel dello strip chart;
+- risorse grafiche riutilizzate;
+- griglia temporale basata su MajorGridSeconds;
+- benchmark render-plan da 100.000 campioni;
+- pseudo-classe interlocked comune.
+
+Stato: **CANDIDATE**
+
+
+### RC6-C Hotfix 1
+
+Correzione `cref` XML della proprietà ereditata `TimeWindowSeconds`.
+
+
+### RC6-C Hotfix 2
+
+Diagnostica esplicita delle discontinuità e dei punti incerti nello strip chart.

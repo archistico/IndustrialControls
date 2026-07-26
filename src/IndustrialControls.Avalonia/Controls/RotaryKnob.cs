@@ -391,6 +391,15 @@ public sealed class RotaryKnob : TemplatedControl
                 InterlockReason)
             : "COMMAND AVAILABLE";
 
+        if (IsInterlocked)
+        {
+            PseudoClasses.Add(":interlocked");
+        }
+        else
+        {
+            PseudoClasses.Remove(":interlocked");
+        }
+
         IndustrialAutomationMetadata.Apply(
             this,
             Title,

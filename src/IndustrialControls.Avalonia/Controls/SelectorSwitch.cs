@@ -320,6 +320,15 @@ public sealed class SelectorSwitch : TemplatedControl
                 InterlockReason)
             : "SELECTION AVAILABLE";
 
+        if (IsInterlocked)
+        {
+            PseudoClasses.Add(":interlocked");
+        }
+        else
+        {
+            PseudoClasses.Remove(":interlocked");
+        }
+
         if (refreshAutomationImmediately)
         {
             RefreshAutomationMetadata();

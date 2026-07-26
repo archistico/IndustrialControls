@@ -46,7 +46,7 @@ il file generato.
 Esempio con una sorgente locale configurata:
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.7
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.8
 ```
 
 ### Da riferimento al progetto
@@ -327,8 +327,13 @@ Display testuale scorrevole.
 ```
 
 Con `AutoFitVisibleCharacters="True"` il numero di caratteri visibili viene
-calcolato dalla larghezza effettiva del controllo. Il testo entra dal bordo
+calcolato dalla larghezza effettiva del controllo tramite un'unica legge,
+utilizzata sia dai cambi proprietà sia dal layout. Il testo entra dal bordo
 destro anche dopo il ridimensionamento della finestra.
+
+La sorgente completa dello scorrimento viene ricostruita soltanto quando
+cambiano testo, capacità o pausa finale; ogni tick riutilizza la sorgente e il
+buffer della finestra.
 
 Proprietà utili:
 
@@ -739,6 +744,15 @@ I campioni vengono conservati in un buffer circolare limitato da
     IsRunning="True" />
 ```
 
+Il registratore applica una decimazione legata alla larghezza del plot: una
+serie molto densa non genera un segmento per ogni campione, ma mantiene un
+budget prossimo a un punto per pixel, preservando campioni incerti e
+interruzioni dovute a qualità `Bad` o `Unavailable`.
+
+`MajorGridSeconds` controlla realmente la spaziatura della griglia temporale.
+`PaperSpeed` resta una velocità nominale visualizzata nell'intestazione; la
+finestra temporale sullo schermo è determinata da `TimeWindowSeconds`.
+
 #### OscilloscopeDisplay
 
 ```xml
@@ -880,7 +894,9 @@ Per acquisizioni dense:
 - usa `AddSample(series, ...)`;
 - evita di aggiornare il controllo più spesso del necessario;
 - separa frequenza di simulazione e frequenza di refresh grafico;
-- scegli capacità coerenti con la memoria disponibile.
+- scegli capacità coerenti con la memoria disponibile;
+- usa `StripChartRecorder` quando serve una traccia continua con decimazione
+  automatica per pixel.
 
 Benchmark diagnostico:
 
@@ -994,11 +1010,5 @@ Consulta il file `LICENSE` incluso nel progetto.
 
 
 
-## RC6-B Hotfix 1
 
-Correzione di compilazione limitata alla suite di test:
 
-- escape corretto del backslash nel controllo del vecchio comando
-  `dotnet test tests\...`;
-- nessuna modifica alla libreria, alla demo o agli script di validazione;
-- versione NuGet invariata: `1.0.0-rc.7`.

@@ -11,15 +11,20 @@ internal static class Program
 
     public static int Main()
     {
-        Console.WriteLine("IndustrialControls.Avalonia benchmark smoke suite");
-        Console.WriteLine($"Iterations: {Iterations:N0}");
-        Console.WriteLine($"Warmup: {WarmupIterations:N0}");
+        Console.WriteLine(
+            "IndustrialControls.Avalonia benchmark smoke suite");
+        Console.WriteLine(
+            $"Iterations: {Iterations:N0}");
+        Console.WriteLine(
+            $"Warmup: {WarmupIterations:N0}");
         Console.WriteLine();
 
         RunTrendBufferBenchmark();
         RunTrendHandleBenchmark();
         RunGaugeUpdateBenchmark();
         RunSelectorBenchmark();
+        RunMarqueeAdvanceBenchmark();
+        RunStripChartRenderPlanBenchmark();
 
         return 0;
     }
@@ -37,12 +42,17 @@ internal static class Program
             "MWe",
             Colors.Green);
 
-        for (var index = 0; index < WarmupIterations; index++)
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
         {
             trend.AddSample(
                 "POWER",
                 index * 0.1,
-                5.0 + Math.Sin(index * 0.01));
+                5.0 +
+                Math.Sin(
+                    index *
+                    0.01));
         }
 
         trend.ClearSamples();
@@ -52,16 +62,23 @@ internal static class Program
             Iterations,
             () =>
             {
-                for (var index = 0; index < Iterations; index++)
+                for (var index = 0;
+                     index < Iterations;
+                     index++)
                 {
                     trend.AddSample(
                         "POWER",
                         index * 0.1,
-                        5.0 + Math.Sin(index * 0.01));
+                        5.0 +
+                        Math.Sin(
+                            index *
+                            0.01));
                 }
             });
 
-        ValidateRetainedSamples(trend, series);
+        ValidateRetainedSamples(
+            trend,
+            series);
     }
 
     private static void RunTrendHandleBenchmark()
@@ -77,12 +94,17 @@ internal static class Program
             "MWe",
             Colors.Green);
 
-        for (var index = 0; index < WarmupIterations; index++)
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
         {
             trend.AddSample(
                 series,
                 index * 0.1,
-                5.0 + Math.Sin(index * 0.01));
+                5.0 +
+                Math.Sin(
+                    index *
+                    0.01));
         }
 
         trend.ClearSamples();
@@ -92,16 +114,23 @@ internal static class Program
             Iterations,
             () =>
             {
-                for (var index = 0; index < Iterations; index++)
+                for (var index = 0;
+                     index < Iterations;
+                     index++)
                 {
                     trend.AddSample(
                         series,
                         index * 0.1,
-                        5.0 + Math.Sin(index * 0.01));
+                        5.0 +
+                        Math.Sin(
+                            index *
+                            0.01));
                 }
             });
 
-        ValidateRetainedSamples(trend, series);
+        ValidateRetainedSamples(
+            trend,
+            series);
     }
 
     private static void RunGaugeUpdateBenchmark()
@@ -114,9 +143,13 @@ internal static class Program
             DecimalPlaces = 2
         };
 
-        for (var index = 0; index < WarmupIterations; index++)
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
         {
-            gauge.Value = index % 101;
+            gauge.Value =
+                index %
+                101;
         }
 
         Measure(
@@ -124,9 +157,13 @@ internal static class Program
             Iterations,
             () =>
             {
-                for (var index = 0; index < Iterations; index++)
+                for (var index = 0;
+                     index < Iterations;
+                     index++)
                 {
-                    gauge.Value = index % 101;
+                    gauge.Value =
+                        index %
+                        101;
                 }
             });
 
@@ -139,12 +176,17 @@ internal static class Program
         var selector = new SelectorSwitch
         {
             PositionCount = 3,
-            PositionLabels = "OFF|AUTO|MANUAL"
+            PositionLabels =
+                "OFF|AUTO|MANUAL"
         };
 
-        for (var index = 0; index < WarmupIterations; index++)
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
         {
-            selector.Select(index % 3);
+            selector.Select(
+                index %
+                3);
         }
 
         Measure(
@@ -152,9 +194,13 @@ internal static class Program
             Iterations,
             () =>
             {
-                for (var index = 0; index < Iterations; index++)
+                for (var index = 0;
+                     index < Iterations;
+                     index++)
                 {
-                    selector.Select(index % 3);
+                    selector.Select(
+                        index %
+                        3);
                 }
             });
 
@@ -162,11 +208,134 @@ internal static class Program
             $"  final state: {selector.SelectedLabel}");
     }
 
+    private static void RunMarqueeAdvanceBenchmark()
+    {
+        var marquee =
+            new LedMarqueeDisplay
+            {
+                IsRunning = false,
+                AutoFitVisibleCharacters = false,
+                VisibleCharacters = 32,
+                EndPauseCharacters = 8,
+                Text =
+                    "MAIN STEAM PRESSURE LOW — CHECK HEADER"
+            };
+
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
+        {
+            marquee.AdvanceForDiagnostics();
+        }
+
+        var sourceBuildsBefore =
+            marquee.ScrollSourceBuildCount;
+
+        Measure(
+            "LED marquee cached advance",
+            Iterations,
+            () =>
+            {
+                for (var index = 0;
+                     index < Iterations;
+                     index++)
+                {
+                    marquee.AdvanceForDiagnostics();
+                }
+            });
+
+        Console.WriteLine(
+            $"  source rebuilds during measure: " +
+            $"{marquee.ScrollSourceBuildCount - sourceBuildsBefore:N0}");
+        Console.WriteLine(
+            $"  cached source length: " +
+            $"{marquee.CachedScrollSourceLength:N0}");
+    }
+
+    private static void RunStripChartRenderPlanBenchmark()
+    {
+        const int sampleCount = 100_000;
+        const int planningIterations = 2_000;
+        const double plotWidth = 900;
+
+        var recorder =
+            new StripChartRecorder
+            {
+                MaxSamplesPerSeries = sampleCount,
+                TimeWindowSeconds = 10_000,
+                AutoScale = true
+            };
+
+        var series =
+            recorder.AddSeries(
+                "TEMPERATURE",
+                "°C",
+                Colors.Green);
+
+        for (var index = 0;
+             index < sampleCount;
+             index++)
+        {
+            recorder.AddSample(
+                series,
+                index * 0.1,
+                50 +
+                (10 *
+                 Math.Sin(
+                     index *
+                     0.002)));
+        }
+
+        for (var index = 0;
+             index < WarmupIterations;
+             index++)
+        {
+            _ = recorder.GetRenderDiagnostics(
+                plotWidth);
+        }
+
+        StripChartRenderDiagnostics diagnostics =
+            default;
+
+        Measure(
+            "Strip-chart 100k render planning",
+            planningIterations,
+            () =>
+            {
+                for (var index = 0;
+                     index < planningIterations;
+                     index++)
+                {
+                    diagnostics =
+                        recorder.GetRenderDiagnostics(
+                            plotWidth);
+                }
+            });
+
+        Console.WriteLine(
+            $"  source samples: " +
+            $"{diagnostics.SourceSampleCount:N0}");
+        Console.WriteLine(
+            $"  selected points: " +
+            $"{diagnostics.SelectedPointCount:N0}");
+        Console.WriteLine(
+            $"  estimated segments: " +
+            $"{diagnostics.EstimatedSegmentCount:N0}");
+
+        Console.WriteLine(
+            $"  quality breaks: " +
+            $"{diagnostics.QualityBreakCount:N0}");
+        Console.WriteLine(
+            $"  uncertain points: " +
+            $"{diagnostics.UncertainPointCount:N0}");
+    }
+
     private static void ValidateRetainedSamples(
         TrendChart trend,
         SignalTraceSeries series)
     {
-        if (series.Samples.Count != trend.MaxSamplesPerSeries)
+        if (series.Samples.Count !=
+            trend.MaxSamplesPerSeries)
         {
             throw new InvalidOperationException(
                 "Trend buffer exceeded or failed to reach its configured capacity.");
@@ -188,8 +357,11 @@ internal static class Program
         var allocatedBefore =
             GC.GetAllocatedBytesForCurrentThread();
 
-        var stopwatch = Stopwatch.StartNew();
+        var stopwatch =
+            Stopwatch.StartNew();
+
         action();
+
         stopwatch.Stop();
 
         var allocatedBytes =
@@ -198,10 +370,13 @@ internal static class Program
 
         Console.WriteLine(name);
         Console.WriteLine(
-            $"  elapsed: {stopwatch.Elapsed.TotalMilliseconds:N2} ms");
+            $"  elapsed: " +
+            $"{stopwatch.Elapsed.TotalMilliseconds:N2} ms");
         Console.WriteLine(
-            $"  allocated: {allocatedBytes:N0} bytes");
+            $"  allocated: " +
+            $"{allocatedBytes:N0} bytes");
         Console.WriteLine(
-            $"  allocated/op: {(double)allocatedBytes / operations:N2} bytes");
+            $"  allocated/op: " +
+            $"{(double)allocatedBytes / operations:N2} bytes");
     }
 }

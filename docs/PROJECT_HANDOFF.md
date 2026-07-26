@@ -6,7 +6,7 @@ M7 Hotfix 3 / versione `0.7.3` è la baseline validata.
 
 ## Candidate corrente
 
-M8 RC6-B — Avalonia Property & Reactive Contracts / versione `1.0.0-rc.7`.
+M8 RC6-C — Rendering & Performance Hardening / versione `1.0.0-rc.8`.
 
 ## Contenuto
 
@@ -205,4 +205,50 @@ Compile-only test correction:
 
 - escaped the trailing backslash in the validation-script regression test;
 - production code and validation scripts are unchanged;
-- package version remains `1.0.0-rc.7`.
+- package version remains `1.0.0-rc.8`.
+
+
+## M8 RC6-C candidate
+
+Cumulative candidate based on validated RC6-B:
+
+- marquee source padding is cached and capacity has a single deterministic law;
+- strip-chart rendering is decimated to a pixel-oriented budget;
+- all strip-chart pens and brushes are reused;
+- quality discontinuities remain explicit;
+- `MajorGridSeconds` drives the time grid;
+- direct-handle ingestion obeys recorder pause state;
+- operator controls share an interlocked pseudo-class and amber status
+  treatment;
+- benchmark coverage includes marquee advancement and 100,000-sample strip
+  planning.
+
+The planned next phase after validation is RC6-D, the final API cleanup and
+release gate before 1.0.0.
+
+
+## M8 RC6-C Hotfix 1
+
+Compile-only XML documentation correction:
+
+- replaced unresolved inherited-property
+  `<see cref="TimeWindowSeconds"/>` with
+  `<c>TimeWindowSeconds</c>`;
+- production behavior is unchanged;
+- package version remains `1.0.0-rc.8`.
+
+
+## M8 RC6-C Hotfix 2
+
+The failing quality-decimation assertion expected at least 500 selected points.
+The deterministic plan actually contains:
+
+- 499 selected points;
+- 496 rendered segments;
+- 2 quality breaks (`Bad`, `Unavailable`);
+- 1 uncertain point.
+
+The renderer was already preserving the discontinuities. The internal
+diagnostic contract now reports quality breaks and uncertain points directly,
+and the regression test validates those values. Production rendering is
+unchanged.

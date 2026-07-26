@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.7`
+Version: `1.0.0-rc.8`
 
 The following control families are release-gated:
 

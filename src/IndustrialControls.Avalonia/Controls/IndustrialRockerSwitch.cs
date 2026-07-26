@@ -139,6 +139,15 @@ public sealed class IndustrialRockerSwitch : ToggleButton
             ? string.Concat("INTERLOCK — ", InterlockReason)
             : "SWITCHING AVAILABLE";
 
+        if (IsInterlocked)
+        {
+            PseudoClasses.Add(":interlocked");
+        }
+        else
+        {
+            PseudoClasses.Remove(":interlocked");
+        }
+
         IndustrialAutomationMetadata.Apply(
             this,
             Title,

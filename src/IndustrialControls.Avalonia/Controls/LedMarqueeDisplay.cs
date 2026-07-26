@@ -11,11 +11,16 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
 {
     private const double HorizontalChromeWidth = 50.0;
     private const double EstimatedCharacterPitch = 15.2;
+    private const int MinimumVisibleCharacters = 4;
+    private const int MaximumVisibleCharacters = 200;
 
     private readonly DispatcherTimer _timer;
 
     private int _offset;
     private int _effectiveVisibleCharacters = 24;
+    private int _scrollSourceBuildCount;
+    private string _scrollSource = string.Empty;
+    private char[] _windowBuffer = Array.Empty<char>();
 
     public static readonly StyledProperty<bool> IsRunningProperty =
         AvaloniaProperty.Register<LedMarqueeDisplay, bool>(
@@ -26,7 +31,9 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
         AvaloniaProperty.Register<LedMarqueeDisplay, int>(
             nameof(VisibleCharacters),
             24,
-            validate: value => value is >= 4 and <= 200);
+            validate: value => value is
+                >= MinimumVisibleCharacters and
+                <= MaximumVisibleCharacters);
 
     public static readonly StyledProperty<bool> AutoFitVisibleCharactersProperty =
         AvaloniaProperty.Register<LedMarqueeDisplay, bool>(
@@ -60,7 +67,7 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
     static LedMarqueeDisplay()
     {
         TextProperty.Changed.AddClassHandler<LedMarqueeDisplay>(
-            (control, _) => control.Reset());
+            (control, _) => control.ResetScrollState());
 
         IsRunningProperty.Changed.AddClassHandler<LedMarqueeDisplay>(
             (control, _) => control.RefreshTimer());
@@ -75,7 +82,7 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
             (control, _) => control.RefreshCapacity());
 
         EndPauseCharactersProperty.Changed.AddClassHandler<LedMarqueeDisplay>(
-            (control, _) => control.Reset());
+            (control, _) => control.ResetScrollState());
     }
 
     public LedMarqueeDisplay()
@@ -85,7 +92,7 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
         _timer = new DispatcherTimer();
         _timer.Tick += OnTick;
 
-        Reset();
+        ResetScrollState();
         RefreshTimer();
     }
 
@@ -143,54 +150,41 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
             value);
     }
 
+    internal int ScrollSourceBuildCount =>
+        _scrollSourceBuildCount;
+
+    internal int CachedScrollSourceLength =>
+        _scrollSource.Length;
+
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var arrangedSize = base.ArrangeOverride(finalSize);
-        UpdateEffectiveCapacity(finalSize.Width);
+        var arrangedSize =
+            base.ArrangeOverride(finalSize);
+
+        ApplyEffectiveCapacity(
+            CalculateEffectiveVisibleCharacters(
+                finalSize.Width,
+                AutoFitVisibleCharacters,
+                VisibleCharacters));
+
         return arrangedSize;
     }
 
-    private void OnTick(
-        object? sender,
-        EventArgs e)
+    internal static int CalculateEffectiveVisibleCharacters(
+        double actualWidth,
+        bool autoFit,
+        int manualVisibleCharacters)
     {
-        var source = BuildSource();
-        if (source.Length == 0)
+        var normalizedManual = Math.Clamp(
+            manualVisibleCharacters,
+            MinimumVisibleCharacters,
+            MaximumVisibleCharacters);
+
+        if (!autoFit ||
+            !double.IsFinite(actualWidth) ||
+            actualWidth <= 0)
         {
-            DisplayText = string.Empty;
-            return;
-        }
-
-        _offset = (_offset + 1) % source.Length;
-        DisplayText = BuildWindow(source, _offset);
-    }
-
-    private void Reset()
-    {
-        _offset = 0;
-        DisplayText = BuildWindow(
-            BuildSource(),
-            0);
-    }
-
-    private void RefreshCapacity()
-    {
-        if (!AutoFitVisibleCharacters ||
-            Bounds.Width <= HorizontalChromeWidth)
-        {
-            SetEffectiveCapacity(VisibleCharacters);
-            return;
-        }
-
-        UpdateEffectiveCapacity(Bounds.Width);
-    }
-
-    private void UpdateEffectiveCapacity(double actualWidth)
-    {
-        if (!AutoFitVisibleCharacters)
-        {
-            SetEffectiveCapacity(VisibleCharacters);
-            return;
+            return normalizedManual;
         }
 
         var usableWidth = Math.Max(
@@ -200,14 +194,52 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
         var calculated = (int)Math.Floor(
             usableWidth / EstimatedCharacterPitch);
 
-        SetEffectiveCapacity(
-            Math.Clamp(
-                calculated,
-                4,
-                200));
+        return Math.Clamp(
+            calculated,
+            MinimumVisibleCharacters,
+            MaximumVisibleCharacters);
     }
 
-    private void SetEffectiveCapacity(int capacity)
+    internal void AdvanceForDiagnostics() =>
+        AdvanceWindow();
+
+    private void OnTick(
+        object? sender,
+        EventArgs e) =>
+        AdvanceWindow();
+
+    private void AdvanceWindow()
+    {
+        if (_scrollSource.Length == 0)
+        {
+            DisplayText = string.Empty;
+            return;
+        }
+
+        _offset =
+            (_offset + 1) %
+            _scrollSource.Length;
+
+        UpdateDisplayWindow();
+    }
+
+    private void ResetScrollState()
+    {
+        _offset = 0;
+        RebuildScrollSource();
+        UpdateDisplayWindow();
+    }
+
+    private void RefreshCapacity()
+    {
+        ApplyEffectiveCapacity(
+            CalculateEffectiveVisibleCharacters(
+                Bounds.Width,
+                AutoFitVisibleCharacters,
+                VisibleCharacters));
+    }
+
+    private void ApplyEffectiveCapacity(int capacity)
     {
         if (EffectiveVisibleCharacters == capacity)
         {
@@ -215,12 +247,13 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
         }
 
         EffectiveVisibleCharacters = capacity;
-        Reset();
+        ResetScrollState();
     }
 
     private void RefreshTimer()
     {
         _timer.Stop();
+
         _timer.Interval =
             TimeSpan.FromMilliseconds(
                 ScrollIntervalMilliseconds);
@@ -231,51 +264,64 @@ public sealed class LedMarqueeDisplay : LedMatrixDisplay
         }
     }
 
-    private string BuildSource()
+    private void RebuildScrollSource()
     {
-        var text = Text ?? string.Empty;
+        _scrollSourceBuildCount++;
+
+        var text =
+            Text ??
+            string.Empty;
 
         if (text.Length == 0)
         {
-            return string.Empty;
+            _scrollSource = string.Empty;
+            EnsureWindowBuffer();
+            return;
         }
 
-        var leadingViewport =
+        _scrollSource = string.Concat(
             new string(
                 ' ',
-                EffectiveVisibleCharacters);
-
-        var endPause =
-            new string(
-                ' ',
-                EndPauseCharacters);
-
-        return string.Concat(
-            leadingViewport,
+                EffectiveVisibleCharacters),
             text,
-            endPause);
+            new string(
+                ' ',
+                EndPauseCharacters));
+
+        EnsureWindowBuffer();
     }
 
-    private string BuildWindow(
-        string source,
-        int offset)
+    private void EnsureWindowBuffer()
     {
-        if (source.Length == 0)
+        if (_windowBuffer.Length ==
+            EffectiveVisibleCharacters)
         {
-            return string.Empty;
+            return;
         }
 
-        var result =
+        _windowBuffer =
             new char[EffectiveVisibleCharacters];
+    }
+
+    private void UpdateDisplayWindow()
+    {
+        if (_scrollSource.Length == 0)
+        {
+            DisplayText = string.Empty;
+            return;
+        }
 
         for (var index = 0;
-             index < result.Length;
+             index < _windowBuffer.Length;
              index++)
         {
-            result[index] =
-                source[(offset + index) % source.Length];
+            _windowBuffer[index] =
+                _scrollSource[
+                    (_offset + index) %
+                    _scrollSource.Length];
         }
 
-        return new string(result);
+        DisplayText =
+            new string(_windowBuffer);
     }
 }

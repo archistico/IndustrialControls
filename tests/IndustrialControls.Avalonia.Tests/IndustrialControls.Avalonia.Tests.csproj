@@ -34,5 +34,11 @@
     <None Include="..\..\scripts\validate.cmd"
           Link="Assets\validate.cmd"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\LedMarqueeDisplay.cs"
+          Link="Assets\LedMarqueeDisplay.cs"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\StripChartRecorder.cs"
+          Link="Assets\StripChartRecorder.cs"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

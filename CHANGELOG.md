@@ -1,6 +1,17 @@
 # Changelog
 
-## 1.0.0-rc.7
+## 1.0.0-rc.8 Hotfix 2
+
+### Diagnostics
+
+- strip-chart diagnostics now expose `QualityBreakCount`;
+- strip-chart diagnostics now expose `UncertainPointCount`;
+- the quality-decimation test verifies the deterministic 499-point,
+  496-segment, two-break render plan;
+- rendering behavior is unchanged.
+
+
+## 1.0.0-rc.8
 
 ### Performance
 

@@ -619,8 +619,12 @@
                      Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
         </Grid>
 
-        <TextBlock Grid.Row="3" Text="{TemplateBinding InterlockText}"
-                   HorizontalAlignment="Center" FontSize="9"
+        <TextBlock x:Name="InterlockStatusText"
+                   Grid.Row="3"
+                   Text="{TemplateBinding InterlockText}"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   FontSize="9"
                    Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
       </Grid>
     </ControlTemplate>
@@ -634,6 +638,15 @@
 
   <Style Selector="^:disabled /template/ Grid#SliderRoot">
     <Setter Property="Opacity" Value="0.55" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ Grid#SliderRoot">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
   </Style>
 </ControlTheme>
 
@@ -658,12 +671,21 @@
                    HorizontalAlignment="Center" Margin="0,4,0,0"
                    FontFamily="Cascadia Mono,Consolas,monospace"
                    FontSize="19" FontWeight="Bold" Foreground="#58D46C" />
-        <TextBlock Text="{TemplateBinding StatusText}"
+        <TextBlock x:Name="InterlockStatusText" Text="{TemplateBinding StatusText}"
                    HorizontalAlignment="Center" FontSize="9"
                    Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
       </StackPanel>
     </ControlTemplate>
   </Setter>
+
+  <Style Selector="^:interlocked">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:SelectorSwitch}" TargetType="controls:SelectorSwitch">
@@ -687,12 +709,21 @@
         <TextBlock Text="{TemplateBinding SelectedLabel}"
                    HorizontalAlignment="Center" Margin="0,16,0,0"
                    FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
-        <TextBlock Text="{TemplateBinding StatusText}"
+        <TextBlock x:Name="InterlockStatusText" Text="{TemplateBinding StatusText}"
                    HorizontalAlignment="Center" FontSize="9"
                    Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
       </StackPanel>
     </ControlTemplate>
   </Setter>
+
+  <Style Selector="^:interlocked">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:IndustrialToggleSwitch}"
@@ -728,13 +759,22 @@
           <TextBlock Text="{TemplateBinding StateText}"
                      HorizontalAlignment="Center" Margin="0,4,0,0"
                      FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
-          <TextBlock Text="{TemplateBinding StatusText}"
+          <TextBlock x:Name="InterlockStatusText" Text="{TemplateBinding StatusText}"
                      HorizontalAlignment="Center" FontSize="9"
                      Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
         </StackPanel>
       </Border>
     </ControlTemplate>
   </Setter>
+
+  <Style Selector="^:interlocked">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:SpringReturnSwitch}"
@@ -759,12 +799,21 @@
         <TextBlock Text="{TemplateBinding StateText}"
                    HorizontalAlignment="Center" Margin="0,16,0,0"
                    FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
-        <TextBlock Text="{TemplateBinding StatusText}"
+        <TextBlock x:Name="InterlockStatusText" Text="{TemplateBinding StatusText}"
                    HorizontalAlignment="Center" FontSize="9"
                    Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
       </StackPanel>
     </ControlTemplate>
   </Setter>
+
+  <Style Selector="^:interlocked">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
 </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:InterlockIndicator}"
@@ -835,13 +884,22 @@
           <TextBlock Text="{TemplateBinding StateText}"
                      HorizontalAlignment="Center" Margin="0,2,0,0"
                      FontSize="17" FontWeight="Bold" Foreground="#F1F1DF" />
-          <TextBlock Text="{TemplateBinding StatusText}"
+          <TextBlock x:Name="InterlockStatusText" Text="{TemplateBinding StatusText}"
                      HorizontalAlignment="Center" FontSize="9"
                      Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
         </StackPanel>
       </Border>
     </ControlTemplate>
   </Setter>
+
+  <Style Selector="^:interlocked">
+    <Setter Property="Opacity" Value="0.78" />
+  </Style>
+
+  <Style Selector="^:interlocked /template/ TextBlock#InterlockStatusText">
+    <Setter Property="Foreground" Value="#F2DD4B" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
 </ControlTheme>
 
   
