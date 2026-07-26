@@ -36,7 +36,7 @@
 
 Release candidate corrente:
 
-- versione `1.0.0-rc.5`;
+- versione `1.0.0-rc.6`;
 - contratto API pubblico;
 - metadati di accessibilità;
 - live region per allarmi;
@@ -90,3 +90,25 @@ Dopo la validazione locale di M8 RC1 verrà preparata la release stabile `1.0.0`
 - `AlarmAnnunciator.PriorityColor`;
 - test palette non dipendente da `SolidColorBrush`;
 - rendering legacy invariato.
+
+
+### RC6-A — Functional safety fixes
+
+- DeviationGauge basato sullo scostamento;
+- deadband operativo;
+- memoria latched per AlarmAnnunciator;
+- pointer capture del SpringReturnSwitch;
+- rilascio su interlock via binding;
+- interlock completo del pulsante illuminato.
+
+Stato: **CANDIDATE**
+
+
+### RC6-A Hotfix 1
+
+Correzione namespace `Avalonia.Styling` per le pseudo-classi.
+
+
+### RC6-A Hotfix 2
+
+Gestione pseudo-classi tramite `IPseudoClasses.Add/Remove`.

@@ -6,7 +6,7 @@ M7 Hotfix 3 / versione `0.7.3` è la baseline validata.
 
 ## Candidate corrente
 
-M8 RC5 — dispatcher-independent alarm palette / versione `1.0.0-rc.5`.
+M8 RC5 — dispatcher-independent alarm palette / versione `1.0.0-rc.6`.
 
 ## Contenuto
 
@@ -144,3 +144,38 @@ The README now documents:
 - performance;
 - customization;
 - demo and validation commands.
+
+
+## M8 RC6-A candidate
+
+Functional-safety candidate based on the validated RC5 baseline:
+
+- gauge evaluation may use a derived engineering value;
+- `DeviationGauge` uses deadband-adjusted deviation for scale and status;
+- legacy alarm annunciators now retain transient alarms;
+- spring-return input uses pointer capture;
+- binding-driven interlock changes return the command to center;
+- illuminated push buttons expose and enforce interlock state.
+
+The next planned phase after validation is RC6-B, covering Avalonia property
+coercion and reactive notification contracts.
+
+
+## M8 RC6-A Hotfix 1
+
+Compile-only correction:
+
+- `SpringReturnSwitch` and `IlluminatedPushButton` now import
+  `Avalonia.Styling`;
+- this enables the `PseudoClasses.Set(...)` extension method;
+- functional behavior and package version remain unchanged.
+
+
+## M8 RC6-A Hotfix 2
+
+Definitive pseudo-class compile correction:
+
+- replaced `PseudoClasses.Set(name, bool)` with direct
+  `IPseudoClasses.Add(name)` / `Remove(name)` calls;
+- removed the incorrect `Avalonia.Styling` import;
+- added a source-level regression test for both affected controls.

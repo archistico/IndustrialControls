@@ -195,6 +195,7 @@ public sealed partial class MainWindow : Window
 
     private void SetInterlockState(bool isInterlocked)
     {
+        StartPushButton.IsInterlocked = isInterlocked;
         FeedwaterSlider.IsInterlocked = isInterlocked;
         ValveSlider.IsInterlocked = isInterlocked;
         LoadKnob.IsInterlocked = isInterlocked;

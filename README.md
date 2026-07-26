@@ -46,7 +46,7 @@ il file generato.
 Esempio con una sorgente locale configurata:
 
 ```powershell
-dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.5
+dotnet add package IndustrialControls.Avalonia --version 1.0.0-rc.6
 ```
 
 ### Da riferimento al progetto
@@ -281,12 +281,24 @@ Pulsante con lampada integrata.
     LampColor="Red"
     IsLampOn="{Binding IsStopRequested}"
     ActionMode="Momentary"
+    IsInterlocked="{Binding IsStopCommandInterlocked}"
+    InterlockReason="COMANDO NON CONSENTITO"
     Command="{Binding StopPumpCommand}" />
 ```
 
 `ActionMode` supporta il comportamento momentaneo o toggle.
 
-Il controllo è utilizzabile con tastiera e mostra il cursore a mano.
+Il pulsante espone inoltre:
+
+- `IsInterlocked`;
+- `InterlockReason`;
+- `CanInvoke`;
+- `StatusText`;
+- `TryInvoke()`.
+
+Quando è interbloccato non modifica lo stato toggle, non genera `Click` e non
+esegue il comando associato. Il controllo è utilizzabile con tastiera e mostra
+il cursore a mano.
 
 ### Display LED
 
@@ -407,6 +419,10 @@ indicator.ClearCondition();
 indicator.Reset();
 ```
 
+L'annunciatore legacy `AlarmAnnunciator` applica la stessa regola di memoria:
+un allarme transitorio con `IsLatched="True"` resta visibile dopo il rientro
+finché non viene riconosciuto e ripristinato.
+
 #### AlarmIndicatorPanel
 
 Pannello per annunciatori retroilluminati.
@@ -520,6 +536,11 @@ Stati calcolati:
 
 Mostra la differenza rispetto a un valore di riferimento.
 
+`Minimum`, `Maximum` e le soglie vengono applicati alla deviazione
+`Value - Setpoint`, non al valore di processo assoluto. `Deadband` centra
+l'indicatore quando lo scostamento è sufficientemente piccolo, mentre
+`Deviation` continua a conservare il valore fisico non filtrato.
+
 ```xml
 <industrial:DeviationGauge
     Title="ERRORE DI POTENZA"
@@ -530,6 +551,13 @@ Mostra la differenza rispetto a un valore di riferimento.
     Deadband="0.2"
     Unit="MWe"
     DecimalPlaces="2" />
+```
+
+Valori disponibili:
+
+```csharp
+gauge.Deviation;          // scostamento fisico
+gauge.EffectiveDeviation; // scostamento usato da scala e soglie
 ```
 
 ### Comandi operatore
@@ -955,3 +983,25 @@ dotnet run --project .\src\IndustrialControls.Avalonia.Demo\
 ## Licenza
 
 Consulta il file `LICENSE` incluso nel progetto.
+
+
+## RC6-A Hotfix 1
+
+Correzione di compilazione:
+
+- aggiunto `using Avalonia.Styling;` ai controlli che usano
+  `PseudoClasses.Set(...)`;
+- nessuna modifica al comportamento funzionale di RC6-A;
+- versione NuGet invariata: `1.0.0-rc.6`.
+
+
+## RC6-A Hotfix 2
+
+Correzione definitiva della gestione delle pseudo-classi:
+
+- rimosso l'uso dell'estensione `PseudoClasses.Set(...)`;
+- usati direttamente `PseudoClasses.Add(...)` e
+  `PseudoClasses.Remove(...)`, disponibili su `IPseudoClasses`;
+- rimossa la dipendenza dal namespace dell'estensione;
+- nessuna modifica al comportamento funzionale di RC6-A;
+- versione NuGet invariata: `1.0.0-rc.6`.

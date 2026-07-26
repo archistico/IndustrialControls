@@ -2,7 +2,7 @@
 
 ## Release candidate
 
-Version: `1.0.0-rc.5`
+Version: `1.0.0-rc.6`
 
 The following control families are release-gated:
 
@@ -70,3 +70,26 @@ The direct overload is additive and does not change the existing API contract.
 - `PriorityBrush`, the brush consumed by the Industrial90 template.
 
 Use `PriorityColor` in tests and non-rendering logic.
+
+
+## RC6 functional-safety contracts
+
+### DeviationGauge
+
+- `Deviation`: raw `Value - Setpoint`;
+- `EffectiveDeviation`: deadband-adjusted value used by scale and thresholds.
+
+### AlarmAnnunciator
+
+- `HasLatchedAlarm`;
+- `VisualState`;
+- `TryAcknowledge()`;
+- `TryReset()`.
+
+### IlluminatedPushButton
+
+- `IsInterlocked`;
+- `InterlockReason`;
+- `CanInvoke`;
+- `StatusText`;
+- `TryInvoke()`.

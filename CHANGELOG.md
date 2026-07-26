@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-rc.5
+## 1.0.0-rc.6
 
 ### Performance
 

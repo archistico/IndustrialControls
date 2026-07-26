@@ -22,5 +22,11 @@
     <None Include="..\..\src\IndustrialControls.Avalonia.Demo\MainWindow.axaml"
           Link="Assets\DemoMainWindow.axaml"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\SpringReturnSwitch.cs"
+          Link="Assets\SpringReturnSwitch.cs"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\IndustrialControls.Avalonia\Controls\IlluminatedPushButton.cs"
+          Link="Assets\IlluminatedPushButton.cs"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

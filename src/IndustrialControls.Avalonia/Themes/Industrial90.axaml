@@ -202,10 +202,10 @@
   </ControlTheme>
 
 <ControlTheme x:Key="{x:Type controls:IlluminatedPushButton}" TargetType="controls:IlluminatedPushButton">
-        <Setter Property="Cursor" Value="Hand" />
-<Setter Property="Focusable" Value="True" />
-  <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
-<Setter Property="MinWidth" Value="132" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="FocusAdorner" Value="{StaticResource Industrial90.FocusAdorner}" />
+    <Setter Property="MinWidth" Value="132" />
     <Setter Property="MinHeight" Value="150" />
     <Setter Property="Padding" Value="12" />
     <Setter Property="Background" Value="{DynamicResource Industrial90.PanelBrush}" />
@@ -222,7 +222,8 @@
                   BorderThickness="1"
                   CornerRadius="2"
                   Padding="10">
-            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                  RowSpacing="6">
               <controls:IndustrialLamp Grid.Row="0"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
@@ -233,6 +234,7 @@
                                        IsOn="{TemplateBinding IsLampOn}"
                                        LampColor="{TemplateBinding LampColor}"
                                        State="{TemplateBinding LampState}" />
+
               <ContentPresenter Grid.Row="1"
                                 Content="{TemplateBinding Content}"
                                 HorizontalAlignment="Center"
@@ -240,12 +242,23 @@
                                 FontSize="16"
                                 FontWeight="Bold"
                                 Foreground="{TemplateBinding CaptionForeground}" />
+
               <TextBlock Grid.Row="2"
                          Text="{TemplateBinding SecondaryCaption}"
                          HorizontalAlignment="Center"
                          TextAlignment="Center"
                          FontSize="9"
                          Foreground="{DynamicResource Industrial90.MutedTextBrush}" />
+
+              <TextBlock Grid.Row="3"
+                         Text="{TemplateBinding StatusText}"
+                         IsVisible="{TemplateBinding IsInterlocked}"
+                         HorizontalAlignment="Center"
+                         TextAlignment="Center"
+                         TextWrapping="Wrap"
+                         FontSize="8"
+                         FontWeight="Bold"
+                         Foreground="{TemplateBinding StatusBrush}" />
             </Grid>
           </Border>
         </Border>
@@ -1231,6 +1244,14 @@
   <Style Selector="controls|IlluminatedPushButton:pressed">
       <Setter Property="Padding" Value="11,12,9,8" />
       <Setter Property="Background" Value="{DynamicResource Industrial90.PanelDarkBrush}" />
+    </Style>
+
+
+  <Style Selector="controls|IlluminatedPushButton:interlocked">
+      <Setter Property="Background" Value="#2B2920" />
+      <Setter Property="BorderBrush" Value="#D4B936" />
+      <Setter Property="CaptionForeground" Value="#F2DD4B" />
+      <Setter Property="Opacity" Value="0.78" />
     </Style>
 
   <Style Selector="controls|IlluminatedPushButton:disabled">

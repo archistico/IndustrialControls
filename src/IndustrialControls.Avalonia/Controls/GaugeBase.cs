@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
-using System.Threading;
 
 namespace IndustrialControls.Avalonia.Controls;
 
@@ -27,58 +27,85 @@ public abstract class GaugeBase : TemplatedControl
         new SolidColorBrush(Color.Parse("#7B7F80"));
 
     public static readonly StyledProperty<double> MinimumProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(Minimum), 0.0);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(Minimum),
+            0.0);
 
     public static readonly StyledProperty<double> MaximumProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(Maximum), 100.0);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(Maximum),
+            100.0);
 
     public static readonly StyledProperty<double> ValueProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(Value), 0.0);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(Value),
+            0.0);
 
     public static readonly StyledProperty<string> TitleProperty =
-        AvaloniaProperty.Register<GaugeBase, string>(nameof(Title), string.Empty);
+        AvaloniaProperty.Register<GaugeBase, string>(
+            nameof(Title),
+            string.Empty);
 
     public static readonly StyledProperty<string> UnitProperty =
-        AvaloniaProperty.Register<GaugeBase, string>(nameof(Unit), string.Empty);
+        AvaloniaProperty.Register<GaugeBase, string>(
+            nameof(Unit),
+            string.Empty);
 
     public static readonly StyledProperty<int> DecimalPlacesProperty =
         AvaloniaProperty.Register<GaugeBase, int>(
-            nameof(DecimalPlaces), 1, validate: value => value is >= 0 and <= 8);
+            nameof(DecimalPlaces),
+            1,
+            validate: value => value is >= 0 and <= 8);
 
     public static readonly StyledProperty<double> CautionLowProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(CautionLow), double.NaN);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(CautionLow),
+            double.NaN);
 
     public static readonly StyledProperty<double> CautionHighProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(CautionHigh), double.NaN);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(CautionHigh),
+            double.NaN);
 
     public static readonly StyledProperty<double> WarningLowProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(WarningLow), double.NaN);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(WarningLow),
+            double.NaN);
 
     public static readonly StyledProperty<double> WarningHighProperty =
-        AvaloniaProperty.Register<GaugeBase, double>(nameof(WarningHigh), double.NaN);
+        AvaloniaProperty.Register<GaugeBase, double>(
+            nameof(WarningHigh),
+            double.NaN);
 
     public static readonly StyledProperty<bool> IsAvailableProperty =
-        AvaloniaProperty.Register<GaugeBase, bool>(nameof(IsAvailable), true);
+        AvaloniaProperty.Register<GaugeBase, bool>(
+            nameof(IsAvailable),
+            true);
 
     public static readonly DirectProperty<GaugeBase, double> NormalizedValueProperty =
         AvaloniaProperty.RegisterDirect<GaugeBase, double>(
-            nameof(NormalizedValue), control => control.NormalizedValue);
+            nameof(NormalizedValue),
+            control => control.NormalizedValue);
 
     public static readonly DirectProperty<GaugeBase, double> PercentageProperty =
         AvaloniaProperty.RegisterDirect<GaugeBase, double>(
-            nameof(Percentage), control => control.Percentage);
+            nameof(Percentage),
+            control => control.Percentage);
 
     public static readonly DirectProperty<GaugeBase, string> FormattedValueProperty =
         AvaloniaProperty.RegisterDirect<GaugeBase, string>(
-            nameof(FormattedValue), control => control.FormattedValue);
+            nameof(FormattedValue),
+            control => control.FormattedValue);
 
     public static readonly DirectProperty<GaugeBase, GaugeStatus> StatusProperty =
         AvaloniaProperty.RegisterDirect<GaugeBase, GaugeStatus>(
-            nameof(Status), control => control.Status);
+            nameof(Status),
+            control => control.Status);
 
     public static readonly DirectProperty<GaugeBase, IBrush> StatusBrushProperty =
         AvaloniaProperty.RegisterDirect<GaugeBase, IBrush>(
-            nameof(StatusBrush), control => control.StatusBrush);
+            nameof(StatusBrush),
+            control => control.StatusBrush);
 
     private readonly SynchronizationContext? _automationContext;
     private readonly SendOrPostCallback _flushAutomationMetadataCallback;
@@ -95,27 +122,27 @@ public abstract class GaugeBase : TemplatedControl
     static GaugeBase()
     {
         MinimumProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         MaximumProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         ValueProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(false));
+            (control, _) => control.RefreshGaugeState(false));
         TitleProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         UnitProperty.Changed.AddClassHandler<GaugeBase>(
             (control, _) => control.RefreshFormattingAndState());
         DecimalPlacesProperty.Changed.AddClassHandler<GaugeBase>(
             (control, _) => control.RefreshFormattingAndState());
         CautionLowProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         CautionHighProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         WarningLowProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         WarningHighProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
         IsAvailableProperty.Changed.AddClassHandler<GaugeBase>(
-            (control, _) => control.RefreshState(true));
+            (control, _) => control.RefreshGaugeState(true));
     }
 
     protected GaugeBase()
@@ -123,8 +150,13 @@ public abstract class GaugeBase : TemplatedControl
         _automationContext = SynchronizationContext.Current;
         _flushAutomationMetadataCallback =
             static state => ((GaugeBase)state!).FlushAutomationMetadata();
+
         RefreshFormattingCache();
-        RefreshState(true);
+
+        // Avoid virtual dispatch during base construction.
+        RefreshGaugeStateCore(
+            Value,
+            refreshAutomationImmediately: true);
     }
 
     public double Minimum
@@ -238,26 +270,46 @@ public abstract class GaugeBase : TemplatedControl
             value);
     }
 
+    /// <summary>
+    /// Returns the value evaluated against the gauge scale and thresholds.
+    /// Standard gauges use <see cref="Value"/>; specialized gauges may
+    /// evaluate a derived quantity.
+    /// </summary>
+    protected virtual double GetGaugeEvaluationValue() => Value;
+
+    /// <summary>
+    /// Recalculates scale position, status and accessibility metadata.
+    /// </summary>
+    protected void RefreshGaugeState(
+        bool refreshAutomationImmediately = true) =>
+        RefreshGaugeStateCore(
+            GetGaugeEvaluationValue(),
+            refreshAutomationImmediately);
+
     private void RefreshFormattingAndState()
     {
         RefreshFormattingCache();
-        RefreshState(true);
+        RefreshGaugeState(true);
     }
 
     private void RefreshFormattingCache()
     {
         _numericFormat = NumericFormats[DecimalPlaces];
+
         _unitSuffix = string.IsNullOrWhiteSpace(Unit)
             ? string.Empty
             : string.Concat(" ", Unit);
     }
 
-    private void RefreshState(bool refreshAutomationImmediately)
+    private void RefreshGaugeStateCore(
+        double evaluatedValue,
+        bool refreshAutomationImmediately)
     {
         var span = Maximum - Minimum;
+
         NormalizedValue = span > 0
             ? Math.Clamp(
-                (Value - Minimum) / span,
+                (evaluatedValue - Minimum) / span,
                 0.0,
                 1.0)
             : 0.0;
@@ -270,7 +322,7 @@ public abstract class GaugeBase : TemplatedControl
                 CultureInfo.InvariantCulture),
             _unitSuffix);
 
-        Status = CalculateStatus();
+        Status = CalculateStatus(evaluatedValue);
         StatusBrush = GetStatusBrush(Status);
 
         if (refreshAutomationImmediately)
@@ -283,26 +335,31 @@ public abstract class GaugeBase : TemplatedControl
         }
     }
 
-    private GaugeStatus CalculateStatus()
+    private GaugeStatus CalculateStatus(double evaluatedValue)
     {
         if (!IsAvailable)
         {
             return GaugeStatus.Unavailable;
         }
 
-        if (Value < Minimum || Value > Maximum)
+        if (evaluatedValue < Minimum ||
+            evaluatedValue > Maximum)
         {
             return GaugeStatus.OutOfRange;
         }
 
-        if ((!double.IsNaN(WarningLow) && Value <= WarningLow) ||
-            (!double.IsNaN(WarningHigh) && Value >= WarningHigh))
+        if ((!double.IsNaN(WarningLow) &&
+             evaluatedValue <= WarningLow) ||
+            (!double.IsNaN(WarningHigh) &&
+             evaluatedValue >= WarningHigh))
         {
             return GaugeStatus.Warning;
         }
 
-        if ((!double.IsNaN(CautionLow) && Value <= CautionLow) ||
-            (!double.IsNaN(CautionHigh) && Value >= CautionHigh))
+        if ((!double.IsNaN(CautionLow) &&
+             evaluatedValue <= CautionLow) ||
+            (!double.IsNaN(CautionHigh) &&
+             evaluatedValue >= CautionHigh))
         {
             return GaugeStatus.Caution;
         }

@@ -180,11 +180,13 @@
             <industrial:IndustrialPanel Header="ILLUMINATED PUSH BUTTONS"
                                         Subtitle="MOMENTARY AND TOGGLE ACTIONS">
               <WrapPanel Orientation="Horizontal">
-                <industrial:IlluminatedPushButton Content="START"
+                <industrial:IlluminatedPushButton x:Name="StartPushButton"
+                                                  Content="START"
                                                   SecondaryCaption="MOMENTARY"
                                                   LampColor="Green"
                                                   IsLampOn="True"
                                                   ActionMode="Momentary"
+                                                  InterlockReason="START PERMISSIVE MISSING"
                                                   Margin="10" />
                 <industrial:IlluminatedPushButton Content="STOP"
                                                   SecondaryCaption="MOMENTARY"
