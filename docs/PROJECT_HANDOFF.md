@@ -122,3 +122,25 @@ The RC4 palette tests failed because `SolidColorBrush` is an Avalonia object
 owned by a dispatcher thread. RC5 adds `AlarmAnnunciator.PriorityColor`, a
 plain `Color` value suitable for tests and non-rendering logic. The existing
 `PriorityBrush` and visual output remain unchanged.
+
+
+## Documentation update after RC5 validation
+
+The root README is now a user-facing integration guide. Historical milestone
+status was removed from the README and remains available only in roadmap,
+handoff and changelog documents.
+
+The README now documents:
+
+- package and project-reference installation;
+- theme registration;
+- every public control family;
+- AXAML and C# examples;
+- MVVM and binding;
+- alarm sequencing;
+- high-frequency trend acquisition;
+- accessibility;
+- keyboard interaction;
+- performance;
+- customization;
+- demo and validation commands.

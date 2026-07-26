@@ -11,7 +11,7 @@
     <Authors>Emilie Rollandin</Authors>
     <Title>IndustrialControls.Avalonia</Title>
     <Description>Reusable Avalonia controls inspired by 1990s industrial control panels.</Description>
-    <PackageReleaseNotes>Fifth 1.0 release candidate: dispatcher-independent legacy annunciator priority-color contract and corrected palette regression tests.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fifth 1.0 release candidate: dispatcher-independent legacy annunciator priority-color contract, corrected palette regression tests, and expanded integration documentation.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
