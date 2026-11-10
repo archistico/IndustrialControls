@@ -11,105 +11,83 @@ public sealed class ToggleSwitchDial : Control
 {
     public static readonly StyledProperty<bool> IsOnProperty =
         AvaloniaProperty.Register<ToggleSwitchDial, bool>(nameof(IsOn));
-
     public static readonly StyledProperty<bool> IsInterlockedProperty =
         AvaloniaProperty.Register<ToggleSwitchDial, bool>(nameof(IsInterlocked));
 
-    static ToggleSwitchDial()
-    {
-        AffectsRender<ToggleSwitchDial>(IsOnProperty, IsInterlockedProperty);
-    }
+    private static readonly IBrush PlateBrush = Solid("#292C2F");
+    private static readonly IBrush ScrewBrush = Solid("#858B8E");
+    private static readonly IBrush NutBrush = Solid("#A8ADB0");
+    private static readonly IBrush HandleBrush = Solid("#B8BDC0");
+    private static readonly IBrush LockedHandleBrush = Solid("#666B6E");
+    private static readonly IBrush ShadowBrush = Solid("#17191B");
+    private static readonly IBrush SocketBrush = Solid("#111416");
+    private static readonly IBrush PivotBrush = Solid("#44494C");
+    private static readonly IBrush MutedBrush = Solid("#888E91");
+    private static readonly IBrush OnBrush = Solid("#58D46C");
+    private static readonly IBrush OffBrush = Solid("#F1F1DF");
+    private static readonly Pen ScrewPen = new(ShadowBrush, 1);
+    private static readonly Pen OutlinePen = new(ShadowBrush, 2);
+    private static readonly Pen FramePen = new(ShadowBrush, 4);
+    private static readonly Pen InnerEdgePen = new(Solid("#969DA1"), 1);
 
-    public bool IsOn
-    {
-        get => GetValue(IsOnProperty);
-        set => SetValue(IsOnProperty, value);
-    }
+    static ToggleSwitchDial() => AffectsRender<ToggleSwitchDial>(IsOnProperty, IsInterlockedProperty);
 
-    public bool IsInterlocked
-    {
-        get => GetValue(IsInterlockedProperty);
-        set => SetValue(IsInterlockedProperty, value);
-    }
+    public bool IsOn { get => GetValue(IsOnProperty); set => SetValue(IsOnProperty, value); }
+    public bool IsInterlocked { get => GetValue(IsInterlockedProperty); set => SetValue(IsInterlockedProperty, value); }
 
     public override void Render(DrawingContext context)
     {
         base.Render(context);
+        var scale = System.Math.Min(Bounds.Width, Bounds.Height) / 150;
+        if (scale <= .05) return;
 
-        var size = Bounds.Size;
-        if (size.Width <= 20 || size.Height <= 20)
+        // One proportioned mechanical assembly, centered at every supported size.
+        using var transform = context.PushTransform(new Matrix(scale, 0, 0, scale,
+            (Bounds.Width - 150 * scale) / 2, (Bounds.Height - 150 * scale) / 2));
+        var pivot = new Point(75, 79);
+        var handle = IsInterlocked ? LockedHandleBrush : HandleBrush;
+
+        // Match the panel/bezel borders and the 9 px bolts of BoltedDataPlate.
+        context.DrawRectangle(PlateBrush, FramePen, new Rect(18, 22, 114, 114), 4, 4);
+        context.DrawRectangle(null, InnerEdgePen, new Rect(22, 26, 106, 106), 2, 2);
+        DrawScrew(context, new Point(30, 34));
+        DrawScrew(context, new Point(120, 34));
+        DrawScrew(context, new Point(30, 124));
+        DrawScrew(context, new Point(120, 124));
+
+        // Flat fills and ordinary outlines, like the selector and rocker dials.
+        context.DrawEllipse(SocketBrush, FramePen, pivot, 30, 30);
+        var nut = new StreamGeometry();
+        using (var geometry = nut.Open())
         {
-            return;
+            geometry.BeginFigure(new Point(63, 58), true);
+            geometry.LineTo(new Point(87, 58));
+            geometry.LineTo(new Point(99, 79));
+            geometry.LineTo(new Point(87, 100));
+            geometry.LineTo(new Point(63, 100));
+            geometry.LineTo(new Point(51, 79));
+            geometry.EndFigure(true);
         }
+        context.DrawGeometry(NutBrush, OutlinePen, nut);
+        context.DrawEllipse(SocketBrush, OutlinePen, pivot, 17, 17);
+        context.DrawEllipse(PivotBrush, OutlinePen, pivot, 10, 10);
 
-        var plate = new Rect(18, 22, size.Width - 36, size.Height - 36);
-        var frameBrush = new SolidColorBrush(Color.Parse("#9DB5C3"));
-        var plateBrush = new SolidColorBrush(Color.Parse("#284156"));
-        var ringBrush = new SolidColorBrush(Color.Parse("#D5D7D0"));
-        var socketBrush = new SolidColorBrush(Color.Parse("#22313F"));
+        // Same 12 px outline / 8 px stem used by SelectorSwitchDial.
+        var tip = new Point(75, IsOn ? 39 : 117);
+        context.DrawLine(new Pen(ShadowBrush, 12), pivot, tip);
+        context.DrawLine(new Pen(handle, 8), pivot, tip);
+        context.DrawRectangle(handle, OutlinePen, new Rect(66, IsOn ? 25 : 105, 18, 26), 4, 4);
 
-        context.DrawRectangle(frameBrush, null, plate);
-
-        var innerPlate = plate.Deflate(12);
-        context.DrawRectangle(
-            plateBrush,
-            new Pen(new SolidColorBrush(Color.Parse("#1E2F3B")), 2),
-            innerPlate);
-
-        var center = innerPlate.Center;
-        var ringRadius = System.Math.Min(innerPlate.Width, innerPlate.Height) / 2.8;
-
-        context.DrawEllipse(
-            null,
-            new Pen(ringBrush, 3),
-            center,
-            ringRadius,
-            ringRadius);
-
-        context.DrawEllipse(
-            socketBrush,
-            new Pen(new SolidColorBrush(Color.Parse("#14202A")), 2),
-            center,
-            ringRadius - 5,
-            ringRadius - 5);
-
-        var stemColor = IsInterlocked
-            ? "#7C7F80"
-            : (IsOn ? "#F2A02C" : "#D35463");
-
-        var headColor = IsInterlocked
-            ? "#909395"
-            : (IsOn ? "#FDB33F" : "#D96471");
-
-        var stemBrush = new SolidColorBrush(Color.Parse(stemColor));
-        var headBrush = new SolidColorBrush(Color.Parse(headColor));
-
-        var headCenter = IsOn
-            ? new Point(center.X, center.Y - 34)
-            : new Point(center.X, center.Y + 34);
-
-        context.DrawLine(
-            new Pen(new SolidColorBrush(Color.Parse("#11202A")), 12),
-            center,
-            headCenter);
-
-        context.DrawLine(
-            new Pen(stemBrush, 8),
-            center,
-            headCenter);
-
-        context.DrawEllipse(
-            headBrush,
-            new Pen(new SolidColorBrush(Color.Parse("#20313F")), 2),
-            headCenter,
-            15,
-            15);
-
-        context.DrawEllipse(
-            new SolidColorBrush(Color.Parse("#163245")),
-            new Pen(new SolidColorBrush(Color.Parse("#1A242C")), 1),
-            headCenter,
-            7,
-            7);
+        // Fixed position marks remain readable independently of the metal finish.
+        var onMark = !IsInterlocked && IsOn ? OnBrush : MutedBrush;
+        var offMark = !IsInterlocked && !IsOn ? OffBrush : MutedBrush;
+        context.DrawLine(new Pen(onMark, 2), new Point(113, 58), new Point(113, 66));
+        context.DrawEllipse(null, new Pen(offMark, 2), new Point(37, 99), 4, 4);
     }
+
+    private static void DrawScrew(DrawingContext context, Point center)
+    {
+        context.DrawEllipse(ScrewBrush, ScrewPen, center, 4.5, 4.5);
+    }
+    private static IBrush Solid(string color) => new SolidColorBrush(Color.Parse(color));
 }

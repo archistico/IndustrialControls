@@ -12,14 +12,15 @@ internal static class Program
     {
         try
         {
-            if (args.Length == 2 && args[0] is "--render-diagram" or "--render-catalog")
+            if (args.Length == 2 && args[0] is "--render-diagram" or "--render-catalog" or "--render-toggle")
             {
                 BuildAvaloniaApp().SetupWithoutStarting();
                 MainWindow? catalog = null;
                 if (args[0] == "--render-catalog") catalog = new MainWindow();
                 var diagram = new IndustrialDiagram { Document = PlantDiagramSample.Create(), IsAnimationEnabled = false, AnimationTime = .4 };
                 var size = new Size(1640, 820);
-                var visual = catalog?.Content as Control ?? diagram;
+                Control visual = args[0] == "--render-toggle" ? new ToggleSwitchPreview() : catalog?.Content as Control ?? diagram;
+                if (args[0] == "--render-toggle") size = new Size(950, 370);
                 if (catalog is not null) size = new Size(1520, 980);
                 visual.Measure(size);
                 visual.Arrange(new Rect(size));

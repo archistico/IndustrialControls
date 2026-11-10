@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — toggle switch visual refinement
+
+- replaced the colored pin with a flat-color lever and hexagonal mounting nut;
+- aligned the 9 px bolts, 4/1 px frame borders and 8 px lever stem with the
+  existing Industrial90 controls, using the same solid gray palette;
+- made the vector assembly scale uniformly, with a muted interlocked handle;
+- preserved the toggle state, commands, bindings and interaction behavior;
+- added an offscreen preview of ON/OFF and interlocked appearances.
+
 ## Unreleased — process and architecture diagrams
 
 - added native `IndustrialDiagram` with observable nodes, groups, texts and
