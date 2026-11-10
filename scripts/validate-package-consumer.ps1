@@ -83,6 +83,7 @@ $configSource = @"
 $programSource = @"
 using IndustrialControls.Avalonia;
 using IndustrialControls.Avalonia.Controls;
+using IndustrialControls.Avalonia.Diagrams;
 
 var gauge = new DigitalGauge
 {
@@ -118,6 +119,19 @@ if (!string.Equals(
 if (switchControl.TryToggle())
 {
     return 4;
+}
+
+var diagramDocument = new DiagramDocument();
+diagramDocument.Nodes.Add(new DiagramNode("pump") { Symbol = DiagramSymbol.Pump });
+diagramDocument.Nodes.Add(new DiagramNode("tank") { Symbol = DiagramSymbol.Tank, X = 360 });
+var connection = new DiagramConnection("flow") { SourceId = "pump", TargetId = "tank" };
+connection.Waypoints.Add(new DiagramPoint(250, 100));
+diagramDocument.Connections.Add(connection);
+var restoredDiagram = DiagramJson.Deserialize(DiagramJson.Serialize(diagramDocument));
+var diagram = new IndustrialDiagram { Document = restoredDiagram };
+if (!diagram.SelectElement("pump") || diagram.GetConnectionRoute("flow").Count != 3)
+{
+    return 5;
 }
 
 Console.WriteLine(

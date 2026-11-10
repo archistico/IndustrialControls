@@ -20,7 +20,16 @@ applicazione Avalonia compatibile con `.NET 10`.
 ## Anteprima del catalogo
 
 La demo inclusa nel repository raccoglie l'intero catalogo dei controlli in
-sette sezioni.
+otto sezioni.
+
+### Architecture diagram
+
+![IndustrialControls.Avalonia — Architecture diagram](screenshot/08-architecture-diagram.png)
+
+`IndustrialDiagram` rappresenta nodi, gruppi, flussi, testi e allarmi con zoom,
+pan e selezione. Include simboli di impianto, stati aggiornabili dall'host,
+percorsi configurabili e salvataggio del layout in JSON.
+Vedi la [guida al componente](docs/PROCESS_DIAGRAM.md).
 
 ### Foundation
 
@@ -1032,6 +1041,7 @@ dotnet run --project .\src\IndustrialControls.Avalonia.Demo\
 
 ## Documentazione aggiuntiva
 
+- [PROCESS_DIAGRAM.md](docs/PROCESS_DIAGRAM.md): API e utilizzo dei diagrammi di impianto;
 - `docs/PACKAGE_USAGE.md`: integrazione del pacchetto;
 - `docs/PUBLIC_API.md`: contratto delle API;
 - `docs/ACCESSIBILITY.md`: accessibilità e tastiera;

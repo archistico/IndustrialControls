@@ -1,4 +1,7 @@
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using IndustrialControls.Avalonia.Controls;
 
 namespace IndustrialControls.Avalonia.Demo;
 
@@ -9,6 +12,26 @@ internal static class Program
     {
         try
         {
+            if (args.Length == 2 && args[0] is "--render-diagram" or "--render-catalog")
+            {
+                BuildAvaloniaApp().SetupWithoutStarting();
+                MainWindow? catalog = null;
+                if (args[0] == "--render-catalog") catalog = new MainWindow();
+                var diagram = new IndustrialDiagram { Document = PlantDiagramSample.Create(), IsAnimationEnabled = false, AnimationTime = .4 };
+                var size = new Size(1640, 820);
+                var visual = catalog?.Content as Control ?? diagram;
+                if (catalog is not null) size = new Size(1520, 980);
+                visual.Measure(size);
+                visual.Arrange(new Rect(size));
+                var activeDiagram = catalog?.FindControl<IndustrialDiagram>("PlantDiagram") ?? diagram;
+                activeDiagram.IsAnimationEnabled = false;
+                activeDiagram.FitToContent(35);
+                using var bitmap = new RenderTargetBitmap(new PixelSize((int)size.Width, (int)size.Height), new Vector(96, 96));
+                bitmap.Render(visual);
+                bitmap.Save(args[1]);
+                catalog?.Close();
+                return;
+            }
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }

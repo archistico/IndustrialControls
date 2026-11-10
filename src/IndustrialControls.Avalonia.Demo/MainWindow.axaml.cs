@@ -24,6 +24,7 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        InitializePlantDiagram();
 
         _powerSeries = ProcessTrend.AddSeries(
             "POWER",

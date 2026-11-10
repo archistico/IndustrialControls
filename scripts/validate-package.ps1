@@ -50,6 +50,7 @@ try {
         'docs/DEMO_CATALOG.md',
         'docs/CONTROL_CATALOG.md',
         'docs/PERFORMANCE.md',
+        'docs/PROCESS_DIAGRAM.md',
         'docs/RELEASE_CHECKLIST.md',
         'screenshot/01-foundation.png',
         'screenshot/02-lamps-and-led.png',
@@ -58,6 +59,7 @@ try {
         'screenshot/05-trends-and-screens.png',
         'screenshot/06-alarm-indicators.png',
         'screenshot/07-static-and-release.png',
+        'screenshot/08-architecture-diagram.png',
         'lib/net10.0/IndustrialControls.Avalonia.dll',
         'lib/net10.0/IndustrialControls.Avalonia.xml'
     )

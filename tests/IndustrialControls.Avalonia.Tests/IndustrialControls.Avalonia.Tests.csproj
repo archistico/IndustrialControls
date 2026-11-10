@@ -82,5 +82,8 @@
     <None Include="..\..\screenshot\07-static-and-release.png"
           Link="Assets\screenshot\07-static-and-release.png"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshot\08-architecture-diagram.png"
+          Link="Assets\screenshot\08-architecture-diagram.png"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@
     <None Include="..\..\docs\DEMO_CATALOG.md" Pack="true" PackagePath="docs\" Link="DEMO_CATALOG.md" />
     <None Include="..\..\docs\CONTROL_CATALOG.md" Pack="true" PackagePath="docs\" Link="CONTROL_CATALOG.md" />
     <None Include="..\..\docs\PERFORMANCE.md" Pack="true" PackagePath="docs\" Link="PERFORMANCE.md" />
+    <None Include="..\..\docs\PROCESS_DIAGRAM.md" Pack="true" PackagePath="docs\" Link="PROCESS_DIAGRAM.md" />
     <None Include="..\..\docs\RELEASE_CHECKLIST.md" Pack="true" PackagePath="docs\" Link="RELEASE_CHECKLIST.md" />
     <None Include="..\..\screenshot\01-foundation.png" Pack="true" PackagePath="screenshot\" Link="01-foundation.png" />
     <None Include="..\..\screenshot\02-lamps-and-led.png" Pack="true" PackagePath="screenshot\" Link="02-lamps-and-led.png" />
@@ -44,5 +45,6 @@
     <None Include="..\..\screenshot\05-trends-and-screens.png" Pack="true" PackagePath="screenshot\" Link="05-trends-and-screens.png" />
     <None Include="..\..\screenshot\06-alarm-indicators.png" Pack="true" PackagePath="screenshot\" Link="06-alarm-indicators.png" />
     <None Include="..\..\screenshot\07-static-and-release.png" Pack="true" PackagePath="screenshot\" Link="07-static-and-release.png" />
+    <None Include="..\..\screenshot\08-architecture-diagram.png" Pack="true" PackagePath="screenshot\" Link="08-architecture-diagram.png" />
   </ItemGroup>
 </Project>

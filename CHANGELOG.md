@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — process and architecture diagrams
+
+- added native `IndustrialDiagram` with observable nodes, groups, texts and
+  routed connections, medium-specific colors and directional flow animation;
+- added external operational/alarm state, selection, command-based details,
+  zoom/pan, opt-in node positioning and keyboard navigation;
+- added fourteen equipment symbols and a custom symbol-renderer extension;
+- added batched host updates and validated schema-v1 JSON persistence;
+- added a plant overview demo, reproducible PNG rendering and component guide;
+- kept simulator integration deferred and restored the simulator working tree.
+
 ## 1.0.0 documentation update 1
 
 ### Screenshots

@@ -1,5 +1,12 @@
 # Control catalog
 
+## IndustrialDiagram
+
+Sinottico vettoriale con nodi, gruppi, testi, connessioni configurabili, flussi
+animati e allarmi forniti dall'host. Supporta zoom/pan, selezione, simboli
+industriali estendibili, editing delle posizioni e persistenza JSON.
+Vedi [PROCESS_DIAGRAM.md](PROCESS_DIAGRAM.md).
+
 ## IndustrialPanel
 
 Contenitore con intestazione, sottotitolo, fissaggi e superficie industriale.

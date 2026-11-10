@@ -52,7 +52,8 @@ public sealed class M8DemoCatalogContractTests
             "BacklitAlarmIndicator",
             "AlarmIndicatorPanel",
             "SafetyPlacard",
-            "BoltedDataPlate"
+            "BoltedDataPlate",
+            "IndustrialDiagram"
         };
 
         foreach (var controlName in requiredControls)
@@ -64,12 +65,13 @@ public sealed class M8DemoCatalogContractTests
     }
 
     [Fact]
-    public void DemoCatalog_IsOrganizedIntoSevenFunctionalTabs()
+    public void DemoCatalog_IsOrganizedIntoEightFunctionalTabs()
     {
         var demo = ReadAsset("DemoMainWindow.axaml");
 
         var requiredTabs = new[]
         {
+            "ARCHITECTURE DIAGRAM",
             "FOUNDATION",
             "LAMPS &amp; LED",
             "GAUGES",

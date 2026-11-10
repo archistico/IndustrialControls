@@ -110,7 +110,8 @@ public sealed class StableReleaseContractTests
             "04-operator-controls.png",
             "05-trends-and-screens.png",
             "06-alarm-indicators.png",
-            "07-static-and-release.png"
+            "07-static-and-release.png",
+            "08-architecture-diagram.png"
         };
 
         foreach (var screenshot in screenshots)

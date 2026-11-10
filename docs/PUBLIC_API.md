@@ -14,6 +14,10 @@ The following control families are release-gated:
 6. Trends and screens
 7. Alarm indicators
 8. Static placards and data plates
+9. Process and architecture diagrams (`IndustrialDiagram`, `Diagrams` model)
+
+The [process-diagram guide](PROCESS_DIAGRAM.md) documents the scene model,
+external alarm state, viewport APIs, custom symbols and versioned persistence.
 
 ## Compatibility policy
 

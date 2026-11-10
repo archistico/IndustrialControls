@@ -122,3 +122,24 @@ Version `1.0.0` promotes the validated RC6-D API without adding new public
 control types or changing runtime behavior. Internal implementation helpers
 remain internal, and the package-consumer gate validates the installed NuGet
 surface rather than repository project references.
+
+## Integrazioni consumer
+
+La [verifica di integrazione con NuclearReactorSimulator](NUCLEAR_REACTOR_SIMULATOR_INTEGRATION_AUDIT.md)
+documenta la compatibilità compilata, le differenze di contratto e il percorso
+di migrazione della sala controllo.
+
+La patch del pannello pilota è conservata come esperimento differito. Non è
+applicata alla copia locale del simulatore: l'integrazione verrà svolta dal
+progetto consumer in un secondo momento.
+
+## Process and architecture diagrams
+
+`IndustrialDiagram` disegna un `DiagramDocument` osservabile tramite
+`DrawingContext`. Geometria, collegamenti, testo, stato operativo e allarmi
+restano dati distinti. Il consumer applica snapshot sul thread UI con
+`BeginUpdate`; selezione e viewport sopravvivono agli aggiornamenti del modello.
+Il controllo non possiede memoria degli allarmi né logica di impianto.
+
+La [guida del diagramma](PROCESS_DIAGRAM.md) descrive route, simboli,
+estensione del renderer, interazione e formato JSON versione 1.

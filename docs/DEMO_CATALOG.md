@@ -4,13 +4,15 @@ The demo is the visual acceptance catalog for the library.
 
 ## Tabs
 
-1. Foundation
-2. Lamps & LED
-3. Gauges
-4. Operator controls
-5. Trends & screens
-6. Alarm indicators
-7. Static & release
+1. Architecture diagram — plant overview, animated media flows, selection,
+   node positioning, synthetic fault/ACK and versioned layout round trip.
+2. Foundation
+3. Lamps & LED
+4. Gauges
+5. Operator controls
+6. Trends & screens
+7. Alarm indicators
+8. Static & release
 
 ## Startup diagnostics
 

@@ -19,6 +19,10 @@ The release candidate supplies:
 - `IndustrialRockerSwitch`: standard toggle-button keyboard behavior;
 - `SpringReturnSwitch`: hold an arrow key for the momentary command; release it to return to center;
 - `IlluminatedPushButton`: standard button keyboard behavior.
+- `IndustrialDiagram`: arrows select equipment, Enter invokes details, Home
+  fits the scene, plus/minus zoom and Escape clears selection. The selected
+  element exposes its readout, operational state and alarm acknowledgement in
+  automation help text. The diagram draws a visible keyboard-focus border.
 
 ## Focus visibility
 

@@ -1,0 +1,539 @@
+diff --git a/src/NuclearReactorSimulator.App/App.axaml b/src/NuclearReactorSimulator.App/App.axaml
+index 6dbea344359cedd2f32bb2663e432a336c7f43bf..6fddb196bd12617a4f205e280c9bb9201f7865a5 100644
+--- a/src/NuclearReactorSimulator.App/App.axaml
++++ b/src/NuclearReactorSimulator.App/App.axaml
+@@ -2,6 +2,7 @@
+     x:Class="NuclearReactorSimulator.App.App"
+     xmlns="https://github.com/avaloniaui"
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
++    xmlns:industrialTheme="using:IndustrialControls.Avalonia.Themes"
+     RequestedThemeVariant="Dark">
+   <Application.Resources>
+     <FontFamily x:Key="InterfaceFont">Inter</FontFamily>
+@@ -9,6 +10,7 @@
+   </Application.Resources>
+   <Application.Styles>
+     <FluentTheme />
++    <industrialTheme:IndustrialControlsTheme />
+     <Style Selector="Window">
+       <Setter Property="FontFamily" Value="{StaticResource InterfaceFont}" />
+       <Setter Property="Foreground" Value="#E8F2F5" />
+diff --git a/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml b/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..8bbff9d60dd4b1617d02c2d118e9f9e77278131d
+--- /dev/null
++++ b/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml
+@@ -0,0 +1,55 @@
++<UserControl xmlns="https://github.com/avaloniaui"
++             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
++             xmlns:industrial="using:IndustrialControls.Avalonia.Controls"
++             xmlns:vm="using:NuclearReactorSimulator.App.ViewModels"
++             xmlns:presentation="using:NuclearReactorSimulator.App.Presentation"
++             x:Class="NuclearReactorSimulator.App.Controls.IndustrialPrimaryPumpPanel"
++             x:DataType="vm:PrimaryPumpPanelViewModel">
++  <industrial:IndustrialPanel Header="MAIN CIRCULATION PUMP" Subtitle="{Binding PumpId}">
++    <StackPanel Spacing="14">
++      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16">
++        <StackPanel VerticalAlignment="Center" Spacing="5">
++          <TextBlock Text="{Binding LoopId}" FontWeight="Bold" />
++          <TextBlock Text="{Binding OperatingText}" FontWeight="Bold" FontSize="18" />
++        </StackPanel>
++        <industrial:IndustrialLamp Grid.Column="1" Label="RUNNING"
++                                   IsOn="{Binding IsRunning, Mode=OneWay}" LampColor="Green" />
++        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12">
++          <industrial:IlluminatedPushButton Content="START" SecondaryCaption="MAIN CIRCULATION"
++                                            ActionMode="Momentary" LampColor="Green"
++                                            IsLampOn="{Binding IsRunning, Mode=OneWay}"
++                                            IsEnabled="{Binding CanStart}"
++                                            IsInterlocked="{Binding !CanStart}"
++                                            InterlockReason="{Binding StartInterlockReason}"
++                                            Command="{Binding StartCommand}" />
++          <industrial:IlluminatedPushButton Content="STOP" SecondaryCaption="MAIN CIRCULATION"
++                                            ActionMode="Momentary" LampColor="Red"
++                                            IsLampOn="{Binding IsStopped, Mode=OneWay}"
++                                            IsEnabled="{Binding CanStop}"
++                                            IsInterlocked="{Binding !CanStop}"
++                                            InterlockReason="{Binding StopInterlockReason}"
++                                            Command="{Binding StopCommand}" />
++        </StackPanel>
++      </Grid>
++      <ItemsControl ItemsSource="{Binding Measurements}">
++        <ItemsControl.ItemsPanel>
++          <ItemsPanelTemplate><UniformGrid Columns="3" /></ItemsPanelTemplate>
++        </ItemsControl.ItemsPanel>
++        <ItemsControl.ItemTemplate>
++          <DataTemplate x:DataType="presentation:IndustrialInstrumentReadoutViewModel">
++            <industrial:InstrumentBezel Title="{Binding Current.Title}" Unit="{Binding Current.Unit}" Margin="0,0,10,0" ShowGlass="False">
++              <StackPanel Spacing="8">
++                <TextBlock Text="{Binding Current.ValueText}" FontSize="28" FontWeight="Bold"
++                           FontFamily="{DynamicResource DataFont}" />
++                <industrial:SignalQualityIndicator SignalName="{Binding Current.Title}"
++                                                   Quality="{Binding Current.Quality}" Source="{Binding Current.Source}" />
++                <TextBlock Text="{Binding Current.StateText}" FontWeight="SemiBold" />
++                <TextBlock Text="{Binding Current.ScaleText}" TextWrapping="Wrap" FontSize="10" />
++              </StackPanel>
++            </industrial:InstrumentBezel>
++          </DataTemplate>
++        </ItemsControl.ItemTemplate>
++      </ItemsControl>
++    </StackPanel>
++  </industrial:IndustrialPanel>
++</UserControl>
+diff --git a/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml.cs b/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c755a5ec2d92b356d072bb61688910b06ec341e5
+--- /dev/null
++++ b/src/NuclearReactorSimulator.App/Controls/IndustrialPrimaryPumpPanel.axaml.cs
+@@ -0,0 +1,8 @@
++using Avalonia.Controls;
++
++namespace NuclearReactorSimulator.App.Controls;
++
++public sealed partial class IndustrialPrimaryPumpPanel : UserControl
++{
++    public IndustrialPrimaryPumpPanel() => InitializeComponent();
++}
+diff --git a/src/NuclearReactorSimulator.App/NuclearReactorSimulator.App.csproj b/src/NuclearReactorSimulator.App/NuclearReactorSimulator.App.csproj
+index 8356e63c828a97d49b090a5d01833f686aabf5e9..71f89168c601a37b56630937bdac32983823537b 100644
+--- a/src/NuclearReactorSimulator.App/NuclearReactorSimulator.App.csproj
++++ b/src/NuclearReactorSimulator.App/NuclearReactorSimulator.App.csproj
+@@ -4,6 +4,7 @@
+     <RootNamespace>NuclearReactorSimulator.App</RootNamespace>
+     <AssemblyName>NuclearReactorSimulator.App</AssemblyName>
+     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
++    <IndustrialControlsProject Condition="'$(IndustrialControlsProject)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\2026 IndustrialControls\IndustrialControls\src\IndustrialControls.Avalonia\IndustrialControls.Avalonia.csproj</IndustrialControlsProject>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -16,5 +17,6 @@
+   <ItemGroup>
+     <ProjectReference Include="..\NuclearReactorSimulator.Application\NuclearReactorSimulator.Application.csproj" />
+     <ProjectReference Include="..\NuclearReactorSimulator.Infrastructure\NuclearReactorSimulator.Infrastructure.csproj" />
++    <ProjectReference Include="$(IndustrialControlsProject)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/NuclearReactorSimulator.App/Presentation/IndustrialInstrumentPresentation.cs b/src/NuclearReactorSimulator.App/Presentation/IndustrialInstrumentPresentation.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..532799fe007e67f4f3b2fadc41bfb0c7ded9dcde
+--- /dev/null
++++ b/src/NuclearReactorSimulator.App/Presentation/IndustrialInstrumentPresentation.cs
+@@ -0,0 +1,65 @@
++using System.Globalization;
++using System.ComponentModel;
++using IndustrialControls.Avalonia.Controls;
++using NuclearReactorSimulator.Application.ControlRoom;
++using NuclearReactorSimulator.Application.ControlRoom.Hmi;
++
++namespace NuclearReactorSimulator.App.Presentation;
++
++/// <summary>Maps published instrument semantics without calculating process state or inventing scale bands.</summary>
++public sealed record IndustrialInstrumentPresentation(
++    string Title,
++    string ValueText,
++    string Unit,
++    SignalQuality Quality,
++    string Source,
++    string StateText,
++    string ScaleText)
++{
++    public static IndustrialInstrumentPresentation From(string title, ControlRoomValueSnapshot snapshot)
++    {
++        ArgumentNullException.ThrowIfNull(snapshot);
++        var available = snapshot.NumericValue is { } value && double.IsFinite(value)
++            && snapshot.Quality != ControlRoomInstrumentQuality.Unavailable
++            && snapshot.State != ControlRoomVisualState.Unavailable;
++        var quality = !available ? SignalQuality.Unavailable : snapshot.Quality switch
++        {
++            ControlRoomInstrumentQuality.Good => SignalQuality.Good,
++            ControlRoomInstrumentQuality.Suspect => SignalQuality.Uncertain,
++            _ => SignalQuality.Unavailable,
++        };
++        var scale = snapshot.InstrumentScale;
++        var scaleText = scale is null ? "SCALE —" : string.Concat(
++            scale.Minimum.ToString("0.###", CultureInfo.InvariantCulture), "–",
++            scale.Maximum.ToString("0.###", CultureInfo.InvariantCulture), " ", snapshot.Unit,
++            " · ", snapshot.ScaleSemanticsText,
++            snapshot.IsOffScale ? " · " + snapshot.ScaleStatusText : string.Empty);
++        return new IndustrialInstrumentPresentation(
++            title,
++            available ? snapshot.ValueText : "—",
++            snapshot.Unit,
++            quality,
++            snapshot.ProvenanceText,
++            available ? snapshot.State.ToString().ToUpperInvariant() : "UNAVAILABLE",
++            scaleText);
++    }
++}
++
++/// <summary>Keeps each instrument and its visual tree stable across published snapshots.</summary>
++public sealed class IndustrialInstrumentReadoutViewModel(string title) : INotifyPropertyChanged
++{
++    public event PropertyChangedEventHandler? PropertyChanged;
++    public IndustrialInstrumentPresentation Current { get; private set; } =
++        IndustrialInstrumentPresentation.From(title, ControlRoomValueSnapshot.Unavailable());
++
++    public void Update(ControlRoomValueSnapshot snapshot)
++    {
++        var next = IndustrialInstrumentPresentation.From(title, snapshot);
++        if (next == Current)
++        {
++            return;
++        }
++        Current = next;
++        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
++    }
++}
+diff --git a/src/NuclearReactorSimulator.App/ViewModels/MainWindowViewModel.cs b/src/NuclearReactorSimulator.App/ViewModels/MainWindowViewModel.cs
+index 2544d1e9859b21484c81853eaa6fa4c3ffc8853c..93966e0d9b394ec1b97945417ff0a64f1b7bfa5b 100644
+--- a/src/NuclearReactorSimulator.App/ViewModels/MainWindowViewModel.cs
++++ b/src/NuclearReactorSimulator.App/ViewModels/MainWindowViewModel.cs
+@@ -137,6 +137,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
+         RodWithdrawCommand = new DelegateCommand(() => DispatchRod(ControlRoomCommandKind.ControlRodWithdraw));
+         PumpStartCommand = new DelegateCommand(() => DispatchPump(ControlRoomCommandKind.MainCirculationPumpStart));
+         PumpStopCommand = new DelegateCommand(() => DispatchPump(ControlRoomCommandKind.MainCirculationPumpStop));
++        PumpPilot = new PrimaryPumpPanelViewModel(
++            () => DispatchPump(ControlRoomCommandKind.MainCirculationPumpStart),
++            () => DispatchPump(ControlRoomCommandKind.MainCirculationPumpStop));
++        PumpPilot.Update(SelectedPump, _snapshot.RunState);
+         TurbineTripCommand = new DelegateCommand(() => Dispatch(ControlRoomCommandKind.TurbineTrip));
+         TurbineStopValveOpenCommand = new DelegateCommand(() => DispatchSelectedTurbineValve(ControlRoomCommandKind.TurbineValveOpen, static train => train.StopValveId));
+         TurbineStopValveCloseCommand = new DelegateCommand(() => DispatchSelectedTurbineValve(ControlRoomCommandKind.TurbineValveClose, static train => train.StopValveId));
+@@ -702,6 +706,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
+         ? "NO MCP TARGETS"
+         : string.Join("|", CommandablePumps.Select(static pump => pump.PumpId));
+ 
++    public PrimaryPumpPanelViewModel PumpPilot { get; }
++
+     public int SelectedPumpIndex
+     {
+         get => _selectedPumpIndex;
+@@ -715,6 +721,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
+             }
+ 
+             _selectedPumpIndex = next;
++            PumpPilot.Update(SelectedPump, _snapshot.RunState);
+             OnPropertyChanged();
+             OnPropertyChanged(nameof(SelectedPumpId));
+             OnPropertyChanged(nameof(SelectedPumpText));
+@@ -1878,6 +1885,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
+         OnPropertyChanged(nameof(AlarmResetAllCommandState));
+         OnPropertyChanged(nameof(AlarmContextText));
+         OnPropertyChanged(nameof(PumpOptionsText));
++        PumpPilot.Update(SelectedPump, _snapshot.RunState);
+         OnPropertyChanged(nameof(SelectedPumpIndex));
+         OnPropertyChanged(nameof(SelectedPumpId));
+         OnPropertyChanged(nameof(SelectedPumpText));
+diff --git a/src/NuclearReactorSimulator.App/ViewModels/PrimaryPumpPanelViewModel.cs b/src/NuclearReactorSimulator.App/ViewModels/PrimaryPumpPanelViewModel.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..2ff05c781ffb9f89eaa20d2e12e4172cee0585ca
+--- /dev/null
++++ b/src/NuclearReactorSimulator.App/ViewModels/PrimaryPumpPanelViewModel.cs
+@@ -0,0 +1,76 @@
++using System.ComponentModel;
++using System.Windows.Input;
++using NuclearReactorSimulator.App.Presentation;
++using NuclearReactorSimulator.Application.ControlRoom;
++
++namespace NuclearReactorSimulator.App.ViewModels;
++
++/// <summary>Snapshot-driven pump feedback. Only explicit commands invoke the existing application dispatch path.</summary>
++public sealed class PrimaryPumpPanelViewModel : INotifyPropertyChanged
++{
++    private readonly PumpCommand _startCommand;
++    private readonly PumpCommand _stopCommand;
++    private PrimaryCircuitPumpPresentationSnapshot? _pump;
++    private ControlRoomRunState _runState;
++
++    public PrimaryPumpPanelViewModel(Action start, Action stop)
++    {
++        _startCommand = new PumpCommand(start, () => CanStart);
++        _stopCommand = new PumpCommand(stop, () => CanStop);
++        Update(null, ControlRoomRunState.ShellOnly);
++    }
++
++    public event PropertyChangedEventHandler? PropertyChanged;
++
++    public string PumpId => _pump?.PumpId ?? "NO PUMP SELECTED";
++    public string LoopId => _pump?.LoopId ?? "—";
++    public bool HasPump => _pump is not null && _runState != ControlRoomRunState.ShellOnly;
++    public bool IsRunning => HasPump && _pump!.IsRunning;
++    public bool IsStopped => HasPump && !_pump!.IsRunning;
++    public bool CanStart => HasPump && _pump!.IsOperatorCommandable && !IsRunning;
++    public bool CanStop => HasPump && _pump!.IsOperatorCommandable && IsRunning;
++    public string OperatingText => !HasPump ? "UNAVAILABLE" : _pump!.OperatingText;
++    public string StartInterlockReason => !HasPump ? "NO PUMP AVAILABLE"
++        : !_pump!.IsOperatorCommandable ? "OPERATOR CONTROL UNAVAILABLE" : "PUMP ALREADY RUNNING";
++    public string StopInterlockReason => !HasPump ? "NO PUMP AVAILABLE"
++        : !_pump!.IsOperatorCommandable ? "OPERATOR CONTROL UNAVAILABLE" : "PUMP ALREADY STOPPED";
++    public ICommand StartCommand => _startCommand;
++    public ICommand StopCommand => _stopCommand;
++    public IReadOnlyList<IndustrialInstrumentReadoutViewModel> Measurements { get; } =
++        Array.AsReadOnly(new[] { new IndustrialInstrumentReadoutViewModel("SPEED"),
++            new IndustrialInstrumentReadoutViewModel("MASS FLOW"),
++            new IndustrialInstrumentReadoutViewModel("PRESSURE BOOST") });
++
++    public void Update(PrimaryCircuitPumpPresentationSnapshot? pump, ControlRoomRunState runState)
++    {
++        _pump = pump;
++        _runState = runState;
++        var unavailable = ControlRoomValueSnapshot.Unavailable();
++        Measurements[0].Update(HasPump ? pump!.Speed : unavailable);
++        Measurements[1].Update(HasPump ? pump!.MassFlow : unavailable);
++        Measurements[2].Update(HasPump ? pump!.PressureBoost : unavailable);
++        foreach (var name in new[] { nameof(PumpId), nameof(LoopId), nameof(HasPump), nameof(IsRunning),
++            nameof(IsStopped), nameof(CanStart), nameof(CanStop), nameof(OperatingText),
++            nameof(StartInterlockReason), nameof(StopInterlockReason) })
++        {
++            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
++        }
++        _startCommand.NotifyCanExecuteChanged();
++        _stopCommand.NotifyCanExecuteChanged();
++    }
++
++    private sealed class PumpCommand(Action execute, Func<bool> canExecute) : ICommand
++    {
++        private readonly Action _execute = execute ?? throw new ArgumentNullException(nameof(execute));
++        public event EventHandler? CanExecuteChanged;
++        public bool CanExecute(object? parameter) => canExecute();
++        public void Execute(object? parameter)
++        {
++            if (CanExecute(parameter))
++            {
++                _execute();
++            }
++        }
++        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
++    }
++}
+diff --git a/src/NuclearReactorSimulator.App/Views/MainWindow.axaml b/src/NuclearReactorSimulator.App/Views/MainWindow.axaml
+index daaa09e556bc183be66e473147e773f88f85b1c7..8b85af4182b7c9983626db33ff6b6f757b4bfa91 100644
+--- a/src/NuclearReactorSimulator.App/Views/MainWindow.axaml
++++ b/src/NuclearReactorSimulator.App/Views/MainWindow.axaml
+@@ -504,6 +504,7 @@
+                 </Grid>
+               </StackPanel>
+             </Border>
++            <controls:IndustrialPrimaryPumpPanel DataContext="{Binding PumpPilot}" />
+             <Border Padding="20" Background="#171C24" CornerRadius="8" BorderThickness="1" BorderBrush="#303846">
+               <StackPanel Spacing="14">
+                 <StackPanel Spacing="5">
+diff --git a/tests/NuclearReactorSimulator.App.Tests/M10982Hotfix1Rev5ListRefreshStabilityTests.cs b/tests/NuclearReactorSimulator.App.Tests/M10982Hotfix1Rev5ListRefreshStabilityTests.cs
+index a364eb2a844d49eed3338b5d177fff89cbb4408c..0d26b9b7205c558e80dde717e0a5d2d4ee549a7a 100644
+--- a/tests/NuclearReactorSimulator.App.Tests/M10982Hotfix1Rev5ListRefreshStabilityTests.cs
++++ b/tests/NuclearReactorSimulator.App.Tests/M10982Hotfix1Rev5ListRefreshStabilityTests.cs
+@@ -170,6 +170,7 @@ public sealed class M10982Hotfix1Rev5ListRefreshStabilityTests
+                 "{Binding AlarmEvents.FirstOutGroups}",
+                 "{Binding Branches}",
+                 "{Binding Electrical.Generators}",
++                "{Binding Measurements}",
+                 "{Binding OperationalHistory.Events}",
+                 "{Binding OperationalHistory.TrendSeries}",
+                 "{Binding PrimaryCircuit.Loops}",
+@@ -198,9 +199,9 @@ public sealed class M10982Hotfix1Rev5ListRefreshStabilityTests
+             .ToArray();
+         Assert.Equal(new[] { "{Binding Timeline}" }, interactiveItemsControls);
+         Assert.Equal(4, itemSources.Length);
+-        Assert.Equal(20, itemsControlSources.Length);
+-        Assert.Equal(24, itemSources.Length + itemsControlSources.Length);
+-        Assert.Equal(19, itemsControlSources.Length - interactiveItemsControls.Length);
++        Assert.Equal(21, itemsControlSources.Length);
++        Assert.Equal(25, itemSources.Length + itemsControlSources.Length);
++        Assert.Equal(20, itemsControlSources.Length - interactiveItemsControls.Length);
+ 
+         var programmaticSelectorLabels = documents
+             .SelectMany(static document => document.Descendants())
+diff --git a/tests/NuclearReactorSimulator.App.Tests/PrimaryPumpPanelTests.cs b/tests/NuclearReactorSimulator.App.Tests/PrimaryPumpPanelTests.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..47544f97a4784a4a439f155ce16be071d0baae3e
+--- /dev/null
++++ b/tests/NuclearReactorSimulator.App.Tests/PrimaryPumpPanelTests.cs
+@@ -0,0 +1,189 @@
++using IndustrialControls.Avalonia.Controls;
++using NuclearReactorSimulator.App.Presentation;
++using NuclearReactorSimulator.App.ViewModels;
++using NuclearReactorSimulator.Application;
++using NuclearReactorSimulator.Application.ControlRoom;
++using NuclearReactorSimulator.Application.ControlRoom.Hmi;
++using Xunit;
++
++namespace NuclearReactorSimulator.App.Tests;
++
++public sealed class PrimaryPumpPanelTests
++{
++    [Fact]
++    public void CommandsWaitForPublishedFeedback_AndRefreshNeverDispatches()
++    {
++        var starts = 0;
++        var stops = 0;
++        var panel = new PrimaryPumpPanelViewModel(() => starts++, () => stops++);
++        panel.Update(Pump("pump-1", running: false), ControlRoomRunState.Paused);
++        panel.StartCommand.Execute(null);
++        Assert.Equal(1, starts);
++        Assert.True(panel.IsStopped);
++        Assert.False(panel.IsRunning);
++        panel.Update(Pump("pump-1", running: true), ControlRoomRunState.Running);
++        Assert.True(panel.IsRunning);
++        Assert.False(panel.CanStart);
++        Assert.True(panel.CanStop);
++        panel.StopCommand.Execute(null);
++        Assert.True(panel.IsRunning);
++        panel.Update(Pump("pump-1", running: false), ControlRoomRunState.Running);
++        Assert.True(panel.IsStopped);
++        Assert.Equal(1, starts);
++        Assert.Equal(1, stops);
++    }
++
++    [Theory]
++    [InlineData(false, ControlRoomRunState.Paused)]
++    [InlineData(true, ControlRoomRunState.ShellOnly)]
++    public void UnavailableCommandsFailClosed_EvenWhenExecutedDirectly(bool commandable, ControlRoomRunState state)
++    {
++        var commands = 0;
++        var panel = new PrimaryPumpPanelViewModel(() => commands++, () => commands++);
++        panel.Update(Pump("pump-1", commandable: commandable), state);
++        Assert.False(panel.StartCommand.CanExecute(null));
++        Assert.False(panel.StopCommand.CanExecute(null));
++        panel.StartCommand.Execute(null);
++        panel.StopCommand.Execute(null);
++        Assert.Equal(0, commands);
++    }
++
++    [Fact]
++    public void RemovingPumpClearsFeedbackMeasurementsAndCommands()
++    {
++        var panel = new PrimaryPumpPanelViewModel(() => { }, () => { });
++        panel.Update(Pump("pump-1", running: true), ControlRoomRunState.Running);
++        panel.Update(null, ControlRoomRunState.Paused);
++        Assert.False(panel.IsRunning);
++        Assert.False(panel.IsStopped);
++        Assert.False(panel.CanStart);
++        Assert.False(panel.CanStop);
++        Assert.Equal("UNAVAILABLE", panel.OperatingText);
++        Assert.All(panel.Measurements, value => Assert.Equal("—", value.Current.ValueText));
++    }
++
++    [Fact]
++    public void MeasurementRowsStayStableAndUnchangedReadingsDoNotNotify()
++    {
++        var panel = new PrimaryPumpPanelViewModel(() => { }, () => { });
++        var rows = panel.Measurements;
++        var first = rows[0];
++        var changes = 0;
++        first.PropertyChanged += (_, _) => changes++;
++        panel.Update(Pump("pump-1"), ControlRoomRunState.Paused);
++        Assert.Equal(1, changes);
++        panel.Update(Pump("pump-1"), ControlRoomRunState.Running);
++        Assert.Same(rows, panel.Measurements);
++        Assert.Same(first, panel.Measurements[0]);
++        Assert.Equal(1, changes);
++        panel.Update(null, ControlRoomRunState.Paused);
++        Assert.Equal(2, changes);
++        Assert.Equal("—", first.Current.ValueText);
++    }
++
++    [Theory]
++    [InlineData(null, ControlRoomInstrumentQuality.Good, ControlRoomVisualState.Normal)]
++    [InlineData(double.NaN, ControlRoomInstrumentQuality.Good, ControlRoomVisualState.Normal)]
++    [InlineData(double.PositiveInfinity, ControlRoomInstrumentQuality.Good, ControlRoomVisualState.Normal)]
++    [InlineData(12d, ControlRoomInstrumentQuality.Unavailable, ControlRoomVisualState.Normal)]
++    [InlineData(12d, ControlRoomInstrumentQuality.Good, ControlRoomVisualState.Unavailable)]
++    public void MissingOrInvalidReadingsNeverBecomeValidZero(double? numeric, ControlRoomInstrumentQuality quality, ControlRoomVisualState state)
++    {
++        var value = IndustrialInstrumentPresentation.From("FLOW",
++            new ControlRoomValueSnapshot("12", "kg/s", numeric, state) { Quality = quality });
++        Assert.Equal("—", value.ValueText);
++        Assert.Equal(SignalQuality.Unavailable, value.Quality);
++        Assert.Equal("UNAVAILABLE", value.StateText);
++        Assert.Equal("kg/s", value.Unit);
++    }
++
++    [Fact]
++    public void ReadoutPreservesAuthoritativeFormattingProvenanceQualityAndTrip()
++    {
++        var value = IndustrialInstrumentPresentation.From("FLOW",
++            new ControlRoomValueSnapshot("1.234,50", "kg/s", 1234.5, ControlRoomVisualState.Trip)
++            {
++                Quality = ControlRoomInstrumentQuality.Suspect,
++                Provenance = ControlRoomInstrumentProvenance.Measured,
++            });
++        Assert.Equal("1.234,50", value.ValueText);
++        Assert.Equal("MEASURED", value.Source);
++        Assert.Equal(SignalQuality.Uncertain, value.Quality);
++        Assert.Equal("TRIP", value.StateText);
++        Assert.Equal("SCALE —", value.ScaleText);
++    }
++
++    [Fact]
++    public void OffScaleReadoutPreservesValueAndCanonicalScaleDescription()
++    {
++        var snapshot = new ControlRoomValueSnapshot("110", "rpm", 110, ControlRoomVisualState.Warning)
++        {
++            InstrumentScale = new ControlRoomInstrumentScaleSnapshot(0, 100, setpoint: 50),
++        };
++        var value = IndustrialInstrumentPresentation.From("SPEED", snapshot);
++        Assert.Equal("110", value.ValueText);
++        Assert.Contains(snapshot.ScaleSemanticsText, value.ScaleText);
++        Assert.Contains(snapshot.ScaleStatusText, value.ScaleText);
++    }
++
++    [Fact]
++    public void MainWindowSelectionAndSnapshotRefreshUseCanonicalPumpTarget()
++    {
++        var dispatcher = new RecordingDispatcher();
++        var source = new InMemoryControlRoomSnapshotSource(Snapshot(Pump("pump-1"), Pump("pump-2")));
++        var vm = new MainWindowViewModel(new ApplicationDescriptor("NRS", "TEST", "TEST"), source, dispatcher);
++        vm.SelectedPumpIndex = 1;
++        Assert.Empty(dispatcher.Commands);
++        Assert.Equal("pump-2", vm.PumpPilot.PumpId);
++        vm.PumpPilot.StartCommand.Execute(null);
++        var command = Assert.Single(dispatcher.Commands);
++        Assert.Equal(ControlRoomCommandKind.MainCirculationPumpStart, command.Kind);
++        Assert.Equal(ControlRoomCommandTargetKind.Pump, command.TargetKind);
++        Assert.Equal("pump-2", command.TargetId);
++        Assert.False(vm.PumpPilot.IsRunning);
++        source.Publish(Snapshot(Pump("pump-2", running: true)));
++        Assert.Equal("pump-2", vm.PumpPilot.PumpId);
++        Assert.True(vm.PumpPilot.IsRunning);
++        Assert.Single(dispatcher.Commands);
++        vm.DetachRuntimeSubscriptions();
++        source.Publish(ControlRoomSnapshot.ShellOnly);
++        Assert.True(vm.PumpPilot.IsRunning);
++    }
++
++    [Fact]
++    public void DispatcherRejectionLeavesFeedbackUnchangedAndUsesExistingStatusPath()
++    {
++        var source = new InMemoryControlRoomSnapshotSource(Snapshot(Pump("pump-1")));
++        var vm = new MainWindowViewModel(new ApplicationDescriptor("NRS", "TEST", "TEST"), source, new RejectingDispatcher());
++        vm.PumpPilot.StartCommand.Execute(null);
++        Assert.False(vm.PumpPilot.IsRunning);
++        Assert.Contains("Command blocked", vm.CommandStatus);
++        Assert.Contains("test interlock", vm.CommandStatus);
++        vm.DetachRuntimeSubscriptions();
++    }
++
++    private static PrimaryCircuitPumpPresentationSnapshot Pump(string id, bool running = false, bool commandable = true)
++    {
++        var value = new ControlRoomValueSnapshot("12.50", "rpm", 12.5, ControlRoomVisualState.Normal);
++        return new(id, "loop-1", running, value, value, value, commandable);
++    }
++
++    private static ControlRoomSnapshot Snapshot(params PrimaryCircuitPumpPresentationSnapshot[] pumps)
++    {
++        var value = ControlRoomValueSnapshot.Unavailable();
++        var loop = new PrimaryCircuitLoopPresentationSnapshot("loop-1", value, value, value, value, "FORWARD", pumps, []);
++        var primary = new PrimaryCircuitPanelSnapshot([loop], [], [], value, value, value);
++        return new(0, ControlRoomRunState.Paused, 0, 0, 0, 0, false, false, false, primaryCircuit: primary);
++    }
++
++    private sealed class RecordingDispatcher : IControlRoomCommandDispatcher
++    {
++        public List<ControlRoomCommand> Commands { get; } = [];
++        public void Dispatch(ControlRoomCommand command) => Commands.Add(command);
++    }
++
++    private sealed class RejectingDispatcher : IControlRoomCommandDispatcher
++    {
++        public void Dispatch(ControlRoomCommand command) => throw new InvalidOperationException("test interlock");
++    }
++}
